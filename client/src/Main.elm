@@ -1,8 +1,9 @@
-module Main exposing (Model, main)
+module Main exposing (Model, Msg, main)
 
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
+import Html.Styled exposing (toUnstyled)
 import List
 import Pages.Home as Home
 import Pages.Login as Login
@@ -76,10 +77,10 @@ view model =
         List.singleton <|
             case parse Routes.parser model.url of
                 Just Routes.Home ->
-                    Html.map HomeMsg (Home.view model.home)
+                    Html.map HomeMsg (model.home |> Home.view)
 
                 Just Routes.Login ->
-                    Html.map LoginMsg (Login.view model.login)
+                    Html.map LoginMsg (model.login |> Login.view |> toUnstyled)
 
                 Nothing ->
                     text "Not Found"

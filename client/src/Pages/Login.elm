@@ -1,10 +1,15 @@
 module Pages.Login exposing (Model, Msg(..), init, update, view)
 
-import Html exposing (..)
+import Css exposing (..)
+import Html
+import Html.Styled exposing (..)
+import Types exposing (StyledElement)
 
 
 type alias Model =
-    {}
+    { username : String
+    , password : String
+    }
 
 
 type Msg
@@ -13,7 +18,9 @@ type Msg
 
 init : Model
 init =
-    {}
+    { username = ""
+    , password = ""
+    }
 
 
 update : Model -> Msg -> Model
@@ -21,6 +28,16 @@ update model msg =
     model
 
 
+container : StyledElement
+container =
+    styled div
+        [ displayFlex
+        , justifyContent center
+        , alignItems center
+        , height <| pct 70
+        ]
+
+
 view : Model -> Html Msg
 view model =
-    text "Hello world from login"
+    container [] [ text "Hello world from login" ]
