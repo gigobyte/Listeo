@@ -31,15 +31,20 @@ type Msg
     | LoginMsg Login.Msg
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
-init flags url key =
-    ( { key = key, url = url, home = Home.init, login = Login.init }
-    , case flags.jwt of
+redirectIfUnauthenticated : Maybe String -> Nav.Key -> Cmd msg
+redirectIfUnauthenticated jwtToken key =
+    case jwtToken of
         Just _ ->
             Cmd.none
 
         Nothing ->
             Nav.pushUrl key "login"
+
+
+init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
+init flags url key =
+    ( { key = key, url = url, home = Home.init, login = Login.init }
+    , redirectIfUnauthenticated flags.jwt key
     )
 
 
