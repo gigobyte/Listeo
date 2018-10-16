@@ -6,7 +6,7 @@ import Html exposing (..)
 import List
 import Pages.Home as Home
 import Pages.Login as Login
-import Routes
+import Routes exposing (pushUrl)
 import Url
 import Url.Parser exposing (parse)
 
@@ -38,7 +38,7 @@ redirectIfUnauthenticated jwtToken key =
             Cmd.none
 
         Nothing ->
-            Nav.pushUrl key "login"
+            pushUrl key Routes.Login
 
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
