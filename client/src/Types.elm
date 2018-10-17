@@ -1,7 +1,7 @@
 module Types exposing (StyledElement)
 
-import Main exposing (Msg)
+import Html.Styled exposing (Attribute, Html)
 
 
-type alias StyledElement =
-    List (Attribute Msg) -> List (Html Msg) -> Html Msg
+type alias StyledElement msg =
+    List (Attribute msg) -> List (Html msg) -> Html msg

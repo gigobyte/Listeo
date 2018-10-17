@@ -28,7 +28,7 @@ update model msg =
     model
 
 
-container : StyledElement
+container : StyledElement msg
 container =
     styled div
         [ displayFlex
