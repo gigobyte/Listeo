@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
 import List
+import Maybe.Extra as Maybe
 import Pages.Home as Home
 import Pages.Login as Login
 import Routes exposing (pushUrl)
@@ -34,12 +35,8 @@ type Msg
 
 redirectIfUnauthenticated : Maybe String -> Nav.Key -> Cmd msg
 redirectIfUnauthenticated jwtToken key =
-    case jwtToken of
-        Just _ ->
-            Cmd.none
-
-        Nothing ->
-            pushUrl key Routes.Login
+    jwtToken
+        |> Maybe.unwrap (pushUrl key Routes.Login) (always Cmd.none)
 
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
