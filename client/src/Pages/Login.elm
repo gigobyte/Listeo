@@ -4,9 +4,9 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (placeholder, type_, value)
 import Html.Styled.Events exposing (..)
-import Types exposing (StyledElement)
 import UI.Button as Button
 import UI.Input as Input
+import Utils.StyleTypes exposing (StyledElement)
 
 
 type alias Model =

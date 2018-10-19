@@ -2,8 +2,8 @@ module UI.Button exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Types exposing (StyledElement)
 import UI.Colors exposing (blue100, blue200, white)
+import Utils.StyleTypes exposing (StyledElement)
 
 
 view : StyledElement msg

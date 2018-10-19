@@ -1,4 +1,4 @@
-module Types exposing (StyledElement)
+module Utils.StyleTypes exposing (StyledElement)
 
 import Html.Styled exposing (Attribute, Html)
 

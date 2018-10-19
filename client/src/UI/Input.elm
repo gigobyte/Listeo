@@ -2,7 +2,7 @@ module UI.Input exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Types exposing (StyledElement)
+import Utils.StyleTypes exposing (StyledElement)
 import UI.Colors exposing (gray100)
 
 
