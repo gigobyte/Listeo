@@ -10,8 +10,10 @@ import Msg exposing (Msg(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors exposing (getValidationErrors)
 import Pages.Login.Validation exposing (LoginField(..), LoginValidationError(..), errToString)
+import Routes exposing (href)
 import UI.Button as Button
 import UI.Input as Input
+import Routes
 import Utils.StyleTypes exposing (StyledElement)
 import Utils.Validation exposing (getErrorForField)
 
@@ -79,4 +81,5 @@ view model =
             , onClick LoginAttempted
             ]
             [ text "Let's go!" ]
+        , a [ href Routes.Register ] [ text "Don't have an account? Register here" ]
         ]
