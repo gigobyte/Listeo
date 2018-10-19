@@ -8,7 +8,6 @@ import List
 import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
 import Pages.Login as Login
-import Pages.Login.Model as Login
 import Routes exposing (pushUrl)
 import Url
 import Url.Parser exposing (parse)
