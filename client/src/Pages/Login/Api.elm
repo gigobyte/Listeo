@@ -1,4 +1,6 @@
-module Pages.Login.Api exposing (LoginRequestData)
+module Pages.Login.Api exposing (LoginRequestData, getLoginRequestModel)
+
+import Pages.Login as Login
 
 
 type alias LoginRequestData =
