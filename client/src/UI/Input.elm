@@ -1,16 +1,79 @@
 module UI.Input exposing (view)
 
 import Css exposing (..)
+import Css.Transitions as Transitions exposing (easeIn, transition)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (type_)
+import Maybe.Extra as Maybe
+import UI.Colors exposing (gray100, red100)
 import Utils.StyleTypes exposing (StyledElement)
-import UI.Colors exposing (gray100)
 
 
-view : StyledElement msg
-view =
+type alias InputProps msg =
+    { validationError : Maybe String
+    , inputAttributes : List (Attribute msg)
+    }
+
+
+viewError : Maybe String -> Html msg
+viewError errorText =
+    let
+        baseStyle =
+            [ color red100
+            , textAlign center
+            , transition [ Transitions.maxHeight 1500, Transitions.opacity 500 ]
+            , opacity zero
+            ]
+
+        errorStyle =
+            [ marginBottom <| px 10
+            , height <| pct 100
+            , opacity <| int 1
+            ]
+
+        style =
+            baseStyle
+                ++ (case errorText of
+                        Just _ ->
+                            errorStyle
+
+                        _ ->
+                            []
+                   )
+    in
+    styled div style [] [ text (errorText |> Maybe.withDefault "") ]
+
+
+viewInput : Bool -> StyledElement msg
+viewInput hasError =
+    let
+        errorStyle =
+            if hasError then
+                [ marginBottom <| px 5
+                , borderColor red100
+                ]
+
+            else
+                []
+    in
     styled input
-        [ borderRadius <| px 5
-        , padding <| px 7
-        , border3 (px 1) solid gray100
-        , fontFamilies [ "Museo-Sans" ]
+        ([ borderRadius <| px 5
+         , padding <| px 7
+         , fontSize <| px 16
+         , marginBottom <| px 10
+         , border3 (px 1) solid gray100
+         , transition [ Transitions.borderColor 1000 ]
+         , fontFamilies [ "Museo-Sans" ]
+         ]
+            ++ errorStyle
+        )
+
+
+view : InputProps msg -> Html msg
+view props =
+    styled div
+        []
+        []
+        [ viewInput (Maybe.isJust props.validationError) props.inputAttributes []
+        , viewError props.validationError
         ]

@@ -1,4 +1,4 @@
-module Pages.Login.Api exposing (LoginRequestData, getLoginRequestModel)
+module Pages.Login.Api exposing (LoginRequestData, makeLoginRequestModel)
 
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation exposing (LoginValidationError, loginValidator)
@@ -11,8 +11,8 @@ type alias LoginRequestData =
     }
 
 
-getLoginRequestModel : Model -> Result (List LoginValidationError) LoginRequestData
-getLoginRequestModel model =
+makeLoginRequestModel : Model -> Maybe LoginRequestData
+makeLoginRequestModel model =
     validate loginValidator model
         |> Result.map fromValid
         |> Result.map
@@ -21,3 +21,4 @@ getLoginRequestModel model =
                 , password = validatedModel.password
                 }
             )
+        |> Result.toMaybe

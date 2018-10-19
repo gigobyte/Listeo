@@ -23,11 +23,11 @@ update model msg =
             ( { model | password = value }, Cmd.none )
 
         LoginAttempted ->
-            case Api.getLoginRequestModel model of
-                Ok request ->
+            case Api.makeLoginRequestModel model of
+                Just request ->
                     ( model, Cmd.none )
 
-                Err _ ->
+                Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
 
         _ ->
