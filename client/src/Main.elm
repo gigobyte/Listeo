@@ -6,7 +6,6 @@ import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
 import List
 import Maybe.Extra as Maybe
-import Pages.Home as Home
 import Pages.Login as Login
 import Routes exposing (pushUrl)
 import Url
@@ -16,7 +15,6 @@ import Url.Parser exposing (parse)
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
-    , home : Home.Model
     , login : Login.Model
     }
 
@@ -29,7 +27,6 @@ type alias Flags =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
-    | HomeMsg Home.Msg
     | LoginMsg Login.Msg
 
 
@@ -41,7 +38,10 @@ redirectIfUnauthenticated jwtToken key =
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
 init flags url key =
-    ( { key = key, url = url, home = Home.init, login = Login.init }
+    ( { key = key
+      , url = url
+      , login = Login.init
+      }
     , redirectIfUnauthenticated flags.jwt key
     )
 
@@ -60,9 +60,6 @@ update msg model =
         UrlChanged url ->
             ( { model | url = url }, Cmd.none )
 
-        HomeMsg homeMsg ->
-            ( { model | home = Home.update model.home homeMsg }, Cmd.none )
-
         LoginMsg loginMsg ->
             ( { model | login = Login.update model.login loginMsg }, Cmd.none )
 
@@ -73,14 +70,14 @@ view model =
     , body =
         List.singleton <|
             case parse Routes.parser model.url of
-                Just Routes.Home ->
-                    Html.map HomeMsg (model.home |> Home.view)
-
                 Just Routes.Login ->
                     Html.map LoginMsg (model.login |> Login.view |> toUnstyled)
 
                 Nothing ->
                     text "Not Found"
+
+                _ ->
+                    text ""
     }
 
 
