@@ -1,6 +1,7 @@
 module Pages.Login.Update exposing (init, update)
 
 import Msg exposing (Msg(..))
+import Pages.Login.Api as Api
 import Pages.Login.Model exposing (Model)
 
 
@@ -8,6 +9,7 @@ init : Model
 init =
     { username = ""
     , password = ""
+    , showErrors = False
     }
 
 
@@ -21,7 +23,12 @@ update model msg =
             ( { model | password = value }, Cmd.none )
 
         LoginAttempted ->
-            Debug.todo ""
+            case Api.getLoginRequestModel model of
+                Ok request ->
+                    ( model, Cmd.none )
+
+                Err _ ->
+                    ( { model | showErrors = True }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

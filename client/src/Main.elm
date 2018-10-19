@@ -53,6 +53,10 @@ combinedUpdate =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        _ =
+            Debug.log (Debug.toString model) ""
+    in
     case msg of
         LinkClicked urlRequest ->
             case urlRequest of

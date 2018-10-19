@@ -1,13 +1,13 @@
 module Msg exposing (Msg(..))
 
-import Browser
-import Url
+import Browser exposing (UrlRequest)
+import Url exposing (Url)
 
 
 type Msg
-    = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
-    -- Login
+    = LinkClicked UrlRequest
+    | UrlChanged Url
+      -- Login
     | LoginUsernameUpdated String
     | LoginPasswordUpdated String
     | LoginAttempted
