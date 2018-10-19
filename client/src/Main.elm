@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg, main)
+module Main exposing (Model, main)
 
 import Browser
 import Browser.Navigation as Nav
@@ -6,7 +6,9 @@ import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
 import List
 import Maybe.Extra as Maybe
+import Msg exposing (Msg(..))
 import Pages.Login as Login
+import Pages.Login.Model as Login
 import Routes exposing (pushUrl)
 import Url
 import Url.Parser exposing (parse)
@@ -22,12 +24,6 @@ type alias Model =
 type alias Flags =
     { jwt : Maybe String
     }
-
-
-type Msg
-    = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
-    | LoginMsg Login.Msg
 
 
 redirectIfUnauthenticated : Maybe String -> Nav.Key -> Cmd msg
@@ -46,6 +42,16 @@ init flags url key =
     )
 
 
+combinedUpdate : Model -> Msg -> ( Model, Cmd Msg )
+combinedUpdate =
+    \model msg ->
+        let
+            ( newModel, desiredMsg ) =
+                Login.update model.login msg
+        in
+        ( { model | login = newModel }, desiredMsg )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -60,8 +66,8 @@ update msg model =
         UrlChanged url ->
             ( { model | url = url }, Cmd.none )
 
-        LoginMsg loginMsg ->
-            ( { model | login = Login.update model.login loginMsg }, Cmd.none )
+        _ ->
+            combinedUpdate model msg
 
 
 view : Model -> Browser.Document Msg
@@ -71,7 +77,7 @@ view model =
         List.singleton <|
             case parse Routes.parser model.url of
                 Just Routes.Login ->
-                    Html.map LoginMsg (model.login |> Login.view |> toUnstyled)
+                    model.login |> Login.view |> toUnstyled
 
                 Nothing ->
                     text "Not Found"

@@ -1,24 +1,14 @@
-module Pages.Login exposing (Model, Msg(..), init, update, view)
+module Pages.Login exposing (init, update, view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (placeholder, type_, value)
 import Html.Styled.Events exposing (..)
+import Msg exposing (Msg(..))
+import Pages.Login.Model exposing (Model)
 import UI.Button as Button
 import UI.Input as Input
 import Utils.StyleTypes exposing (StyledElement)
-
-
-type alias Model =
-    { username : String
-    , password : String
-    }
-
-
-type Msg
-    = UsernameUpdated String
-    | PasswordUpdated String
-    | LoginAttempted
 
 
 init : Model
@@ -28,17 +18,20 @@ init =
     }
 
 
-update : Model -> Msg -> Model
+update : Model -> Msg -> ( Model, Cmd Msg )
 update model msg =
     case msg of
-        UsernameUpdated value ->
-            { model | username = value }
+        LoginUsernameUpdated value ->
+            ( { model | username = value }, Cmd.none )
 
-        PasswordUpdated value ->
-            { model | password = value }
+        LoginPasswordUpdated value ->
+            ( { model | password = value }, Cmd.none )
 
         LoginAttempted ->
             Debug.todo ""
+
+        _ ->
+            ( model, Cmd.none )
 
 
 
@@ -87,7 +80,7 @@ view : Model -> Html Msg
 view model =
     container []
         [ title [] [ text "Login" ]
-        , loginInput [ type_ "text", placeholder "Username", value model.username, onInput UsernameUpdated ] []
-        , loginInput [ type_ "text", placeholder "Password", value model.password, onInput PasswordUpdated ] []
+        , loginInput [ type_ "text", placeholder "Username", value model.username, onInput LoginUsernameUpdated ] []
+        , loginInput [ type_ "text", placeholder "Password", value model.password, onInput LoginPasswordUpdated ] []
         , submitButton [ type_ "submit", onClick LoginAttempted ] [ text "Let's go!" ]
         ]
