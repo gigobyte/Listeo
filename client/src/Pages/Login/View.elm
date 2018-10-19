@@ -11,7 +11,6 @@ import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors exposing (getValidationErrors)
 import Pages.Login.Validation exposing (LoginField(..), LoginValidationError(..), errToString)
 import UI.Button as Button
-import UI.Colors exposing (gray100, red100)
 import UI.Input as Input
 import Utils.StyleTypes exposing (StyledElement)
 import Utils.Validation exposing (getErrorForField)
