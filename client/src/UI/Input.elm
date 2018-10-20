@@ -1,7 +1,7 @@
 module UI.Input exposing (InputProps, view)
 
 import Css exposing (..)
-import Css.Transitions as Transitions exposing (easeIn, transition)
+import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
@@ -20,7 +20,6 @@ viewError errorText =
     let
         baseStyle =
             [ color redOrange100
-            , textAlign center
             , maxHeight zero
             , transition [ Transitions.maxHeight 3000, Transitions.opacity 1000 ]
             , opacity zero
@@ -74,7 +73,9 @@ viewInput hasError =
 view : InputProps msg -> StyledElement msg
 view props attrs children =
     styled div
-        []
+        [
+            textAlign center
+        ]
         attrs
         ([ viewInput (Maybe.isJust props.validationError) props.inputAttributes []
          , viewError props.validationError

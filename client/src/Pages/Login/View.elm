@@ -1,7 +1,6 @@
 module Pages.Login.View exposing (view)
 
 import Css exposing (..)
-import Css.Transitions as Transitions exposing (easeIn, transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (placeholder, type_, value)
 import Html.Styled.Events exposing (..)
@@ -11,7 +10,7 @@ import Pages.Header as Header
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors exposing (getValidationErrors)
 import Pages.Login.Validation exposing (LoginField(..), LoginValidationError(..), errToString)
-import Routes exposing (href)
+import Routes
 import UI.Button as Button
 import UI.Input as Input
 import UI.Link as Link
@@ -85,6 +84,7 @@ view model =
                 { validationError = passwordError
                 , inputAttributes =
                     [ placeholder "Password"
+                    , type_ "password"
                     , value model.password
                     , onInput LoginPasswordUpdated
                     ]
