@@ -1,4 +1,4 @@
-module UI.Input exposing (view)
+module UI.Input exposing (InputProps, view)
 
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (easeIn, transition)

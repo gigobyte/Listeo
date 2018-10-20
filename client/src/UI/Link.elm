@@ -1,4 +1,4 @@
-module UI.Link exposing (view)
+module UI.Link exposing (LinkProps, view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)

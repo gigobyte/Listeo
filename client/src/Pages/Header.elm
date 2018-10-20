@@ -3,6 +3,7 @@ module Pages.Header exposing (view)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Routes
+import UI.Colors exposing (blue150)
 import UI.Link as Link
 import UI.Logo as Logo
 import Utils.StyleTypes exposing (StyledElement)
@@ -24,6 +25,15 @@ nav =
         , alignItems center
         , paddingRight <| pct 5
         , fontSize <| rem 1.1
+        , fontWeight bold
+        ]
+
+
+navItem : Link.LinkProps -> StyledElement msg
+navItem props =
+    styled (Link.view props)
+        [ padding2 zero (px 10)
+        , color blue150
         ]
 
 
@@ -39,8 +49,8 @@ view =
     container []
         [ logo [] [ Logo.view ]
         , nav []
-            [ Link.view { to = Routes.Login } [] [ text "Sign In" ]
-            , Link.view { to = Routes.Register } [] [ text "Register" ]
-            , Link.view { to = Routes.About } [] [ text "About" ]
+            [ navItem { to = Routes.Login } [] [ text "Sign In" ]
+            , navItem { to = Routes.Register } [] [ text "Register" ]
+            , navItem { to = Routes.About } [] [ text "About" ]
             ]
         ]
