@@ -79,6 +79,8 @@ view model =
                     , onInput LoginUsernameUpdated
                     ]
                 }
+                []
+                []
             , Input.view
                 { validationError = passwordError
                 , inputAttributes =
@@ -87,11 +89,13 @@ view model =
                     , onInput LoginPasswordUpdated
                     ]
                 }
+                []
+                []
             , submitButton
                 [ type_ "submit"
                 , onClick LoginAttempted
                 ]
                 [ text "Let's go!" ]
-            , Link.view { to = Routes.Register, attributes = [] } [ text "Don't have an account?" ]
+            , Link.view { to = Routes.Register } [] [ text "Don't have an account?" ]
             ]
         ]

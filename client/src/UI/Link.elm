@@ -6,16 +6,16 @@ import Routes
 import Utils.StyleTypes exposing (StyledElement)
 
 
-type alias LinkProps msg =
+type alias LinkProps =
     { to : Routes.Route
-    , attributes : List (Attribute msg)
     }
 
 
-view : LinkProps msg -> List (Html msg) -> Html msg
-view props =
+view : LinkProps -> StyledElement msg
+view props attrs =
     styled a
         [ textDecoration none
         ]
-        (props.attributes
-        ++ [ Routes.href props.to ])
+        (attrs
+            ++ [ Routes.href props.to ]
+        )

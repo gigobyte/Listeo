@@ -70,11 +70,13 @@ viewInput hasError =
         )
 
 
-view : InputProps msg -> Html msg
-view props =
+view : InputProps msg -> StyledElement msg
+view props attrs children =
     styled div
         []
-        []
-        [ viewInput (Maybe.isJust props.validationError) props.inputAttributes []
-        , viewError props.validationError
-        ]
+        attrs
+        ([ viewInput (Maybe.isJust props.validationError) props.inputAttributes []
+         , viewError props.validationError
+         ]
+            ++ children
+        )
