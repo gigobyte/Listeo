@@ -10,6 +10,7 @@ type Route
     = Home
     | Login
     | Register
+    | About
 
 
 toString : Route -> String
@@ -23,6 +24,9 @@ toString route =
 
         Register ->
             "register"
+
+        About ->
+            "about"
 
 
 pushUrl : Nav.Key -> Route -> Cmd msg
