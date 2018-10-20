@@ -23,7 +23,7 @@ nav =
         [ textTransform uppercase
         , displayFlex
         , alignItems center
-        , paddingRight <| pct 5
+        , paddingRight <| pct 4
         , fontSize <| rem 1.1
         , fontWeight bold
         ]
@@ -33,7 +33,6 @@ navItem : Link.LinkProps -> StyledElement msg
 navItem props =
     styled (Link.view props)
         [ padding2 zero (px 10)
-        , color blue150
         ]
 
 
@@ -41,6 +40,7 @@ logo : StyledElement msg
 logo =
     styled div
         [ padding <| px 20
+        , paddingLeft <| pct 4
         ]
 
 

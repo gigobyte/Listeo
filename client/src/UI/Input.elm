@@ -5,7 +5,7 @@ import Css.Transitions as Transitions exposing (easeIn, transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
-import UI.Colors exposing (gray100, redOrange100)
+import UI.Colors exposing (gray100, redOrange100, whiteGray100)
 import Utils.StyleTypes exposing (StyledElement)
 
 
@@ -65,6 +65,7 @@ viewInput hasError =
          , border3 (px 1) solid gray100
          , transition [ Transitions.borderColor 1000 ]
          , fontFamilies [ "Museo-Sans" ]
+         , backgroundColor whiteGray100
          ]
             ++ errorStyle
         )
