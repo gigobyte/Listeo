@@ -1,0 +1,1 @@
+export const JWT_SECRET = 'LISTEO_VERY_SECRET'

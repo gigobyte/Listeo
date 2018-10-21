@@ -36,10 +36,10 @@ errToString err =
             "Please enter password"
 
         UsernameTooShort ->
-            "Username must be at least " ++ String.fromInt usernameMinimumLength ++ " characters"
+            "Username must be at least " ++ String.fromInt usernameMinimumLength ++ " characters long"
 
         PasswordTooShort ->
-            "Password must be at least " ++ String.fromInt passwordMinimumLength ++ " characters"
+            "Password must be at least " ++ String.fromInt passwordMinimumLength ++ " characters long"
 
 
 loginValidator : Validator ( LoginField, LoginValidationError ) Model
