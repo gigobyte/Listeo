@@ -9,13 +9,10 @@ copyright: "2018 Stanislav Iliev"
 dependencies:
   - base >= 4.7 && < 5
 
-library:
-  source-dirs: src
-
 executables:
   listeo-exe:
     main: Main.hs
-    source-dirs: app
+    source-dirs: src
     ghc-options:
       - -threaded
       - -rtsopts
@@ -24,5 +21,3 @@ executables:
       - -Wcompat
       - -Wincomplete-record-updates
       - -Wincomplete-uni-patterns
-    dependencies:
-      - listeo
