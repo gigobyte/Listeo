@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 31d3ee037c5bbf006d86198ba0cd1eeac0c614f1afaa6201a699109eedac7487
+-- hash: e0ec523d997026e6fdca23d2937b52dc473298444e727fa76d190f16abd41ace
 
 name:           listeo
 version:        0.1.0.0
@@ -26,7 +26,8 @@ executable listeo-exe
       Paths_listeo
   hs-source-dirs:
       src
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
+  ghc-options: -rtsopts -with-rtsopts=-N -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       base >=4.7 && <5
+    , scotty
   default-language: Haskell2010
