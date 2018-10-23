@@ -2,4 +2,3 @@ elm-stuff
 node_modules
 dist
 .cache
-server/env.ts
