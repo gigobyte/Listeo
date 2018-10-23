@@ -1,0 +1,28 @@
+name: listeo
+version: 0.1.0.0
+github: "gigobyte/Listeo"
+license: MIT
+author: "Stanislav Iliev"
+maintainer: "s.iliev3@gmail.com"
+copyright: "2018 Stanislav Iliev"
+
+dependencies:
+  - base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  listeo-exe:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -Wall
+      - -Wcompat
+      - -Wincomplete-record-updates
+      - -Wincomplete-uni-patterns
+    dependencies:
+      - listeo
