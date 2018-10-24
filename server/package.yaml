@@ -10,6 +10,10 @@ dependencies:
   - base >= 4.7 && < 5
   - protolude
   - scotty
+  - aeson
+  - mongoDB
+  - wai-cors
+  - http-types
 
 executables:
   listeo-exe:
@@ -21,4 +25,7 @@ executables:
       - -Wincomplete-record-updates
       - -Wincomplete-uni-patterns
 
-default-extensions: NoImplicitPrelude
+default-extensions:
+  - NoImplicitPrelude
+  - OverloadedStrings
+  - DeriveGeneric
