@@ -8,6 +8,7 @@ copyright: "2018 Stanislav Iliev"
 
 dependencies:
   - base >= 4.7 && < 5
+  - protolude
   - scotty
 
 executables:
@@ -15,9 +16,9 @@ executables:
     main: Main.hs
     source-dirs: src
     ghc-options:
-      - -rtsopts
-      - -with-rtsopts=-N
       - -Wall
       - -Wcompat
       - -Wincomplete-record-updates
       - -Wincomplete-uni-patterns
+
+default-extensions: NoImplicitPrelude

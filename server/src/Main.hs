@@ -1,8 +1,8 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main where
 
-import           Web.Scotty
+import           Protolude
+-- import           Web.Scotty
 
 main :: IO ()
-main = putStrLn "Hello world"
+main =
+    print $ head ([] :: [Int])
