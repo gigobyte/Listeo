@@ -2,11 +2,15 @@ module Routes.Auth.Register (register) where
 
 import           Data.Aeson                (FromJSON, ToJSON)
 import           Data.Aeson                (decode)
+import           Data.ByteString.Lazy      (ByteString)
 import qualified Data.Text                 as T
+import           Data.Time.Clock           (getCurrentTime)
 import           Database.MongoDB          (Pipe)
+import           Database.MongoDB          (Action, Value, insert, (=:))
 import           GHC.Generics
+import qualified Models.User               as User
 import qualified Network.HTTP.Types.Status as Status
-import           Protolude
+import           Protolude                 hiding (ByteString)
 import           Web.Scotty                (ActionM, body, json, status)
 
 instance ToJSON RegisterBody
@@ -27,21 +31,28 @@ data RegisterResponse = RegisterResponse
     { errorDescription :: RegisterValidationError
     } deriving Generic
 
-validateRegisterBody :: RegisterBody -> Either RegisterValidationError RegisterBody
-validateRegisterBody model =
-    if (T.length $ T.strip $ username model) < 4 then
-        Left ValidationFailed
-    else if (T.length $ T.strip $ password model) < 6 then
-        Left ValidationFailed
-    else
-        Right model
+parseBody :: ByteString -> Maybe RegisterBody
+parseBody =
+    decode
+
+createUser :: RegisterBody -> Maybe User.User
+createUser req =
+    User.User
+        <$> (User.mkUsername $ username req)
+        <*> (User.mkPassword $ password req)
+
+insertUser :: User.User -> Action IO Value
+insertUser user =
+    insert "user"
+        [ "username" =: (T.unpack $ User.unwrapUsername $ User.username user)
+        , "password" =: (T.unpack $ User.unwrapPassword $ User.password user)
+        ]
 
 register :: Pipe -> ActionM ()
 register _ = do
     b <- body
+    now <- liftIO $ getCurrentTime
 
-    case (decode b :: Maybe RegisterBody) of
-        Just rawBody  -> case validateRegisterBody rawBody of
-            Left err -> json $ RegisterResponse { errorDescription = err }
-            Right _  -> status Status.ok200
-        Nothing -> status Status.badRequest400
+    let request = parseBody b
+
+    status Status.badRequest400

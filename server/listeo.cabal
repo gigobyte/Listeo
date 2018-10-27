@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bd1f995416d235fcf359eec5ea4dc89ded78c5b9c9fad418182d072209af7e6b
+-- hash: c805be40abcb11cd423027e9fe074f89c9a9a8920e5e846b14fd2ec0d1cf46a5
 
 name:           listeo
 version:        0.1.0.0
@@ -23,19 +23,22 @@ source-repository head
 executable listeo-exe
   main-is: Main.hs
   other-modules:
+      Models.User
       Routes.Auth.Register
       Paths_listeo
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric
+  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , http-types
     , mongoDB
     , protolude
     , scotty
     , text
+    , time
     , wai-cors
   default-language: Haskell2010
