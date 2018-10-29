@@ -1,17 +1,20 @@
 module Routes.Auth.Register (register) where
 
-import           Data.Aeson                (FromJSON, ToJSON)
-import           Data.Aeson                (decode)
-import           Data.ByteString.Lazy      (ByteString)
-import qualified Data.Text                 as T
-import           Data.Time.Clock           (getCurrentTime)
-import           Database.MongoDB          (Pipe)
-import           Database.MongoDB          (Action, Value, insert, (=:))
+import           Control.Monad.Trans.Either (EitherT (..))
+import           Data.Aeson                 (FromJSON, ToJSON)
+import           Data.Aeson                 (decode)
+import           Data.ByteString.Lazy       (ByteString)
+import qualified Data.Text                  as T
+import qualified Data.Time.Clock            as Time
+import           Database.MongoDB           (Action, Pipe, Value, count, find,
+                                             insert, rest, select, (=:))
 import           GHC.Generics
-import qualified Models.User               as User
-import qualified Network.HTTP.Types.Status as Status
-import           Protolude                 hiding (ByteString)
-import           Web.Scotty                (ActionM, body, json, status)
+import           Infrastructure.Maybe       (maybeToEither)
+import qualified Models.User                as User
+import qualified Network.HTTP.Types.Status  as Status
+import           Protolude                  hiding (ByteString, find,
+                                             maybeToEither)
+import           Web.Scotty                 (ActionM, body, json, status)
 
 instance ToJSON RegisterBody
 instance FromJSON RegisterBody
@@ -20,39 +23,58 @@ data RegisterBody = RegisterBody
     , password :: Text
     } deriving Generic
 
-instance ToJSON RegisterValidationError
-data RegisterValidationError
+instance ToJSON RegisterError
+data RegisterError
     = ValidationFailed
     | UserAlreadyExists
+    | BadRequest
     deriving Generic
 
 instance ToJSON RegisterResponse
 data RegisterResponse = RegisterResponse
-    { errorDescription :: RegisterValidationError
+    { errorDescription :: RegisterError
     } deriving Generic
 
-parseBody :: ByteString -> Maybe RegisterBody
-parseBody =
-    decode
+parseBody :: ByteString -> Either RegisterError RegisterBody
+parseBody b =
+    maybeToEither BadRequest $ decode b
 
-createUser :: RegisterBody -> Maybe User.User
-createUser req =
-    User.User
+mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User.User
+mkUser dateNow req =
+    maybeToEither ValidationFailed $ User.User
         <$> (User.mkUsername $ username req)
         <*> (User.mkPassword $ password req)
+        <*> pure dateNow
 
 insertUser :: User.User -> Action IO Value
 insertUser user =
     insert "user"
-        [ "username" =: (T.unpack $ User.unwrapUsername $ User.username user)
-        , "password" =: (T.unpack $ User.unwrapPassword $ User.password user)
+        [ "username" =: (User.unwrapUsername $ User.username user)
+        , "password" =: (User.unwrapPassword $ User.password user)
+        , "createdOn" =: User.createdOn user
         ]
+
+doesUserExist :: Text -> Action IO Bool
+doesUserExist username =
+    (== 1) <$> count (select ["username" =: username] "user")
+
+insertUserWithCheck :: User.User -> Action IO (Either RegisterError Value)
+insertUserWithCheck user = do
+    userExists <- doesUserExist $ User.unwrapUsername $ User.username user
+
+    if userExists then do
+        doc <- insertUser user
+        pure $ Right doc
+    else
+        pure $ Left UserAlreadyExists
+
 
 register :: Pipe -> ActionM ()
 register _ = do
-    b <- body
-    now <- liftIO $ getCurrentTime
+    now <- liftIO Time.getCurrentTime
+    rawBody <- body
 
-    let request = parseBody b
+    let a = parseBody rawBody >>= mkUser now
+    let b = insertUserWithCheck <$> a
 
     status Status.badRequest400

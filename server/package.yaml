@@ -17,6 +17,7 @@ dependencies:
   - text
   - time
   - bytestring
+  - either
 
 executables:
   listeo-exe:
