@@ -34,3 +34,4 @@ default-extensions:
   - OverloadedStrings
   - DeriveGeneric
   - NamedFieldPuns
+  - DuplicateRecordFields

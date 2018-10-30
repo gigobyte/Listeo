@@ -1,14 +1,14 @@
 module Main where
 
 import           Database.MongoDB
+import qualified Feature.User.HTTP           as UserHTTP
 import           Network.Wai.Middleware.Cors
 import           Protolude                   hiding (get)
-import           Routes.Auth.Register        (register)
 import           Web.Scotty
 
 server :: Pipe -> ScottyM ()
 server pipe = do
-    post "/auth/register" $ register pipe
+    post "/auth/register" $ UserHTTP.register pipe
 
 main :: IO ()
 main = do

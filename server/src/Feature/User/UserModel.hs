@@ -1,4 +1,4 @@
-module Models.User (User(..), Username, Password, mkUsername, mkPassword, unwrapUsername, unwrapPassword) where
+module Feature.User.UserModel where
 
 import qualified Data.Text       as T
 import qualified Data.Time.Clock as Time
