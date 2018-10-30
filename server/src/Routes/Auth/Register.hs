@@ -7,6 +7,7 @@ import qualified Data.Time.Clock           as Time
 import           Database.MongoDB          (Action, Pipe, Value, count, insert,
                                             select, (=:))
 import           GHC.Generics
+import           Infrastructure.DB         (runQuery)
 import           Infrastructure.Maybe      (maybeToEither)
 import qualified Models.User               as User
 import qualified Network.HTTP.Types.Status as Status
@@ -70,15 +71,15 @@ toHttpResult (Left err) = json $ RegisterResponse { errorDescription = err }
 toHttpResult _          = status Status.ok200
 
 register :: Pipe -> ActionM ()
-register _ = do
-    now <- liftIO Time.getCurrentTime
+register pipe = do
+    dateNow <- liftIO Time.getCurrentTime
     rawBody <- body
 
-    -- Either Error Body
-    let step1 = parseBody rawBody
-    -- Either Error User
-    let step2 = step1 >>= mkUser now
-    -- Either Error (Action IO (Either Error Value))
-    let step3 = insertUserWithCheck <$> step2
+    result <- liftIO
+            . runQuery pipe
+            . (insertUserWithCheck <$>)
+            . (mkUser dateNow =<<)
+            . parseBody
+            $ rawBody
 
-    toHttpResult step3
+    toHttpResult result

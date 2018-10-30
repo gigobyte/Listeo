@@ -17,7 +17,7 @@ dependencies:
   - text
   - time
   - bytestring
-  - either
+  - transformers
 
 executables:
   listeo-exe:

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 575dbeafa8d527e4dccb29b8b9a85f01edf0981a510ccdf569e8b1e557613511
+-- hash: e937fe270471f173bb2f08d9d4e963480a3a7bda154bc57ce4f90258e5103241
 
 name:           listeo
 version:        0.1.0.0
@@ -35,12 +35,12 @@ executable listeo-exe
       aeson
     , base >=4.7 && <5
     , bytestring
-    , either
     , http-types
     , mongoDB
     , protolude
     , scotty
     , text
     , time
+    , transformers
     , wai-cors
   default-language: Haskell2010
