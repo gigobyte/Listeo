@@ -1,22 +1,19 @@
 module Routes.Auth.Register (register) where
 
-import           Control.Monad.Trans.Either (EitherT (..))
-import           Data.Aeson                 (FromJSON, ToJSON)
-import           Data.Aeson                 (decode)
-import           Data.ByteString.Lazy       (ByteString)
-import qualified Data.Text                  as T
-import qualified Data.Time.Clock            as Time
-import           Database.MongoDB           (Action, Pipe, Value, count, find,
-                                             insert, rest, select, (=:))
+import           Data.Aeson                (FromJSON, ToJSON)
+import           Data.Aeson                (decode)
+import           Data.ByteString.Lazy      (ByteString)
+import qualified Data.Time.Clock           as Time
+import           Database.MongoDB          (Action, Pipe, Value, count, insert,
+                                            select, (=:))
 import           GHC.Generics
-import           Infrastructure.Maybe       (maybeToEither)
-import qualified Models.User                as User
-import qualified Network.HTTP.Types.Status  as Status
-import           Protolude                  hiding (ByteString, find,
-                                             maybeToEither)
-import           Web.Scotty                 (ActionM, body, json, status)
+import           Infrastructure.Maybe      (maybeToEither)
+import qualified Models.User               as User
+import qualified Network.HTTP.Types.Status as Status
+import           Protolude                 hiding (ByteString, find,
+                                            maybeToEither)
+import           Web.Scotty                (ActionM, body, json, status)
 
-instance ToJSON RegisterBody
 instance FromJSON RegisterBody
 data RegisterBody = RegisterBody
     { username :: Text
@@ -68,13 +65,20 @@ insertUserWithCheck user = do
     else
         pure $ Left UserAlreadyExists
 
+toHttpResult :: Either RegisterError a -> ActionM ()
+toHttpResult (Left err) = json $ RegisterResponse { errorDescription = err }
+toHttpResult _          = status Status.ok200
 
 register :: Pipe -> ActionM ()
 register _ = do
     now <- liftIO Time.getCurrentTime
     rawBody <- body
 
-    let a = parseBody rawBody >>= mkUser now
-    let b = insertUserWithCheck <$> a
+    -- Either Error Body
+    let step1 = parseBody rawBody
+    -- Either Error User
+    let step2 = step1 >>= mkUser now
+    -- Either Error (Action IO (Either Error Value))
+    let step3 = insertUserWithCheck <$> step2
 
-    status Status.badRequest400
+    toHttpResult step3
