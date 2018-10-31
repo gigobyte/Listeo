@@ -12,7 +12,7 @@ insertUser :: User.User -> Action IO (Either RegisterError Value)
 insertUser user = do
     userExists <- DB.doesUserExist $ User.unwrapUsername $ User.username user
 
-    if not userExists then do
+    if not userExists then
         Right <$> DB.insertUser user
     else
         pure $ Left UserAlreadyExists

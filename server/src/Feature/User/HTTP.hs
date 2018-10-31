@@ -27,13 +27,12 @@ parseBody b =
 register :: DB.Pipe -> ActionM ()
 register pipe = do
     dateNow <- liftIO Time.getCurrentTime
-    rawBody <- body
 
     result <- liftIO
             . DB.runQuery pipe
             . (Service.insertUser <$>)
             . (Service.mkUser dateNow =<<)
             . parseBody
-            $ rawBody
+            =<< body
 
     toHttpResult result

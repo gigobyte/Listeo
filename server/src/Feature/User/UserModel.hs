@@ -12,12 +12,12 @@ newtype Password =
 
 mkUsername :: Text -> Maybe Username
 mkUsername str
-    | T.length str > 4 = Just $ Username str
+    | T.length str > 4 = Just $ Username $ T.strip str
     | otherwise = Nothing
 
 mkPassword :: Text -> Maybe Password
 mkPassword str
-    | T.length str > 6 = Just $ Password str
+    | T.length str > 6 = Just $ Password $ T.strip str
     | otherwise = Nothing
 
 data User = User
