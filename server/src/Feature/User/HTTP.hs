@@ -17,8 +17,10 @@ import           Protolude                 hiding (ByteString, maybeToEither)
 import           Web.Scotty                (ActionM, body, json, status)
 
 toHttpResult :: Either RegisterError a -> ActionM ()
-toHttpResult (Left err) = json $ RegisterResponse err
-toHttpResult _          = status Status.ok200
+toHttpResult (Left ServerError) = status Status.internalServerError500
+toHttpResult (Left BadRequest)  = status Status.badRequest400
+toHttpResult (Left err)         = json $ RegisterResponse err
+toHttpResult _                  = status Status.ok200
 
 parseBody :: ByteString -> Either RegisterError RegisterBody
 parseBody b =
