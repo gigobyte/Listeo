@@ -13,7 +13,6 @@ instance ToJSON RegisterError
 data RegisterError
     = ValidationFailed
     | UserAlreadyExists
-    | BadRequest
     | ServerError
     deriving Generic
 
