@@ -11,11 +11,11 @@ import           Protolude
 insertUser :: User.User -> Action IO Value
 insertUser user =
     insert "user"
-        [ "username" =: (User.unwrapUsername $ User.username user)
-        , "password" =: (User.unwrapPassword $ User.password user)
+        [ "username" =: (User.unUsername $ User.username user)
+        , "password" =: (User.unPassword $ User.password user)
         , "createdOn" =: User.createdOn user
         ]
 
-doesUserExist :: Text -> Action IO Bool
+doesUserExist :: User.Username -> Action IO Bool
 doesUserExist username =
-    (== 1) <$> count (select ["username" =: username] "user")
+    (== 1) <$> count (select ["username" =: User.unUsername username] "user")

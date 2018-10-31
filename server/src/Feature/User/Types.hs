@@ -14,6 +14,7 @@ data RegisterError
     = ValidationFailed
     | UserAlreadyExists
     | BadRequest
+    | ServerError
     deriving Generic
 
 instance ToJSON RegisterResponse

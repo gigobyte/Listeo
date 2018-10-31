@@ -1,4 +1,6 @@
-module Infrastructure.Maybe (maybeToEither) where
+module Infrastructure.Maybe
+    ( maybeToEither
+    ) where
 
 import           Protolude hiding (maybeToEither)
 
