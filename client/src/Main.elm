@@ -9,14 +9,14 @@ import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
 import Pages.Login as Login
 import Pages.Register as Register
-import Routes exposing (pushUrl)
+import Routes exposing (Route, pushUrl)
 import Url
 import Url.Parser exposing (parse)
 
 
 type alias Model =
     { key : Nav.Key
-    , url : Url.Url
+    , url : Maybe Route
     , login : Login.Model
     , register : Register.Model
     }
@@ -36,7 +36,7 @@ redirectIfUnauthenticated jwtToken key =
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
 init flags url key =
     ( { key = key
-      , url = url
+      , url = parse Routes.parser url
       , login = Login.init
       , register = Register.init
       }
@@ -60,7 +60,7 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = url }, Cmd.none )
+            ( { model | url = parse Routes.parser url }, Cmd.none )
 
         _ ->
             let
@@ -86,7 +86,7 @@ view model =
     { title = "Hello world"
     , body =
         List.singleton <|
-            case parse Routes.parser model.url of
+            case model.url of
                 Just Routes.Login ->
                     model.login |> Login.view |> toUnstyled
 
