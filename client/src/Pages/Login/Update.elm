@@ -17,7 +17,7 @@ update : Model -> Msg -> ( Model, Cmd Msg )
 update model msg =
     case msg of
         LoginUsernameUpdated value ->
-            ( { model | username = value }, Cmd.none )
+            ( { model | username = String.trim value }, Cmd.none )
 
         LoginPasswordUpdated value ->
             ( { model | password = value }, Cmd.none )

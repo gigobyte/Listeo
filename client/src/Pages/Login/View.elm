@@ -26,9 +26,9 @@ container =
         ]
 
 
-content : StyledElement msg
-content =
-    styled Container.centered
+loginForm : StyledElement msg
+loginForm =
+    styled (Container.centered form)
         [ height <| pct 66
         ]
 
@@ -63,10 +63,11 @@ view model =
             getErrorForField Password validationErrors
                 |> Maybe.map Validation.errToString
     in
-    Container.fullHeight []
+    Container.fullHeight div
+        []
         [ Header.view
-        , content []
-            [ title [] [ text "Login" ]
+        , loginForm [ onSubmit LoginAttempted ]
+            [ title [] [ text "Sign In" ]
             , Input.view
                 { validationError = usernameError
                 , inputAttributes =

@@ -19,9 +19,9 @@ import Utils.StyleTypes exposing (StyledElement)
 import Utils.Validation exposing (getErrorForField)
 
 
-content : StyledElement msg
-content =
-    styled Container.centered
+registerForm : StyledElement msg
+registerForm =
+    styled (Container.centered form)
         [ height <| pct 66
         ]
 
@@ -56,9 +56,10 @@ view model =
             getErrorForField Password validationErrors
                 |> Maybe.map Validation.errToString
     in
-    Container.fullHeight []
+    Container.fullHeight div
+        []
         [ Header.view
-        , content []
+        , registerForm [ onSubmit RegisterAttempted ]
             [ title [] [ text "Register" ]
             , Input.view
                 { validationError = usernameError
