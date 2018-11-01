@@ -44,4 +44,6 @@ parser =
     oneOf
         [ Parser.map Home Parser.top
         , Parser.map Login (s "login")
+        , Parser.map Register (s "register")
+        , Parser.map About (s "about")
         ]

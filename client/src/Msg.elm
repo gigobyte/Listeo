@@ -11,3 +11,7 @@ type Msg
     | LoginUsernameUpdated String
     | LoginPasswordUpdated String
     | LoginAttempted
+      -- Register
+    | RegisterUsernameUpdated String
+    | RegisterPasswordUpdated String
+    | RegisterAttempted
