@@ -9,9 +9,10 @@ import Msg exposing (Msg(..))
 import Pages.Header as Header
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors exposing (getValidationErrors)
-import Pages.Login.Validation exposing (LoginField(..), LoginValidationError(..), errToString)
+import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..))
 import Routes
 import UI.Button as Button
+import UI.Container as Container
 import UI.Input as Input
 import UI.Link as Link
 import Utils.StyleTypes exposing (StyledElement)
@@ -27,12 +28,8 @@ container =
 
 content : StyledElement msg
 content =
-    styled div
-        [ displayFlex
-        , justifyContent center
-        , alignItems center
-        , flexDirection column
-        , height <| pct 66
+    styled Container.centered
+        [ height <| pct 66
         ]
 
 
@@ -60,13 +57,13 @@ view model =
 
         usernameError =
             getErrorForField Username validationErrors
-                |> Maybe.map errToString
+                |> Maybe.map Validation.errToString
 
         passwordError =
             getErrorForField Password validationErrors
-                |> Maybe.map errToString
+                |> Maybe.map Validation.errToString
     in
-    container []
+    Container.fullHeight []
         [ Header.view
         , content []
             [ title [] [ text "Login" ]

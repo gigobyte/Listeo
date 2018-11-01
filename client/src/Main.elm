@@ -41,16 +41,6 @@ init flags url key =
     )
 
 
-combinedUpdate : Model -> Msg -> ( Model, Cmd Msg )
-combinedUpdate =
-    \model msg ->
-        let
-            ( newModel, desiredMsg ) =
-                Login.update model.login msg
-        in
-        ( { model | login = newModel }, desiredMsg )
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
@@ -70,7 +60,11 @@ update msg model =
             ( { model | url = url }, Cmd.none )
 
         _ ->
-            combinedUpdate model msg
+            let
+                ( newLoginModel, desiredLoginMsg ) =
+                    Login.update model.login msg
+            in
+            ( { model | login = newLoginModel }, Cmd.batch [ desiredLoginMsg ] )
 
 
 view : Model -> Browser.Document Msg
