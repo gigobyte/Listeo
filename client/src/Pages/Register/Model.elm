@@ -1,17 +1,7 @@
-module Pages.Register.Model exposing (Model, RegisterError(..), RegisterResponse)
+module Pages.Register.Model exposing (Model)
 
+import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
-
-
-type RegisterError
-    = ValidationFailed
-    | UserAlreadyExists
-    | ServerError
-
-
-type alias RegisterResponse =
-    { errorDescription : Maybe RegisterError
-    }
 
 
 type alias Model =

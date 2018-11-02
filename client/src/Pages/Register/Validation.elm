@@ -1,7 +1,14 @@
-module Pages.Register.Validation exposing (RegisterField(..), RegisterValidationError(..), errToString, registerValidator)
+module Pages.Register.Validation exposing
+    ( RegisterField(..)
+    , RegisterValidationError(..)
+    , errToString
+    , makeRegisterRequestModel
+    , registerValidator
+    )
 
+import Pages.Register.Api exposing (RegisterRequest)
 import Pages.Register.Model exposing (Model)
-import Validate exposing (Validator, ifBlank, ifTrue)
+import Validate exposing (Validator, fromValid, ifBlank, ifTrue, validate)
 
 
 type RegisterValidationError
@@ -48,3 +55,16 @@ registerValidator =
         , ifTrue (\form -> String.length form.username < usernameMinimumLength) ( Username, UsernameTooShort )
         , ifTrue (\form -> String.length form.password < passwordMinimumLength) ( Password, PasswordTooShort )
         ]
+
+
+makeRegisterRequestModel : Model -> Maybe RegisterRequest
+makeRegisterRequestModel model =
+    validate registerValidator model
+        |> Result.map fromValid
+        |> Result.map
+            (\validatedModel ->
+                { username = validatedModel.username
+                , password = validatedModel.password
+                }
+            )
+        |> Result.toMaybe

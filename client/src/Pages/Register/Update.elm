@@ -3,6 +3,7 @@ module Pages.Register.Update exposing (init, update)
 import Msg exposing (Msg(..))
 import Pages.Register.Api as Api
 import Pages.Register.Model exposing (Model)
+import Pages.Register.Validation exposing (makeRegisterRequestModel)
 import RemoteData exposing (RemoteData(..))
 
 
@@ -25,9 +26,9 @@ update model msg =
             ( { model | password = value }, Cmd.none )
 
         RegisterAttempted ->
-            case Api.makeRegisterRequestModel model of
+            case makeRegisterRequestModel model of
                 Just request ->
-                    ( model, Api.register request )
+                    ( model, Api.register request |> Cmd.map Register )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )

@@ -1,7 +1,7 @@
 module Msg exposing (Msg(..))
 
 import Browser exposing (UrlRequest)
-import Pages.Register.Model exposing (RegisterResponse)
+import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
 import Url exposing (Url)
 

@@ -1,6 +1,6 @@
 module Pages.Register.Api exposing
     ( RegisterRequest
-    , makeRegisterRequestModel
+    , RegisterResponse
     , register
     )
 
@@ -8,11 +8,8 @@ import Http
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
-import Msg exposing (Msg(..))
-import Pages.Register.Model exposing (Model, RegisterError(..), RegisterResponse)
-import Pages.Register.Validation exposing (RegisterValidationError, registerValidator)
-import RemoteData as RemoteData
-import Validate exposing (fromValid, validate)
+import RemoteData as RemoteData exposing (WebData)
+import Utils.Api exposing (endpoint)
 
 
 type alias RegisterRequest =
@@ -21,32 +18,29 @@ type alias RegisterRequest =
     }
 
 
+type RegisterResponseError
+    = ValidationFailed
+    | UserAlreadyExists
+    | ServerError
+
+
+type alias RegisterResponse =
+    { errorDescription : Maybe RegisterResponseError
+    }
+
+
+register : RegisterRequest -> Cmd (WebData RegisterResponse)
+register model =
+    Http.post (endpoint "/register") (model |> registerRequestEncoder |> Http.jsonBody) registerResponseDecoder
+        |> RemoteData.sendRequest
+
+
 registerRequestEncoder : RegisterRequest -> Encode.Value
 registerRequestEncoder req =
     Encode.object
         [ ( "username", Encode.string req.username )
         , ( "password", Encode.string req.password )
         ]
-
-
-makeRegisterRequestModel : Model -> Maybe RegisterRequest
-makeRegisterRequestModel model =
-    validate registerValidator model
-        |> Result.map fromValid
-        |> Result.map
-            (\validatedModel ->
-                { username = validatedModel.username
-                , password = validatedModel.password
-                }
-            )
-        |> Result.toMaybe
-
-
-register : RegisterRequest -> Cmd Msg
-register model =
-    Http.post "http://localhost:8081/register" (Http.jsonBody (registerRequestEncoder model)) registerResponseDecoder
-        |> RemoteData.sendRequest
-        |> Cmd.map Register
 
 
 registerResponseDecoder : Decoder RegisterResponse
