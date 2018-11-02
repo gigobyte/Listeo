@@ -3,3 +3,4 @@ node_modules
 dist
 .cache
 .stack-work
+server/src/Infrastructure/Secrets.hs

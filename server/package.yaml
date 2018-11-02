@@ -19,6 +19,8 @@ dependencies:
   - bytestring
   - transformers
   - bcrypt
+  - jwt
+  - containers
 
 executables:
   listeo-exe:

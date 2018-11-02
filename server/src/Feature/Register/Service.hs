@@ -1,12 +1,12 @@
-module Feature.User.Service
+module Feature.Register.Service
     ( insertUser
     , mkUser
     ) where
 
 import qualified Data.Time.Clock        as Time
 import           Database.MongoDB       (Action, Value)
-import qualified Feature.User.DB        as DB
-import           Feature.User.Types     (RegisterBody (..), RegisterError (..))
+import qualified Feature.Register.DB    as DB
+import           Feature.Register.Types (RegisterBody (..), RegisterError (..))
 import qualified Feature.User.UserModel as User
 import           Infrastructure.Maybe   (maybeToEither)
 import           Protolude              hiding (maybeToEither)

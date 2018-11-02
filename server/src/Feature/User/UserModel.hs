@@ -9,11 +9,9 @@ module Feature.User.UserModel
     , User(..)
     ) where
 
-import           Crypto.BCrypt         (HashingPolicy (..),
-                                        hashPasswordUsingPolicy)
-import           Data.ByteString.Char8 (pack)
 import qualified Data.Text             as T
 import qualified Data.Time.Clock       as Time
+import qualified Infrastructure.Crypto as Crypto
 import           Protolude
 
 newtype Username =
@@ -34,11 +32,8 @@ mkPassword str
 
 hashPassword :: Password -> IO (Maybe Password)
 hashPassword password =
-    mapToPassword <$> (hashPasswordUsingPolicy policy $ encodeUtf8 $ unPassword $ password)
+    mapToPassword <$> (Crypto.hash $ encodeUtf8 $ unPassword $ password)
         where
-            policy :: HashingPolicy
-            policy = HashingPolicy 12 $ pack "$2y$"
-
             mapToPassword :: Maybe ByteString -> Maybe Password
             mapToPassword maybePass = Password <$> decodeUtf8 <$> maybePass
 

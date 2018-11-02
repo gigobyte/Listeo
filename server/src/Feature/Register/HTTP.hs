@@ -1,16 +1,16 @@
-module Feature.User.HTTP
+module Feature.Register.HTTP
     ( register
     ) where
 
 import           Data.Aeson                (decode)
 import           Data.ByteString.Lazy      (ByteString)
 import qualified Data.Time.Clock           as Time
-import           Database.MongoDB          as DB
-import           Feature.User.Service      as Service
-import           Feature.User.Types        (RegisterBody (..),
+import qualified Database.MongoDB          as DB
+import qualified Feature.Register.Service  as Service
+import           Feature.Register.Types    (RegisterBody (..),
                                             RegisterError (..),
                                             RegisterResponse (..))
-import           Infrastructure.DB         as DB
+import qualified Infrastructure.DB         as DB
 import           Infrastructure.Maybe      (maybeToEither)
 import qualified Network.HTTP.Types.Status as Status
 import           Protolude                 hiding (ByteString, maybeToEither)

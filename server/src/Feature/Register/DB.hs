@@ -1,4 +1,4 @@
-module Feature.User.DB
+module Feature.Register.DB
     ( insertUser
     , doesUserExist
     ) where

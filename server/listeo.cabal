@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8c03cf5d696f99b6136578b2662f668bb945cf51fa6aa2d0b25117e7d9f4e309
+-- hash: 79e61c608c3f9eaebd7f492031333934452261156cdaf45372c07ef50b426c83
 
 name:           listeo
 version:        0.1.0.0
@@ -23,11 +23,16 @@ source-repository head
 executable listeo-exe
   main-is: Main.hs
   other-modules:
-      Feature.User.DB
-      Feature.User.HTTP
-      Feature.User.Service
-      Feature.User.Types
+      Feature.Login.DB
+      Feature.Login.HTTP
+      Feature.Login.Service
+      Feature.Login.Types
+      Feature.Register.DB
+      Feature.Register.HTTP
+      Feature.Register.Service
+      Feature.Register.Types
       Feature.User.UserModel
+      Infrastructure.Crypto
       Infrastructure.DB
       Infrastructure.Maybe
       Paths_listeo
@@ -40,7 +45,9 @@ executable listeo-exe
     , base >=4.7 && <5
     , bcrypt
     , bytestring
+    , containers
     , http-types
+    , jwt
     , mongoDB
     , protolude
     , scotty

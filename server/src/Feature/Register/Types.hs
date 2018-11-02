@@ -1,4 +1,4 @@
-module Feature.User.Types where
+module Feature.Register.Types where
 
 import           Data.Aeson (FromJSON, ToJSON)
 import           Protolude

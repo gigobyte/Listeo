@@ -1,14 +1,16 @@
 module Main where
 
 import           Database.MongoDB
-import qualified Feature.User.HTTP           as UserHTTP
+import qualified Feature.Login.HTTP          as HTTP
+import qualified Feature.Register.HTTP       as HTTP
 import           Network.Wai.Middleware.Cors
 import           Protolude                   hiding (get)
 import           Web.Scotty
 
 server :: Pipe -> ScottyM ()
 server pipe = do
-    post "/register" $ UserHTTP.register pipe
+    post "/register" $ HTTP.register pipe
+    post "/login" $ HTTP.login pipe
 
 policy :: CorsResourcePolicy
 policy =
