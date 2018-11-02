@@ -84,7 +84,6 @@ view model =
                 []
             , submitButton
                 [ type_ "submit"
-                , onClick RegisterAttempted
                 ]
                 [ text "Beam me up!" ]
             , Link.view { to = Routes.Login } [] [ text "Already have an account?" ]

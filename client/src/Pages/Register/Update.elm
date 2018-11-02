@@ -3,6 +3,7 @@ module Pages.Register.Update exposing (init, update)
 import Msg exposing (Msg(..))
 import Pages.Register.Api as Api
 import Pages.Register.Model exposing (Model)
+import RemoteData exposing (RemoteData(..))
 
 
 init : Model
@@ -10,6 +11,7 @@ init =
     { username = ""
     , password = ""
     , showErrors = False
+    , registerResponse = NotAsked
     }
 
 
@@ -25,10 +27,13 @@ update model msg =
         RegisterAttempted ->
             case Api.makeRegisterRequestModel model of
                 Just request ->
-                    ( model, Cmd.none )
+                    ( model, Api.register request )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
+
+        Register response ->
+            ( { model | registerResponse = response }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

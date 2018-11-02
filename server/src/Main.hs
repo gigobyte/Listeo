@@ -8,11 +8,24 @@ import           Web.Scotty
 
 server :: Pipe -> ScottyM ()
 server pipe = do
-    post "/auth/register" $ UserHTTP.register pipe
+    post "/register" $ UserHTTP.register pipe
+
+policy :: CorsResourcePolicy
+policy =
+    CorsResourcePolicy
+        { corsOrigins = Nothing
+        , corsMethods = simpleMethods
+        , corsRequestHeaders = simpleHeaders
+        , corsExposedHeaders = Nothing
+        , corsMaxAge = Nothing
+        , corsVaryOrigin = False
+        , corsRequireOrigin = False
+        , corsIgnoreFailures = False
+        }
 
 main :: IO ()
 main = do
     pipe <- connect $ host "127.0.0.1"
     scotty 8081 $ do
-        middleware simpleCors
+        middleware (cors $ const (Just policy))
         server pipe

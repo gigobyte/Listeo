@@ -1,6 +1,8 @@
 module Msg exposing (Msg(..))
 
 import Browser exposing (UrlRequest)
+import Pages.Register.Model exposing (RegisterResponse)
+import RemoteData exposing (WebData)
 import Url exposing (Url)
 
 
@@ -15,3 +17,4 @@ type Msg
     | RegisterUsernameUpdated String
     | RegisterPasswordUpdated String
     | RegisterAttempted
+    | Register (WebData RegisterResponse)
