@@ -21,6 +21,7 @@ dependencies:
   - bcrypt
   - jwt
   - containers
+  - bson
 
 executables:
   listeo-exe:

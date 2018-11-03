@@ -29,7 +29,8 @@ insertUser user = do
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User.User
 mkUser dateNow req =
     maybeToEither ValidationFailed $ User.User
-        <$> (validateUsername $ username req)
+        <$> pure 0
+        <*> (validateUsername $ username req)
         <*> (validatePassword $ password req)
         <*> pure dateNow
 
@@ -45,13 +46,6 @@ validatePassword str
 
 hashPasswordInUser :: User.User -> IO (Maybe User.User)
 hashPasswordInUser user = do
-    hashedPassword <- hashPassword $ User.password $ user
+    hashedPassword <- Crypto.hash $ encodeUtf8 $ User.password $ user
 
-    pure $ (\p -> user { User.password = p }) <$> hashedPassword
-
-hashPassword :: Text -> IO (Maybe Text)
-hashPassword password =
-    mapToPassword <$> (Crypto.hash $ encodeUtf8 $ password)
-        where
-            mapToPassword :: Maybe ByteString -> Maybe Text
-            mapToPassword maybePass = decodeUtf8 <$> maybePass
+    pure $ (\p -> user { User.password = p }) <$> decodeUtf8 <$> hashedPassword
