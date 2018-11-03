@@ -3,10 +3,12 @@ module Pages.Login.Validation exposing
     , LoginValidationError(..)
     , errToString
     , loginValidator
+    , makeLoginRequestModel
     )
 
+import Pages.Login.Api exposing (LoginRequest)
 import Pages.Login.Model exposing (Model)
-import Validate exposing (Validator, ifBlank, ifTrue)
+import Validate exposing (Validator, fromValid, ifBlank, ifTrue, validate)
 
 
 type LoginValidationError
@@ -35,3 +37,16 @@ loginValidator =
         [ ifBlank .username ( Username, UsernameMissing )
         , ifBlank .password ( Password, PasswordMissing )
         ]
+
+
+makeLoginRequestModel : Model -> Maybe LoginRequest
+makeLoginRequestModel model =
+    validate loginValidator model
+        |> Result.map fromValid
+        |> Result.map
+            (\validatedModel ->
+                { username = validatedModel.username
+                , password = validatedModel.password
+                }
+            )
+        |> Result.toMaybe

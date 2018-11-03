@@ -49,6 +49,7 @@ registerResponseDecoder =
         |> required "errorDescription" registerErrorDecoder
 
 
+registerErrorDecoder : Decoder (Maybe RegisterResponseError)
 registerErrorDecoder =
     Decode.string
         |> Decode.andThen
