@@ -4,20 +4,20 @@ module Feature.User.Types
     , toBson
     ) where
 
-import           Data.Bson       (Document, lookup, (=:))
+import           Data.Bson       (Document, ObjectId, lookup, (=:))
 import qualified Data.Time.Clock as Time
 import           Protolude
 
 data User = User
-    { id        :: Int
+    { id        :: ObjectId
     , username  :: Text
     , password  :: Text
     , createdOn :: Time.UTCTime
-    }
+    } deriving Eq
 
 fromBson :: Document -> Maybe User
 fromBson doc = User
-    <$> lookup "id" doc
+    <$> lookup "_id" doc
     <*> lookup "username" doc
     <*> lookup "password" doc
     <*> lookup "createdOn" doc

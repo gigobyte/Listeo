@@ -19,10 +19,10 @@ findUserByCredentials :: LoginBody -> Action IO (Either LoginError User.User)
 findUserByCredentials req = do
     user <- DB.findUser (username req)
 
-    pure $ maybeToRight UserNotFound $ mfilter validatePassword user
+    pure $ maybeToRight UserNotFound $ mfilter isPasswordValid user
         where
-            validatePassword :: User.User -> Bool
-            validatePassword u = Crypto.validate (User.password u) (password req)
+            isPasswordValid :: User.User -> Bool
+            isPasswordValid u = Crypto.validate (User.password u) (password req)
 
 generateJwtToken :: User.User -> Text
 generateJwtToken user =

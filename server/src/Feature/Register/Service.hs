@@ -3,6 +3,7 @@ module Feature.Register.Service
     , mkUser
     ) where
 
+import           Data.Bson              (ObjectId (..))
 import qualified Data.Text              as T
 import qualified Data.Time.Clock        as Time
 import           Database.MongoDB       (Action, Value)
@@ -25,7 +26,7 @@ insertUser user = do
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User.User
 mkUser dateNow req =
     maybeToRight ValidationFailed $ User.User
-        <$> pure 0
+        <$> (pure $ Oid 0 0)
         <*> (validateUsername $ username req)
         <*> (validatePassword $ password req)
         <*> pure dateNow
