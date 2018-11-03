@@ -6,8 +6,8 @@ module Feature.Login.Service
 import           Data.Aeson             (Value (..))
 import           Data.Map               as M
 import           Database.MongoDB       (Action)
-import qualified Feature.Login.DB       as DB
 import           Feature.Login.Types    (LoginBody (..), LoginError (..))
+import qualified Feature.User.DB        as DB
 import qualified Infrastructure.Crypto  as Crypto
 import           Infrastructure.Secrets (jwtSecret)
 import           Protolude

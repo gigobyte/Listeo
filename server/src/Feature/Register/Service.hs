@@ -3,11 +3,13 @@ module Feature.Register.Service
     , mkUser
     ) where
 
+import qualified Data.Text              as T
 import qualified Data.Time.Clock        as Time
 import           Database.MongoDB       (Action, Value)
-import qualified Feature.Register.DB    as DB
 import           Feature.Register.Types (RegisterBody (..), RegisterError (..))
-import qualified Feature.User.UserModel as User
+import qualified Feature.User.DB        as DB
+import qualified Feature.User.Types     as User
+import qualified Infrastructure.Crypto  as Crypto
 import           Infrastructure.Maybe   (maybeToEither)
 import           Protolude              hiding (maybeToEither)
 
@@ -27,12 +29,29 @@ insertUser user = do
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User.User
 mkUser dateNow req =
     maybeToEither ValidationFailed $ User.User
-        <$> (User.mkUsername $ username req)
-        <*> (User.mkPassword $ password req)
+        <$> (validateUsername $ username req)
+        <*> (validatePassword $ password req)
         <*> pure dateNow
+
+validateUsername :: Text -> Maybe Text
+validateUsername str
+    | T.length str < 4 = Nothing
+    | otherwise = Just $ T.strip str
+
+validatePassword :: Text -> Maybe Text
+validatePassword str
+    | T.length str < 6 = Nothing
+    | otherwise = Just $ T.strip str
 
 hashPasswordInUser :: User.User -> IO (Maybe User.User)
 hashPasswordInUser user = do
-    hashedPassword <- User.hashPassword $ User.password $ user
+    hashedPassword <- hashPassword $ User.password $ user
 
     pure $ (\p -> user { User.password = p }) <$> hashedPassword
+
+hashPassword :: Text -> IO (Maybe Text)
+hashPassword password =
+    mapToPassword <$> (Crypto.hash $ encodeUtf8 $ password)
+        where
+            mapToPassword :: Maybe ByteString -> Maybe Text
+            mapToPassword maybePass = decodeUtf8 <$> maybePass
