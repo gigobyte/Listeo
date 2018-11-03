@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 89cefac0269c0e3acba9fa4951aeb5db6f70210a9c97d5d5deb721fb30b6f777
+-- hash: 2b126389064c9c199e1ce0965c2018116ebc80e82e94213b25f1f9980acf5935
 
 name:           listeo
 version:        0.1.0.0
@@ -33,7 +33,6 @@ executable listeo-exe
       Feature.User.Types
       Infrastructure.Crypto
       Infrastructure.DB
-      Infrastructure.Maybe
       Infrastructure.Secrets
       Paths_listeo
   hs-source-dirs:

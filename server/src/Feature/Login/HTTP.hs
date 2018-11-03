@@ -7,9 +7,8 @@ import           Data.ByteString.Lazy      (ByteString)
 import qualified Database.MongoDB          as DB
 import           Feature.Login.Types       (LoginBody, LoginError (..),
                                             LoginResponse (..))
-import           Infrastructure.Maybe      (maybeToEither)
 import qualified Network.HTTP.Types.Status as Status
-import           Protolude                 hiding (ByteString, maybeToEither)
+import           Protolude                 hiding (ByteString)
 import           Web.Scotty                (ActionM, body, json, status)
 
 toHttpResult :: Either LoginError Text -> ActionM ()
@@ -19,7 +18,7 @@ toHttpResult (Right jwtToken) = json $ SuccessResponse jwtToken
 
 parseBody :: ByteString -> Either LoginError LoginBody
 parseBody b =
-    maybeToEither ValidationFailed $ decode b
+    maybeToRight ValidationFailed $ decode b
 
 login :: DB.Pipe -> ActionM ()
 login _ = do

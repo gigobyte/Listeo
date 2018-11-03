@@ -11,9 +11,8 @@ import           Feature.Register.Types    (RegisterBody (..),
                                             RegisterError (..),
                                             RegisterResponse (..))
 import qualified Infrastructure.DB         as DB
-import           Infrastructure.Maybe      (maybeToEither)
 import qualified Network.HTTP.Types.Status as Status
-import           Protolude                 hiding (ByteString, maybeToEither)
+import           Protolude                 hiding (ByteString)
 import           Web.Scotty                (ActionM, body, json, status)
 
 toHttpResult :: Either RegisterError a -> ActionM ()
@@ -22,7 +21,7 @@ toHttpResult _          = status Status.ok200
 
 parseBody :: ByteString -> Either RegisterError RegisterBody
 parseBody b =
-    maybeToEither ValidationFailed $ decode b
+    maybeToRight ValidationFailed $ decode b
 
 register :: DB.Pipe -> ActionM ()
 register pipe = do
