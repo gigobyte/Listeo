@@ -2,14 +2,15 @@ module Feature.Login.HTTP
     ( login
     ) where
 
-import           Data.Aeson                (decode)
-import           Data.ByteString.Lazy      (ByteString)
-import qualified Database.MongoDB          as DB
-import           Feature.Login.Types       (LoginBody, LoginError (..),
-                                            LoginResponse (..))
-import qualified Network.HTTP.Types.Status as Status
-import           Protolude                 hiding (ByteString)
-import           Web.Scotty                (ActionM, body, json, status)
+import           Data.Aeson            (decode)
+import           Data.ByteString.Lazy  (ByteString)
+import qualified Database.MongoDB      as DB
+import qualified Feature.Login.Service as Service
+import           Feature.Login.Types   (LoginBody, LoginError (..),
+                                        LoginResponse (..))
+import qualified Infrastructure.DB     as DB
+import           Protolude             hiding (ByteString)
+import           Web.Scotty            (ActionM, body, json)
 
 toHttpResult :: Either LoginError Text -> ActionM ()
 toHttpResult (Left err)       = json $ ErrorResponse err
@@ -21,7 +22,12 @@ parseBody b =
     maybeToRight ValidationFailed $ decode b
 
 login :: DB.Pipe -> ActionM ()
-login _ = do
-    requestBody <- parseBody <$> body
+login pipe = do
+    result <- liftIO
+            . ((Service.generateJwtToken <$>) <$>)
+            . DB.runQuery pipe
+            . (Service.findUserByCredentials <$>)
+            . parseBody
+            =<< body
 
-    status Status.ok200
+    toHttpResult result
