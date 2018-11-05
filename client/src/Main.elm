@@ -1,5 +1,6 @@
 module Main exposing (Model, main)
 
+import Auth as Auth
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
@@ -19,6 +20,7 @@ type alias Model =
     , url : Maybe Route
     , login : Login.Model
     , register : Register.Model
+    , auth : Auth.Model
     }
 
 
@@ -39,6 +41,7 @@ init flags url key =
       , url = parse Routes.parser url
       , login = Login.init
       , register = Register.init
+      , auth = Auth.init flags.jwt
       }
     , redirectIfUnauthenticated flags.jwt key
     )
