@@ -1,7 +1,8 @@
 module Pages.Login.Api exposing
     ( LoginRequest
-    , LoginResponse
+    , LoginResponse(..)
     , login
+    , loginErrorToString
     )
 
 import Http
@@ -84,3 +85,13 @@ loginErrorDecoder =
                     _ ->
                         Decode.succeed ServerError
             )
+
+
+loginErrorToString : LoginResponseError -> String
+loginErrorToString err =
+    case err of
+        UserNotFound ->
+            "User not found"
+
+        _ ->
+            "Something went wrong"
