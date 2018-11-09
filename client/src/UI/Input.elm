@@ -6,7 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
 import UI.Colors exposing (gray100, redOrange100, whiteGray100)
-import Utils.Styles exposing (StyledElement)
+import Utils.Styles exposing (StyledElement, stylesIfJust)
 
 
 type alias InputProps msg =
@@ -32,14 +32,7 @@ viewError errorText =
             ]
 
         style =
-            baseStyle
-                ++ (case errorText of
-                        Just _ ->
-                            errorStyle
-
-                        _ ->
-                            []
-                   )
+            baseStyle ++ stylesIfJust errorText errorStyle
     in
     styled div style [] [ text (errorText |> Maybe.withDefault "") ]
 

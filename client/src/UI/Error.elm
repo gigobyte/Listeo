@@ -4,7 +4,7 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import UI.Colors exposing (redOrange100)
-import Utils.Styles exposing (StyledElement)
+import Utils.Styles exposing (StyledElement, stylesIfNotEmpty)
 
 
 type alias ErrorTextProps =
@@ -28,13 +28,6 @@ text props attrs children =
             ]
 
         style =
-            baseStyle
-                ++ (case props.error of
-                        "" ->
-                            []
-
-                        _ ->
-                            errorStyle
-                   )
+            baseStyle ++ stylesIfNotEmpty props.error errorStyle
     in
     styled span style attrs ([ Html.Styled.text props.error ] ++ children)
