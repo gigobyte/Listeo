@@ -49,10 +49,6 @@ init flags url key =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        _ =
-            Debug.log (Debug.toString model) ""
-    in
     case msg of
         LinkClicked urlRequest ->
             case urlRequest of
@@ -73,15 +69,16 @@ update msg model =
                 ( newRegisterModel, registerMsg ) =
                     Register.update model.register msg
             in
-            ( { model
-                | login = newLoginModel
-                , register = newRegisterModel
-              }
-            , Cmd.batch
-                [ loginMsg
-                , registerMsg
-                ]
-            )
+            Debug.log ""
+                ( { model
+                    | login = newLoginModel
+                    , register = newRegisterModel
+                  }
+                , Cmd.batch
+                    [ loginMsg
+                    , registerMsg
+                    ]
+                )
 
 
 view : Model -> Browser.Document Msg

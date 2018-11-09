@@ -3,7 +3,7 @@ module Pages.Login.Update exposing (init, update)
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api
 import Pages.Login.Model exposing (Model)
-import Pages.Login.Validation exposing (makeLoginRequestModel)
+import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
 
 
@@ -26,7 +26,7 @@ update model msg =
             ( { model | password = value }, Cmd.none )
 
         LoginAttempted ->
-            case makeLoginRequestModel model of
+            case Validation.makeLoginRequestModel model of
                 Just request ->
                     ( model, Api.login request |> Cmd.map Login )
 

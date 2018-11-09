@@ -8,10 +8,11 @@ import Validate exposing (validate)
 
 getValidationErrors : Model -> List ( RegisterField, RegisterValidationError )
 getValidationErrors model =
-    if model.showErrors then
-        validate registerValidator model
-            |> Result.map (always [])
-            |> Result.merge
+    case model.showErrors of
+        True ->
+            validate registerValidator model
+                |> Result.map (always [])
+                |> Result.merge
 
-    else
-        []
+        False ->
+            []

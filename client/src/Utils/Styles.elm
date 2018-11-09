@@ -2,6 +2,7 @@ module Utils.Styles exposing
     ( StyledElement
     , stylesIfJust
     , stylesIfNotEmpty
+    , stylesIfTrue
     )
 
 import Html.Styled exposing (Attribute, Html)
@@ -29,3 +30,13 @@ stylesIfNotEmpty cond styles =
 
         _ ->
             styles
+
+
+stylesIfTrue : Bool -> List b -> List b
+stylesIfTrue cond styles =
+    case cond of
+        True ->
+            styles
+
+        False ->
+            []

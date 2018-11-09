@@ -6,7 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
 import UI.Colors exposing (gray100, redOrange100, whiteGray100)
-import Utils.Styles exposing (StyledElement, stylesIfJust)
+import Utils.Styles exposing (StyledElement, stylesIfJust, stylesIfTrue)
 
 
 type alias InputProps msg =
@@ -41,13 +41,10 @@ viewInput : Bool -> StyledElement msg
 viewInput hasError =
     let
         errorStyle =
-            if hasError then
+            stylesIfTrue hasError
                 [ marginBottom <| px 5
                 , borderColor redOrange100
                 ]
-
-            else
-                []
     in
     styled input
         ([ borderRadius <| px 5

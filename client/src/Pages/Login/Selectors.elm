@@ -13,13 +13,14 @@ import Validate exposing (validate)
 
 getValidationErrors : Model -> List ( LoginField, LoginValidationError )
 getValidationErrors model =
-    if model.showErrors then
-        validate loginValidator model
-            |> Result.map (always [])
-            |> Result.merge
+    case model.showErrors of
+        True ->
+            validate loginValidator model
+                |> Result.map (always [])
+                |> Result.merge
 
-    else
-        []
+        False ->
+            []
 
 
 getLoginRequestErrorText : Model -> String
