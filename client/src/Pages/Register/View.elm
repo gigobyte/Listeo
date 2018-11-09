@@ -2,16 +2,17 @@ module Pages.Register.View exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (placeholder, type_, value)
+import Html.Styled.Attributes exposing (disabled, placeholder, type_, value)
 import Html.Styled.Events exposing (..)
 import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
 import Pages.Register.Model exposing (Model)
-import Pages.Register.Selectors exposing (getValidationErrors)
+import Pages.Register.Selectors as Selectors
 import Pages.Register.Validation as Validation exposing (RegisterField(..), RegisterValidationError(..))
 import Routes
 import UI.Button as Button
 import UI.Container as Container
+import UI.Error as Error
 import UI.Header as Header
 import UI.Input as Input
 import UI.Link as Link
@@ -46,7 +47,7 @@ view : Model -> Html Msg
 view model =
     let
         validationErrors =
-            getValidationErrors model
+            Selectors.getValidationErrors model
 
         usernameError =
             getErrorForField Username validationErrors
@@ -84,8 +85,10 @@ view model =
                 []
             , submitButton
                 [ type_ "submit"
+                , disabled <| Selectors.isSubmitButtonDisabled model
                 ]
                 [ text "Beam me up!" ]
+            , Error.text { error = Selectors.getRegisterRequestErrorText model } [] []
             , Link.view { to = Routes.Login } [] [ text "Already have an account?" ]
             ]
         ]

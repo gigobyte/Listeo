@@ -2,6 +2,7 @@ module Pages.Register.Api exposing
     ( RegisterRequest
     , RegisterResponse
     , register
+    , registerErrorToString
     )
 
 import Http
@@ -67,3 +68,16 @@ registerErrorDecoder =
                     _ ->
                         Decode.succeed Nothing
             )
+
+
+registerErrorToString : RegisterResponseError -> String
+registerErrorToString err =
+    case err of
+        UserAlreadyExists ->
+            "User already exists"
+
+        ServerError ->
+            "Something went wrong"
+
+        ValidationFailed ->
+            ""
