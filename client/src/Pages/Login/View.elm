@@ -2,13 +2,13 @@ module Pages.Login.View exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (placeholder, type_, value)
+import Html.Styled.Attributes exposing (disabled, placeholder, type_, value)
 import Html.Styled.Events exposing (..)
 import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
-import Pages.Login.Selectors exposing (getLoginRequestErrorText, getValidationErrors)
+import Pages.Login.Selectors as Selectors
 import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..))
 import RemoteData exposing (RemoteData(..), WebData)
 import Routes
@@ -56,7 +56,7 @@ view : Model -> Html Msg
 view model =
     let
         validationErrors =
-            getValidationErrors model
+            Selectors.getValidationErrors model
 
         usernameError =
             getErrorForField Username validationErrors
@@ -94,9 +94,10 @@ view model =
                 []
             , submitButton
                 [ type_ "submit"
+                , disabled <| Selectors.isSubmitButtonDisabled model
                 ]
                 [ text "Let's go!" ]
-            , Error.text { error = getLoginRequestErrorText model } [] []
+            , Error.text { error = Selectors.getLoginRequestErrorText model } [] []
             , Link.view { to = Routes.Register } [] [ text "Don't have an account?" ]
             ]
         ]

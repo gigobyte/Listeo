@@ -26,4 +26,8 @@ view =
         , active
             [ transform (scale 0.95)
             ]
+        , disabled
+            [ cursor notAllowed
+            , opacity <| num 0.7
+            ]
         ]
