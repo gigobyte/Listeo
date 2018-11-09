@@ -93,5 +93,8 @@ loginErrorToString err =
         UserNotFound ->
             "User not found"
 
-        _ ->
+        ServerError ->
             "Something went wrong"
+
+        ValidationFailed ->
+            ""
