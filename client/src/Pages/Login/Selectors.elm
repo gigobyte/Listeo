@@ -1,7 +1,12 @@
-module Pages.Login.Selectors exposing (getValidationErrors)
+module Pages.Login.Selectors exposing
+    ( getLoginRequestErrorText
+    , getValidationErrors
+    )
 
+import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
-import Pages.Login.Validation exposing (LoginValidationError, LoginField, loginValidator)
+import Pages.Login.Validation exposing (LoginField, LoginValidationError, loginValidator)
+import RemoteData exposing (RemoteData(..))
 import Result.Extra as Result
 import Validate exposing (validate)
 
@@ -15,3 +20,18 @@ getValidationErrors model =
 
     else
         []
+
+
+getLoginRequestErrorText : Model -> String
+getLoginRequestErrorText model =
+    case model.loginResponse of
+        Success res ->
+            case res of
+                ErrorResponse { errorDescription } ->
+                    Api.loginErrorToString errorDescription
+
+                _ ->
+                    ""
+
+        _ ->
+            ""

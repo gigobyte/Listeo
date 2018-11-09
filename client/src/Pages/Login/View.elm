@@ -8,12 +8,13 @@ import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
-import Pages.Login.Selectors exposing (getValidationErrors)
+import Pages.Login.Selectors exposing (getLoginRequestErrorText, getValidationErrors)
 import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..))
-import RemoteData exposing (RemoteData(..))
+import RemoteData exposing (RemoteData(..), WebData)
 import Routes
 import UI.Button as Button
 import UI.Container as Container
+import UI.Error as Error
 import UI.Header as Header
 import UI.Input as Input
 import UI.Link as Link
@@ -49,16 +50,6 @@ submitButton =
         , marginBottom <| px 15
         , fontSize <| rem 1
         ]
-
-
-viewLoginResponse : LoginResponse -> Html msg
-viewLoginResponse res =
-    case res of
-        ErrorResponse { errorDescription } ->
-            text <| Api.loginErrorToString errorDescription
-
-        _ ->
-            text ""
 
 
 view : Model -> Html Msg
@@ -105,12 +96,7 @@ view model =
                 [ type_ "submit"
                 ]
                 [ text "Let's go!" ]
-            , case model.loginResponse of
-                Success res ->
-                    viewLoginResponse res
-
-                _ ->
-                    text ""
+            , Error.text { error = getLoginRequestErrorText model } [] []
             , Link.view { to = Routes.Register } [] [ text "Don't have an account?" ]
             ]
         ]
