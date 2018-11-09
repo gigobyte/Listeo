@@ -1,4 +1,4 @@
-module Pages.Header exposing (view)
+module UI.Header exposing (view)
 
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)

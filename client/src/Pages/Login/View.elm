@@ -6,7 +6,6 @@ import Html.Styled.Attributes exposing (placeholder, type_, value)
 import Html.Styled.Events exposing (..)
 import Maybe.Extra as Maybe
 import Msg exposing (Msg(..))
-import Pages.Header as Header
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors exposing (getValidationErrors)
@@ -15,6 +14,7 @@ import RemoteData exposing (RemoteData(..))
 import Routes
 import UI.Button as Button
 import UI.Container as Container
+import UI.Header as Header
 import UI.Input as Input
 import UI.Link as Link
 import Utils.StyleTypes exposing (StyledElement)
