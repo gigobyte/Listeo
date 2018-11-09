@@ -4,7 +4,7 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import UI.Colors exposing (blue100, blue200, white)
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 
 
 view : StyledElement msg

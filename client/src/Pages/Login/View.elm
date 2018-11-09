@@ -18,7 +18,7 @@ import UI.Error as Error
 import UI.Header as Header
 import UI.Input as Input
 import UI.Link as Link
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 import Utils.Validation exposing (getErrorForField)
 
 

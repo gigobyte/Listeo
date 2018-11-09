@@ -6,7 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
 import UI.Colors exposing (gray100, redOrange100, whiteGray100)
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 
 
 type alias InputProps msg =
@@ -73,8 +73,7 @@ viewInput hasError =
 view : InputProps msg -> StyledElement msg
 view props attrs children =
     styled div
-        [
-            textAlign center
+        [ textAlign center
         ]
         attrs
         ([ viewInput (Maybe.isJust props.validationError) props.inputAttributes []

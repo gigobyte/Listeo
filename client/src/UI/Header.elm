@@ -7,7 +7,7 @@ import Routes
 import UI.Colors exposing (blue150, blue50)
 import UI.Link as Link
 import UI.Logo as Logo
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 
 
 container : StyledElement msg

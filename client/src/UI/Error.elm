@@ -4,7 +4,7 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import UI.Colors exposing (redOrange100)
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 
 
 type alias ErrorTextProps =

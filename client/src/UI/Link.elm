@@ -4,7 +4,7 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Routes
 import UI.Colors exposing (blue150)
-import Utils.StyleTypes exposing (StyledElement)
+import Utils.Styles exposing (StyledElement)
 
 
 type alias LinkProps =
