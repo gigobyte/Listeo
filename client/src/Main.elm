@@ -7,14 +7,15 @@ import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
 import List
 import Maybe.Extra as Maybe
+import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
 import Routes exposing (Route, pushUrl)
 import Url
 import Url.Parser exposing (parse)
-import Model exposing (AppModel)
-import Pages.Layout as Layout
+
 
 type alias Flags =
     { jwt : Maybe String
