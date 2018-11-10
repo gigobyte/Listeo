@@ -13,7 +13,6 @@ import Routes
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
-import UI.Header as Header
 import UI.Input as Input
 import UI.Link as Link
 import Utils.Styles exposing (StyledElement)
@@ -59,8 +58,7 @@ view model =
     in
     Container.fullHeight div
         []
-        [ Header.view
-        , registerForm [ onSubmit RegisterAttempted ]
+        [ registerForm [ onSubmit RegisterAttempted ]
             [ title [] [ text "Register" ]
             , Input.view
                 { validationError = usernameError

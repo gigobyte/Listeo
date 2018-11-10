@@ -1,4 +1,4 @@
-module Main exposing (Model, main)
+module Main exposing (main)
 
 import Auth as Auth
 import Browser
@@ -13,16 +13,8 @@ import Pages.Register as Register
 import Routes exposing (Route, pushUrl)
 import Url
 import Url.Parser exposing (parse)
-
-
-type alias Model =
-    { key : Nav.Key
-    , url : Maybe Route
-    , login : Login.Model
-    , register : Register.Model
-    , auth : Auth.Model
-    }
-
+import Model exposing (AppModel)
+import Pages.Layout as Layout
 
 type alias Flags =
     { jwt : Maybe String
@@ -35,7 +27,7 @@ redirectIfUnauthenticated jwtToken key =
         |> Maybe.unwrap (pushUrl key Routes.Login) (always Cmd.none)
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd msg )
+init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd msg )
 init flags url key =
     ( { key = key
       , url = parse Routes.parser url
@@ -47,7 +39,7 @@ init flags url key =
     )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> AppModel -> ( AppModel, Cmd Msg )
 update msg model =
     case msg of
         LinkClicked urlRequest ->
@@ -81,17 +73,17 @@ update msg model =
                 )
 
 
-view : Model -> Browser.Document Msg
+view : AppModel -> Browser.Document Msg
 view model =
     { title = "Hello world"
     , body =
         List.singleton <|
             case model.url of
                 Just Routes.Login ->
-                    model.login |> Login.view |> toUnstyled
+                    Layout.view (model.login |> Login.view) model |> toUnstyled
 
                 Just Routes.Register ->
-                    model.register |> Register.view |> toUnstyled
+                    Layout.view (model.register |> Register.view) model |> toUnstyled
 
                 Just Routes.About ->
                     text "NotImplementedException"
@@ -104,7 +96,7 @@ view model =
     }
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : AppModel -> Sub Msg
 subscriptions model =
     Sub.none
 
