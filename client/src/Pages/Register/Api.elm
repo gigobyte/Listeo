@@ -7,7 +7,7 @@ module Pages.Register.Api exposing
 
 import Http
 import Json.Decode as Decode exposing (Decoder, string)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode.Pipeline exposing (optional)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
 import Utils.Api exposing (endpoint)
@@ -47,7 +47,7 @@ registerRequestEncoder req =
 registerResponseDecoder : Decoder RegisterResponse
 registerResponseDecoder =
     Decode.succeed RegisterResponse
-        |> required "errorDescription" registerErrorDecoder
+        |> optional "errorDescription" registerErrorDecoder Nothing
 
 
 registerErrorDecoder : Decoder (Maybe RegisterResponseError)

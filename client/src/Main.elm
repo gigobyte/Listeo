@@ -60,7 +60,7 @@ update msg model =
                     Login.update model.login msg
 
                 ( newRegisterModel, registerMsg ) =
-                    Register.update model.register msg
+                    Register.update model.register msg { key = model.key }
             in
             Debug.log ""
                 ( { model

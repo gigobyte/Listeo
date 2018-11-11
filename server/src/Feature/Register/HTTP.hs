@@ -2,22 +2,21 @@ module Feature.Register.HTTP
     ( register
     ) where
 
-import           Data.Aeson                (decode)
-import           Data.ByteString.Lazy      (ByteString)
-import qualified Data.Time.Clock           as Time
-import qualified Database.MongoDB          as DB
-import qualified Feature.Register.Service  as Service
-import           Feature.Register.Types    (RegisterBody (..),
-                                            RegisterError (..),
-                                            RegisterResponse (..))
-import qualified Infrastructure.DB         as DB
-import qualified Network.HTTP.Types.Status as Status
-import           Protolude                 hiding (ByteString)
-import           Web.Scotty                (ActionM, body, json, status)
+import           Data.Aeson               (decode)
+import           Data.ByteString.Lazy     (ByteString)
+import qualified Data.Time.Clock          as Time
+import qualified Database.MongoDB         as DB
+import qualified Feature.Register.Service as Service
+import           Feature.Register.Types   (RegisterBody (..),
+                                           RegisterError (..),
+                                           RegisterResponse (..))
+import qualified Infrastructure.DB        as DB
+import           Protolude                hiding (ByteString)
+import           Web.Scotty               (ActionM, body, json)
 
 toHttpResult :: Either RegisterError a -> ActionM ()
-toHttpResult (Left err) = json $ RegisterResponse err
-toHttpResult _          = status Status.ok200
+toHttpResult (Left err) = json $ RegisterResponse $ Just err
+toHttpResult _          = json $ RegisterResponse Nothing
 
 parseBody :: ByteString -> Either RegisterError RegisterBody
 parseBody b =

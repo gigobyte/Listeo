@@ -18,5 +18,5 @@ data RegisterError
 
 instance ToJSON RegisterResponse
 data RegisterResponse = RegisterResponse
-    { errorDescription :: RegisterError
+    { errorDescription :: Maybe RegisterError
     } deriving Generic

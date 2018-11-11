@@ -1,10 +1,18 @@
 module Pages.Register.Update exposing (init, update)
 
+import Browser.Navigation as Nav
 import Msg exposing (Msg(..))
+import Pages.Login.Api as Api
 import Pages.Register.Api as Api
 import Pages.Register.Model exposing (Model)
 import Pages.Register.Validation exposing (makeRegisterRequestModel)
 import RemoteData exposing (RemoteData(..))
+import Routes as Route
+
+
+type alias RegisterUpdateMeta =
+    { key : Nav.Key
+    }
 
 
 init : Model
@@ -16,8 +24,8 @@ init =
     }
 
 
-update : Model -> Msg -> ( Model, Cmd Msg )
-update model msg =
+update : Model -> Msg -> RegisterUpdateMeta -> ( Model, Cmd Msg )
+update model msg meta =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -34,7 +42,30 @@ update model msg =
                     ( { model | showErrors = True }, Cmd.none )
 
         Register response ->
-            ( { model | registerResponse = response }, Cmd.none )
+            let
+                newModel =
+                    { model | registerResponse = response }
+            in
+            case response of
+                Success { errorDescription } ->
+                    case errorDescription of
+                        Just _ ->
+                            ( newModel, Cmd.none )
+
+                        Nothing ->
+                            ( newModel
+                            , Cmd.batch
+                                [ Api.login
+                                    { username = model.username
+                                    , password = model.password
+                                    }
+                                    |> Cmd.map Login
+                                , Route.pushUrl meta.key Route.Home
+                                ]
+                            )
+
+                _ ->
+                    ( newModel, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
