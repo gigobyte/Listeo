@@ -61,15 +61,20 @@ update msg model =
 
                 ( newRegisterModel, registerMsg ) =
                     Register.update model.register msg { key = model.key }
+
+                ( newAuthModel, authMsg ) =
+                    Auth.update msg model.auth
             in
             Debug.log ""
                 ( { model
                     | login = newLoginModel
                     , register = newRegisterModel
+                    , auth = newAuthModel
                   }
                 , Cmd.batch
                     [ loginMsg
                     , registerMsg
+                    , authMsg
                     ]
                 )
 

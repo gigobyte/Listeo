@@ -1,4 +1,6 @@
-module Auth exposing (Model, User, init)
+module Auth exposing (Model, User, init, update)
+
+import Msg exposing (Msg)
 
 
 type alias User =
@@ -18,3 +20,8 @@ init jwtFromFlag =
     { jwt = jwtFromFlag
     , user = Nothing
     }
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( model, Cmd.none )
