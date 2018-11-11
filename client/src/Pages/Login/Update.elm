@@ -16,8 +16,8 @@ init =
     }
 
 
-update : Model -> Msg -> ( Model, Cmd Msg )
-update model msg =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )

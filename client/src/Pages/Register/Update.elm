@@ -24,8 +24,8 @@ init =
     }
 
 
-update : Model -> Msg -> RegisterUpdateMeta -> ( Model, Cmd Msg )
-update model msg meta =
+update : Msg -> Model -> RegisterUpdateMeta -> ( Model, Cmd Msg )
+update msg model meta =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
