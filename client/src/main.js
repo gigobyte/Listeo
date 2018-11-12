@@ -1,8 +1,12 @@
-const { Elm } = require('./Main.elm');
+const { Elm } = require("./Main.elm");
 
-Elm.Main.init({
-  node: document.querySelector('main'),
+const app = Elm.Main.init({
+  node: document.querySelector("main"),
   flags: {
-    jwt: localStorage.getItem('jwt-token')
+    jwt: localStorage.getItem("jwt-token")
   }
+});
+
+app.ports.storeJwt.subscribe(jwt => {
+  localStorage.setItem("jwt-token", jwt);
 });

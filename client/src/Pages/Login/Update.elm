@@ -1,10 +1,17 @@
-module Pages.Login.Update exposing (init, update)
+port module Pages.Login.Update exposing (init, update)
 
+import Browser.Navigation as Nav
 import Msg exposing (Msg(..))
-import Pages.Login.Api as Api
+import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
+import Routes as Route
+
+
+type alias Meta =
+    { key : Nav.Key
+    }
 
 
 init : Model
@@ -16,8 +23,11 @@ init =
     }
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+port storeJwt : String -> Cmd msg
+
+
+update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
+update msg model meta =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -34,7 +44,21 @@ update msg model =
                     ( { model | showErrors = True }, Cmd.none )
 
         Login response ->
-            ( { model | loginResponse = response }, Cmd.none )
+            let
+                newModel =
+                    { model | loginResponse = response }
+            in
+            case response of
+                Success (SuccessResponse { jwt }) ->
+                    ( newModel
+                    , Cmd.batch
+                        [ Route.pushUrl meta.key Route.Home
+                        , storeJwt jwt
+                        ]
+                    )
+
+                _ ->
+                    ( newModel, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

@@ -10,7 +10,7 @@ import RemoteData exposing (RemoteData(..))
 import Routes as Route
 
 
-type alias RegisterUpdateMeta =
+type alias Meta =
     { key : Nav.Key
     }
 
@@ -24,7 +24,7 @@ init =
     }
 
 
-update : Msg -> Model -> RegisterUpdateMeta -> ( Model, Cmd Msg )
+update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
 update msg model meta =
     case msg of
         RegisterUsernameUpdated value ->

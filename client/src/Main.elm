@@ -57,7 +57,7 @@ update msg model =
         _ ->
             let
                 ( newLoginModel, loginMsg ) =
-                    Login.update msg model.login
+                    Login.update msg model.login { key = model.key }
 
                 ( newRegisterModel, registerMsg ) =
                     Register.update msg model.register { key = model.key }
