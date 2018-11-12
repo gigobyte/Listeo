@@ -1,6 +1,8 @@
 module Auth exposing (Model, User, init, update)
 
-import Msg exposing (Msg)
+import Msg exposing (Msg(..))
+import Pages.Login.Api exposing (LoginResponse(..))
+import RemoteData exposing (RemoteData(..))
 
 
 type alias User =
@@ -24,4 +26,9 @@ init jwtFromFlag =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        Login (Success (SuccessResponse { jwt })) ->
+            ( { model | jwt = Just jwt }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
