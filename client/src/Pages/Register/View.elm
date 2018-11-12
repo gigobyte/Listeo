@@ -9,7 +9,7 @@ import Msg exposing (Msg(..))
 import Pages.Register.Model exposing (Model)
 import Pages.Register.Selectors as Selectors
 import Pages.Register.Validation as Validation exposing (RegisterField(..), RegisterValidationError(..))
-import Routes
+import Route
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
@@ -87,6 +87,6 @@ view model =
                 ]
                 [ text "Beam me up!" ]
             , Error.text { error = Selectors.getRegisterRequestErrorText model } [] []
-            , Link.view { to = Routes.Login } [] [ text "Already have an account?" ]
+            , Link.view { to = Route.Login } [] [ text "Already have an account?" ]
             ]
         ]

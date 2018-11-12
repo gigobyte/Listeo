@@ -11,7 +11,7 @@ import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors as Selectors
 import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..))
 import RemoteData exposing (RemoteData(..), WebData)
-import Routes
+import Route
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
@@ -96,6 +96,6 @@ view model =
                 ]
                 [ text "Let's go!" ]
             , Error.text { error = Selectors.getLoginRequestErrorText model } [] []
-            , Link.view { to = Routes.Register } [] [ text "Don't have an account?" ]
+            , Link.view { to = Route.Register } [] [ text "Don't have an account?" ]
             ]
         ]

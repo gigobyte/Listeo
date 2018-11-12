@@ -2,13 +2,13 @@ module UI.Link exposing (LinkProps, view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Routes
+import Route
 import UI.Colors exposing (blue150)
 import Utils.Styles exposing (StyledElement)
 
 
 type alias LinkProps =
-    { to : Routes.Route
+    { to : Route.Route
     }
 
 
@@ -19,5 +19,5 @@ view props attrs =
         , color blue150
         ]
         (attrs
-            ++ [ Routes.href props.to ]
+            ++ [ Route.href props.to ]
         )

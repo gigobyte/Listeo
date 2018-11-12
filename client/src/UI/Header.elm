@@ -3,7 +3,7 @@ module UI.Header exposing (view)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
-import Routes
+import Route
 import UI.Colors exposing (blue150, blue50)
 import UI.Link as Link
 import UI.Logo as Logo
@@ -54,8 +54,8 @@ view =
     container []
         [ logo [] [ Logo.view ]
         , nav []
-            [ navItem { to = Routes.Login } [] [ text "Sign In" ]
-            , navItem { to = Routes.Register } [] [ text "Register" ]
-            , navItem { to = Routes.About } [] [ text "About" ]
+            [ navItem { to = Route.Login } [] [ text "Sign In" ]
+            , navItem { to = Route.Register } [] [ text "Register" ]
+            , navItem { to = Route.About } [] [ text "About" ]
             ]
         ]

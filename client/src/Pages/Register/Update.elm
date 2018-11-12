@@ -7,7 +7,7 @@ import Pages.Register.Api as Api
 import Pages.Register.Model exposing (Model)
 import Pages.Register.Validation exposing (makeRegisterRequestModel)
 import RemoteData exposing (RemoteData(..))
-import Routes as Route
+import Route as Route
 
 
 type alias Meta =

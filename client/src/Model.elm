@@ -4,7 +4,7 @@ import Auth as Auth
 import Browser.Navigation as Nav
 import Pages.Login as Login
 import Pages.Register as Register
-import Routes exposing (Route)
+import Route exposing (Route)
 
 
 type alias AppModel =

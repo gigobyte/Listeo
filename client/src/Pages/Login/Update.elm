@@ -6,7 +6,7 @@ import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
-import Routes as Route
+import Route as Route
 
 
 type alias Meta =
