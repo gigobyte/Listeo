@@ -9,6 +9,7 @@ import List
 import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
@@ -35,6 +36,7 @@ init flags url key =
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
+      , home = Home.init
       }
     , redirectIfUnauthenticated flags.jwt key
     )
@@ -95,7 +97,7 @@ view model =
                     text "NotImplementedException"
 
                 Just Route.Home ->
-                    text "NotImplementedException"
+                    Layout.view (model.home |> Home.view) model |> toUnstyled
 
                 Nothing ->
                     text "Not Found"
