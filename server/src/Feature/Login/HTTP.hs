@@ -23,11 +23,13 @@ parseBody b =
 
 login :: DB.Pipe -> ActionM ()
 login pipe = do
-    result <- liftIO
-            . ((Service.generateJwtToken <$>) <$>)
-            . DB.runQuery pipe
-            . (Service.findUserByCredentials <$>)
-            . parseBody
-            =<< body
+    parsedBody <- parseBody <$> body
 
-    toHttpResult result
+    let query = Service.findUserByCredentials <$> parsedBody
+    let flatQuery = join <$> sequence query
+
+    result <- liftIO $ DB.runQuery pipe flatQuery
+
+    let jwtToken = Service.generateJwtToken <$> result
+
+    toHttpResult jwtToken

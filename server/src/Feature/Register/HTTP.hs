@@ -25,12 +25,12 @@ parseBody b =
 register :: DB.Pipe -> ActionM ()
 register pipe = do
     dateNow <- liftIO Time.getCurrentTime
+    parsedBody <- parseBody <$> body
 
-    result <- liftIO
-            . DB.runQuery pipe
-            . (Service.insertUser <$>)
-            . (Service.mkUser dateNow =<<)
-            . parseBody
-            =<< body
+    let user = Service.mkUser dateNow =<< parsedBody
+    let query = Service.insertUser <$> user
+    let flatQuery = join <$> sequence query
+
+    result <- liftIO $ DB.runQuery pipe flatQuery
 
     toHttpResult result
