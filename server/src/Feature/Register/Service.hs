@@ -15,7 +15,7 @@ import           Protolude
 
 insertUser :: User.User -> Action IO (Either RegisterError Value)
 insertUser user = do
-    userInDB <- DB.findUser $ User.username user
+    userInDB <- DB.findUser $ User.username (user :: User.User)
 
     case userInDB of
         Just _  -> pure $ Left UserAlreadyExists

@@ -29,7 +29,7 @@ generateJwtToken user =
     let
         cs = def
             { iss = stringOrURI "listeo"
-            , sub = stringOrURI (show $ User.id user)
+            , sub = stringOrURI (show $ User.username (user :: User.User))
             , unregisteredClaims = M.fromList [("http://localhost:1234", (Bool True))]
             }
         key = secret jwtSecret
