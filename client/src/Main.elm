@@ -1,6 +1,7 @@
 module Main exposing (main)
 
-import Auth as Auth
+import Auth.Api as Auth
+import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
@@ -23,13 +24,12 @@ type alias Flags =
     }
 
 
-redirectIfUnauthenticated : Maybe String -> Nav.Key -> Cmd msg
-redirectIfUnauthenticated jwtToken key =
-    jwtToken
-        |> Maybe.unwrap (pushUrl key Route.Login) (always Cmd.none)
+fetchUser : Maybe String -> Cmd Msg
+fetchUser token =
+    Auth.fetchUser (token |> Maybe.withDefault "") |> Cmd.map FetchUser
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd msg )
+init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
       , url = parse Route.parser url
@@ -38,7 +38,7 @@ init flags url key =
       , auth = Auth.init flags.jwt
       , home = Home.init
       }
-    , redirectIfUnauthenticated flags.jwt key
+    , fetchUser flags.jwt
     )
 
 
@@ -67,18 +67,17 @@ update msg model =
                 ( newAuthModel, authMsg ) =
                     Auth.update msg model.auth
             in
-            Debug.log ""
-                ( { model
-                    | login = newLoginModel
-                    , register = newRegisterModel
-                    , auth = newAuthModel
-                  }
-                , Cmd.batch
-                    [ loginMsg
-                    , registerMsg
-                    , authMsg
-                    ]
-                )
+            ( { model
+                | login = newLoginModel
+                , register = newRegisterModel
+                , auth = newAuthModel
+              }
+            , Cmd.batch
+                [ loginMsg
+                , registerMsg
+                , authMsg
+                ]
+            )
 
 
 view : AppModel -> Browser.Document Msg

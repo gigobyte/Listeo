@@ -1,6 +1,6 @@
 module Model exposing (AppModel)
 
-import Auth as Auth
+import Auth.Model as Auth
 import Browser.Navigation as Nav
 import Pages.Home as Home
 import Pages.Login as Login

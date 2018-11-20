@@ -1,20 +1,9 @@
-module Auth exposing (Model, User, init, update)
+module Auth.Update exposing (init, update)
 
+import Auth.Model exposing (Model)
 import Msg exposing (Msg(..))
 import Pages.Login.Api exposing (LoginResponse(..))
 import RemoteData exposing (RemoteData(..))
-
-
-type alias User =
-    { username : String
-    , createdOn : Int
-    }
-
-
-type alias Model =
-    { jwt : Maybe String
-    , user : Maybe User
-    }
 
 
 init : Maybe String -> Model
