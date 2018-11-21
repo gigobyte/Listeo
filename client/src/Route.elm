@@ -11,6 +11,7 @@ type Route
     | Login
     | Register
     | About
+    | NotFound404
 
 
 toString : Route -> String
@@ -27,6 +28,9 @@ toString route =
 
         About ->
             "about"
+
+        NotFound404 ->
+            "404"
 
 
 pushUrl : Nav.Key -> Route -> Cmd msg
@@ -46,4 +50,5 @@ parser =
         , Parser.map Login (s "login")
         , Parser.map Register (s "register")
         , Parser.map About (s "about")
+        , Parser.map NotFound404 (s "404")
         ]

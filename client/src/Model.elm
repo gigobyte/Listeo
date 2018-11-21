@@ -10,7 +10,7 @@ import Route exposing (Route)
 
 type alias AppModel =
     { key : Nav.Key
-    , url : Maybe Route
+    , url : Route
     , login : Login.Model
     , register : Register.Model
     , auth : Auth.Model

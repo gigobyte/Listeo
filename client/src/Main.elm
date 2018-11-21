@@ -32,7 +32,7 @@ fetchUser token =
 init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
-      , url = parse Route.parser url
+      , url = url |> parse Route.parser |> Maybe.withDefault Route.NotFound404
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
@@ -54,7 +54,14 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = parse Route.parser url }, Cmd.none )
+            ( { model
+                | url =
+                    url
+                        |> parse Route.parser
+                        |> Maybe.withDefault Route.NotFound404
+              }
+            , Cmd.none
+            )
 
         _ ->
             let
@@ -65,7 +72,7 @@ update msg model =
                     Register.update msg model.register { key = model.key }
 
                 ( newAuthModel, authMsg ) =
-                    Auth.update msg model.auth
+                    Auth.update msg model.auth { key = model.key, url = model.url }
             in
             Debug.log ""
                 ( { model
@@ -87,19 +94,19 @@ view model =
     , body =
         List.singleton <|
             case model.url of
-                Just Route.Login ->
+                Route.Login ->
                     Layout.view (model.login |> Login.view) model |> toUnstyled
 
-                Just Route.Register ->
+                Route.Register ->
                     Layout.view (model.register |> Register.view) model |> toUnstyled
 
-                Just Route.About ->
+                Route.About ->
                     text "NotImplementedException"
 
-                Just Route.Home ->
+                Route.Home ->
                     Layout.view (model.home |> Home.view) model |> toUnstyled
 
-                Nothing ->
+                Route.NotFound404 ->
                     text "Not Found"
     }
 
