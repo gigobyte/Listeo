@@ -67,17 +67,18 @@ update msg model =
                 ( newAuthModel, authMsg ) =
                     Auth.update msg model.auth
             in
-            ( { model
-                | login = newLoginModel
-                , register = newRegisterModel
-                , auth = newAuthModel
-              }
-            , Cmd.batch
-                [ loginMsg
-                , registerMsg
-                , authMsg
-                ]
-            )
+            Debug.log ""
+                ( { model
+                    | login = newLoginModel
+                    , register = newRegisterModel
+                    , auth = newAuthModel
+                  }
+                , Cmd.batch
+                    [ loginMsg
+                    , registerMsg
+                    , authMsg
+                    ]
+                )
 
 
 view : AppModel -> Browser.Document Msg

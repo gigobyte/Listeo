@@ -19,5 +19,8 @@ update msg model =
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
 
+        FetchUser (Success user) ->
+            ( { model | user = Just user }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
