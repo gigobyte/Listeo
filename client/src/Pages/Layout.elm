@@ -17,6 +17,6 @@ container =
 view : Html msg -> AppModel -> Html msg
 view page model =
     container []
-        [ Header.view
+        [ Header.view model
         , page
         ]

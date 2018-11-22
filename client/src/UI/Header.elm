@@ -1,8 +1,10 @@
 module UI.Header exposing (view)
 
+import Auth.Api exposing (User)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
+import Model exposing (AppModel)
 import Route
 import UI.Colors exposing (blue150, blue50)
 import UI.Link as Link
@@ -49,13 +51,29 @@ logo =
         ]
 
 
-view : Html msg
-view =
+viewPublicNavItems : List (Html msg)
+viewPublicNavItems =
+    [ navItem { to = Route.Login } [] [ text "Sign In" ]
+    , navItem { to = Route.Register } [] [ text "Register" ]
+    , navItem { to = Route.About } [] [ text "About" ]
+    ]
+
+
+viewPrivateNavItems : User -> List (Html msg)
+viewPrivateNavItems user =
+    [ navItem { to = Route.Home } [] [ text user.username ] ]
+
+
+view : AppModel -> Html msg
+view model =
     container []
         [ logo [] [ Logo.view ]
         , nav []
-            [ navItem { to = Route.Login } [] [ text "Sign In" ]
-            , navItem { to = Route.Register } [] [ text "Register" ]
-            , navItem { to = Route.About } [] [ text "About" ]
-            ]
+            (case model.auth.user of
+                Just user ->
+                    viewPrivateNavItems user
+
+                Nothing ->
+                    viewPublicNavItems
+            )
         ]

@@ -74,7 +74,7 @@ update msg model =
                 ( newAuthModel, authMsg ) =
                     Auth.update msg model.auth { key = model.key, url = model.url }
             in
-            Debug.log ""
+            Debug.log "==============\n"
                 ( { model
                     | login = newLoginModel
                     , register = newRegisterModel
