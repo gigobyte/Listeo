@@ -42,12 +42,8 @@ init flags url key =
     )
 
 
-update : Msg -> AppModel -> ( AppModel, Cmd Msg )
-update msg model =
-    let
-        _ =
-            Debug.log "Msg: " msg
-    in
+mainUpdate : Msg -> AppModel -> ( AppModel, Cmd Msg )
+mainUpdate msg model =
     case msg of
         LinkClicked urlRequest ->
             case urlRequest of
@@ -68,28 +64,40 @@ update msg model =
             )
 
         _ ->
-            let
-                ( newLoginModel, loginMsg ) =
-                    Login.update msg model.login { key = model.key }
+            ( model, Cmd.none )
 
-                ( newRegisterModel, registerMsg ) =
-                    Register.update msg model.register { key = model.key }
 
-                ( newAuthModel, authMsg ) =
-                    Auth.update msg model.auth { key = model.key, url = model.url }
-            in
-            Debug.log "==============\n"
-                ( { model
-                    | login = newLoginModel
-                    , register = newRegisterModel
-                    , auth = newAuthModel
-                  }
-                , Cmd.batch
-                    [ loginMsg
-                    , registerMsg
-                    , authMsg
-                    ]
-                )
+update : Msg -> AppModel -> ( AppModel, Cmd Msg )
+update msg model =
+    let
+        _ =
+            Debug.log "Msg: " msg
+
+        ( newMainModel, mainMsg ) =
+            mainUpdate msg model
+
+        ( newLoginModel, loginMsg ) =
+            Login.update msg model.login { key = model.key }
+
+        ( newRegisterModel, registerMsg ) =
+            Register.update msg model.register { key = model.key }
+
+        ( newAuthModel, authMsg ) =
+            Auth.update msg model.auth { key = model.key, url = model.url }
+    in
+    Debug.log ""
+        ( { newMainModel
+            | login = newLoginModel
+            , register = newRegisterModel
+            , auth = newAuthModel
+          }
+        , Cmd.batch
+            [ mainMsg
+            , loginMsg
+            , registerMsg
+            , authMsg
+            ]
+        )
 
 
 view : AppModel -> Browser.Document Msg
