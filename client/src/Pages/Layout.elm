@@ -3,6 +3,8 @@ module Pages.Layout exposing (view)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Model exposing (AppModel)
+import Msg exposing (Msg(..))
+import RemoteData exposing (RemoteData(..))
 import UI.Header as Header
 import Utils.Styles exposing (StyledElement)
 
@@ -14,9 +16,14 @@ container =
         ]
 
 
-view : Html msg -> AppModel -> Html msg
+view : Html Msg -> AppModel -> Html Msg
 view page model =
-    container []
-        [ Header.view model
-        , page
-        ]
+    case model.auth.fetchUserResponse of
+        Loading ->
+            text "Loading..."
+
+        _ ->
+            container []
+                [ Header.view model
+                , page
+                ]

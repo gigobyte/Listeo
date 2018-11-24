@@ -3,8 +3,11 @@ module UI.Header exposing (view)
 import Auth.Api exposing (User)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
+import FontAwesome.Attributes as Icon
+import FontAwesome.Solid as Icon
 import Html.Styled exposing (..)
 import Model exposing (AppModel)
+import Msg exposing (Msg(..))
 import Route
 import UI.Colors exposing (blue150, blue50)
 import UI.Link as Link
@@ -59,12 +62,14 @@ viewPublicNavItems =
     ]
 
 
-viewPrivateNavItems : User -> List (Html msg)
+viewPrivateNavItems : User -> List (Html Msg)
 viewPrivateNavItems user =
-    [ navItem { to = Route.Home } [] [ text user.username ] ]
+    [ navItem { to = Route.Home } [] [ text user.username ]
+    , fromUnstyled <| Icon.camera [ Icon.stack1x ]
+    ]
 
 
-view : AppModel -> Html msg
+view : AppModel -> Html Msg
 view model =
     container []
         [ logo [] [ Logo.view ]

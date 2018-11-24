@@ -19,6 +19,7 @@ init : Maybe String -> Model
 init jwtFromFlag =
     { jwt = jwtFromFlag
     , user = Nothing
+    , fetchUserResponse = NotAsked
     }
 
 
@@ -56,17 +57,26 @@ update msg model meta =
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
 
-        FetchUser (Success user) ->
-            ( { model | user = Just user }, fetchUserSuccessCmd meta.url meta.key )
+        FetchUser res ->
+            let
+                newModel =
+                    { model | fetchUserResponse = res }
+            in
+            case res of
+                Success user ->
+                    ( { newModel | user = Just user }, fetchUserSuccessCmd meta.url meta.key )
 
-        FetchUser (Failure (Http.BadStatus { status })) ->
-            ( model
-            , if status.code == 401 then
-                fetchUserFailureCmd meta.url meta.key
+                Failure (Http.BadStatus { status }) ->
+                    ( newModel
+                    , if status.code == 401 then
+                        fetchUserFailureCmd meta.url meta.key
 
-              else
-                Cmd.none
-            )
+                      else
+                        Cmd.none
+                    )
+
+                _ ->
+                    ( newModel, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
