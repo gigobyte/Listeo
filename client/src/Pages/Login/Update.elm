@@ -1,5 +1,6 @@
 port module Pages.Login.Update exposing (init, update)
 
+import Auth.Api as Auth
 import Browser.Navigation as Nav
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
@@ -52,7 +53,8 @@ update msg model meta =
                 Success (SuccessResponse { jwt }) ->
                     ( newModel
                     , Cmd.batch
-                        [ Route.pushUrl meta.key Route.Home
+                        [ Auth.fetchUser jwt |> Cmd.map FetchUser
+                        , Route.pushUrl meta.key Route.Home
                         , storeJwt jwt
                         ]
                     )
