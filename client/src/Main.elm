@@ -44,6 +44,10 @@ init flags url key =
 
 update : Msg -> AppModel -> ( AppModel, Cmd Msg )
 update msg model =
+    let
+        _ =
+            Debug.log "Msg: " msg
+    in
     case msg of
         LinkClicked urlRequest ->
             case urlRequest of

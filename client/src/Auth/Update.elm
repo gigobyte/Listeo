@@ -1,4 +1,4 @@
-module Auth.Update exposing (init, update)
+port module Auth.Update exposing (init, update)
 
 import Auth.Model exposing (Model)
 import Browser.Navigation as Nav
@@ -7,6 +7,9 @@ import Msg exposing (Msg(..))
 import Pages.Login.Api exposing (LoginResponse(..))
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
+
+
+port removeJwt : () -> Cmd msg
 
 
 type alias Meta =
@@ -56,6 +59,9 @@ update msg model meta =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
+
+        Logout ->
+            ( init Nothing, removeJwt () )
 
         FetchUser res ->
             let

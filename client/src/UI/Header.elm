@@ -6,6 +6,7 @@ import Css.Transitions as Transitions exposing (transition)
 import FontAwesome.Attributes as Icon
 import FontAwesome.Solid as Icon
 import Html.Styled exposing (..)
+import Html.Styled.Events exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Route
@@ -65,7 +66,7 @@ viewPublicNavItems =
 viewPrivateNavItems : User -> List (Html Msg)
 viewPrivateNavItems user =
     [ navItem { to = Route.Home } [] [ text user.username ]
-    , fromUnstyled <| Icon.camera [ Icon.stack1x ]
+    , navItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
     ]
 
 

@@ -13,6 +13,7 @@ type Msg
     | UrlChanged Url
       -- General
     | FetchUser (WebData User)
+    | Logout
       -- Login
     | LoginUsernameUpdated String
     | LoginPasswordUpdated String
