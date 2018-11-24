@@ -1,9 +1,10 @@
-module Route exposing (Route(..), href, parser, pushUrl)
+module Route exposing (Route(..), href, parseUrl, pushUrl)
 
 import Browser.Navigation as Nav
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attributes
-import Url.Parser as Parser exposing ((</>), Parser, oneOf, s)
+import Url
+import Url.Parser as Parser exposing ((</>), Parser, oneOf, parse, s)
 
 
 type Route
@@ -52,3 +53,8 @@ parser =
         , Parser.map About (s "about")
         , Parser.map NotFound404 (s "404")
         ]
+
+
+parseUrl : Url.Url -> Route
+parseUrl =
+    parse parser >> Maybe.withDefault NotFound404

@@ -1,4 +1,9 @@
-port module Auth.Update exposing (init, update)
+port module Auth.Update exposing
+    ( init
+    , isAuthDisallowedRoute
+    , isAuthProtectedRoute
+    , update
+    )
 
 import Auth.Model exposing (Model)
 import Browser.Navigation as Nav

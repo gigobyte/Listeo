@@ -14,7 +14,7 @@ import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
-import Route exposing (Route, pushUrl)
+import Route exposing (Route, parseUrl, pushUrl)
 import Url
 import Url.Parser exposing (parse)
 
@@ -32,7 +32,7 @@ fetchUser token =
 init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
-      , url = url |> parse Route.parser |> Maybe.withDefault Route.NotFound404
+      , url = parseUrl url
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
@@ -48,20 +48,32 @@ mainUpdate msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl model.key (Url.toString url) )
+                    ( model
+                    , let
+                        route =
+                            parseUrl url
+                      in
+                      case model.auth.user of
+                        Just _ ->
+                            if Auth.isAuthDisallowedRoute route then
+                                Route.pushUrl model.key Route.Home
+
+                            else
+                                Route.pushUrl model.key route
+
+                        Nothing ->
+                            if Auth.isAuthProtectedRoute route then
+                                Route.pushUrl model.key Route.Login
+
+                            else
+                                Route.pushUrl model.key route
+                    )
 
                 Browser.External href ->
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model
-                | url =
-                    url
-                        |> parse Route.parser
-                        |> Maybe.withDefault Route.NotFound404
-              }
-            , Cmd.none
-            )
+            ( { model | url = parseUrl url }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
