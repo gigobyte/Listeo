@@ -19,6 +19,9 @@ container =
 view : Html Msg -> AppModel -> Html Msg
 view page model =
     case model.auth.fetchUserResponse of
+        NotAsked ->
+            text ""
+
         Loading ->
             text "Loading..."
 

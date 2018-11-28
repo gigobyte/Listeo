@@ -3,8 +3,6 @@ module UI.Header exposing (view)
 import Auth.Api exposing (User)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
-import FontAwesome.Attributes as Icon
-import FontAwesome.Solid as Icon
 import Html.Styled exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (AppModel)
