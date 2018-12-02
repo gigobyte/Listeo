@@ -21,13 +21,6 @@ import Utils.Styles exposing (StyledElement)
 import Utils.Validation exposing (getErrorForField)
 
 
-container : StyledElement msg
-container =
-    styled div
-        [ height <| pct 100
-        ]
-
-
 loginForm : StyledElement msg
 loginForm =
     styled (Container.centered form)
@@ -65,37 +58,34 @@ view model =
             getErrorForField Password validationErrors
                 |> Maybe.map Validation.errToString
     in
-    Container.fullHeight div
-        []
-        [ loginForm [ onSubmit LoginAttempted ]
-            [ title [] [ text "Sign In" ]
-            , Input.view
-                { validationError = usernameError
-                , inputAttributes =
-                    [ placeholder "Username"
-                    , value model.username
-                    , onInput LoginUsernameUpdated
-                    ]
-                }
-                []
-                []
-            , Input.view
-                { validationError = passwordError
-                , inputAttributes =
-                    [ placeholder "Password"
-                    , type_ "password"
-                    , value model.password
-                    , onInput LoginPasswordUpdated
-                    ]
-                }
-                []
-                []
-            , submitButton
-                [ type_ "submit"
-                , disabled <| Selectors.isSubmitButtonDisabled model
+    loginForm [ onSubmit LoginAttempted ]
+        [ title [] [ text "Sign In" ]
+        , Input.view
+            { validationError = usernameError
+            , inputAttributes =
+                [ placeholder "Username"
+                , value model.username
+                , onInput LoginUsernameUpdated
                 ]
-                [ text "Let's go!" ]
-            , Error.text { error = Selectors.getLoginRequestErrorText model } [] []
-            , Link.view { to = Route.Register } [] [ text "Don't have an account?" ]
+            }
+            []
+            []
+        , Input.view
+            { validationError = passwordError
+            , inputAttributes =
+                [ placeholder "Password"
+                , type_ "password"
+                , value model.password
+                , onInput LoginPasswordUpdated
+                ]
+            }
+            []
+            []
+        , submitButton
+            [ type_ "submit"
+            , disabled <| Selectors.isSubmitButtonDisabled model
             ]
+            [ text "Let's go!" ]
+        , Error.text { error = Selectors.getLoginRequestErrorText model } [] []
+        , Link.view { to = Route.Register } [] [ text "Don't have an account?" ]
         ]

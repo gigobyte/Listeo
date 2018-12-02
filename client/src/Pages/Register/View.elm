@@ -56,9 +56,7 @@ view model =
             getErrorForField Password validationErrors
                 |> Maybe.map Validation.errToString
     in
-    Container.fullHeight div
-        []
-        [ registerForm [ onSubmit RegisterAttempted ]
+    registerForm [ onSubmit RegisterAttempted ]
             [ title [] [ text "Register" ]
             , Input.view
                 { validationError = usernameError
@@ -89,4 +87,3 @@ view model =
             , Error.text { error = Selectors.getRegisterRequestErrorText model } [] []
             , Link.view { to = Route.Login } [] [ text "Already have an account?" ]
             ]
-        ]
