@@ -2,9 +2,11 @@ port module Auth.Update exposing
     ( init
     , isAuthDisallowedRoute
     , isAuthProtectedRoute
+    , pushAuthUrl
     , update
     )
 
+import Auth.Api as Api exposing (User)
 import Auth.Model exposing (Model)
 import Browser.Navigation as Nav
 import Http
@@ -41,22 +43,22 @@ isAuthDisallowedRoute route =
     route == Route.Login || route == Route.Register
 
 
-fetchUserSuccessCmd : Route -> Nav.Key -> Cmd Msg
-fetchUserSuccessCmd route key =
-    if isAuthDisallowedRoute route then
-        Route.pushUrl key Route.Home
+pushAuthUrl : Route -> Nav.Key -> Maybe User -> Cmd msg
+pushAuthUrl route key user =
+    case user of
+        Just _ ->
+            if isAuthDisallowedRoute route then
+                Route.pushUrl key Route.Home
 
-    else
-        Cmd.none
+            else
+                Route.pushUrl key route
 
+        Nothing ->
+            if isAuthProtectedRoute route then
+                Route.pushUrl key Route.Login
 
-fetchUserFailureCmd : Route -> Nav.Key -> Cmd Msg
-fetchUserFailureCmd route key =
-    if isAuthProtectedRoute route then
-        Route.pushUrl key Route.Login
-
-    else
-        Cmd.none
+            else
+                Route.pushUrl key route
 
 
 update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
@@ -66,7 +68,12 @@ update msg model meta =
             ( { model | jwt = Just jwt }, Cmd.none )
 
         Logout ->
-            ( init Nothing, removeJwt () )
+            ( init Nothing
+            , Cmd.batch
+                [ removeJwt ()
+                , Api.fetchUser "" |> Cmd.map FetchUser
+                ]
+            )
 
         FetchUser res ->
             let
@@ -75,12 +82,12 @@ update msg model meta =
             in
             case res of
                 Success user ->
-                    ( { newModel | user = Just user }, fetchUserSuccessCmd meta.url meta.key )
+                    ( { newModel | user = Just user }, pushAuthUrl meta.url meta.key (Just user) )
 
                 Failure (Http.BadStatus { status }) ->
                     ( newModel
                     , if status.code == 401 then
-                        fetchUserFailureCmd meta.url meta.key
+                        pushAuthUrl meta.url meta.key Nothing
 
                       else
                         Cmd.none

@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Auth.Api as Auth
+import Auth.Api as Api
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
@@ -14,7 +14,7 @@ import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
-import Route exposing (Route, parseUrl, pushUrl)
+import Route exposing (Route)
 import Url
 import Url.Parser exposing (parse)
 
@@ -26,13 +26,13 @@ type alias Flags =
 
 fetchUser : Maybe String -> Cmd Msg
 fetchUser token =
-    Auth.fetchUser (token |> Maybe.withDefault "") |> Cmd.map FetchUser
+    Api.fetchUser (token |> Maybe.withDefault "") |> Cmd.map FetchUser
 
 
 init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
-      , url = parseUrl url
+      , url = Route.parseUrl url
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
@@ -48,32 +48,13 @@ mainUpdate msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model
-                    , let
-                        route =
-                            parseUrl url
-                      in
-                      case model.auth.user of
-                        Just _ ->
-                            if Auth.isAuthDisallowedRoute route then
-                                Route.pushUrl model.key Route.Home
-
-                            else
-                                Route.pushUrl model.key route
-
-                        Nothing ->
-                            if Auth.isAuthProtectedRoute route then
-                                Route.pushUrl model.key Route.Login
-
-                            else
-                                Route.pushUrl model.key route
-                    )
+                    ( model, Auth.pushAuthUrl (Route.parseUrl url) model.key model.auth.user )
 
                 Browser.External href ->
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = parseUrl url }, Cmd.none )
+            ( { model | url = Route.parseUrl url }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
