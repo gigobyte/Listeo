@@ -10,7 +10,7 @@ import RemoteData exposing (RemoteData(..))
 import Route as Route
 
 
-type alias Meta =
+type alias Context =
     { key : Nav.Key
     }
 
@@ -24,8 +24,8 @@ init =
     }
 
 
-update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
-update msg model meta =
+update : Msg -> Model -> Context -> ( Model, Cmd Msg )
+update msg model ctx =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -60,7 +60,7 @@ update msg model meta =
                                     , password = model.password
                                     }
                                     |> Cmd.map Login
-                                , Route.pushUrl meta.key Route.Home
+                                , Route.pushUrl ctx.key Route.Home
                                 ]
                             )
 

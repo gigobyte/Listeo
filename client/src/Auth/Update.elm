@@ -19,7 +19,7 @@ import Route exposing (Route)
 port removeJwt : () -> Cmd msg
 
 
-type alias Meta =
+type alias Context =
     { key : Nav.Key
     , url : Route
     }
@@ -61,8 +61,8 @@ pushAuthUrl route key user =
                 Route.pushUrl key route
 
 
-update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
-update msg model meta =
+update : Msg -> Model -> Context -> ( Model, Cmd Msg )
+update msg model ctx =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
@@ -82,12 +82,12 @@ update msg model meta =
             in
             case res of
                 Success user ->
-                    ( { newModel | user = Just user }, pushAuthUrl meta.url meta.key (Just user) )
+                    ( { newModel | user = Just user }, pushAuthUrl ctx.url ctx.key (Just user) )
 
                 Failure (Http.BadStatus { status }) ->
                     ( newModel
                     , if status.code == 401 then
-                        pushAuthUrl meta.url meta.key Nothing
+                        pushAuthUrl ctx.url ctx.key Nothing
 
                       else
                         Cmd.none

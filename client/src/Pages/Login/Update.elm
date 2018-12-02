@@ -10,7 +10,7 @@ import RemoteData exposing (RemoteData(..))
 import Route as Route
 
 
-type alias Meta =
+type alias Context =
     { key : Nav.Key
     }
 
@@ -27,8 +27,8 @@ init =
 port storeJwt : String -> Cmd msg
 
 
-update : Msg -> Model -> Meta -> ( Model, Cmd Msg )
-update msg model meta =
+update : Msg -> Model -> Context -> ( Model, Cmd Msg )
+update msg model ctx =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -54,7 +54,7 @@ update msg model meta =
                     ( newModel
                     , Cmd.batch
                         [ Auth.fetchUser jwt |> Cmd.map FetchUser
-                        , Route.pushUrl meta.key Route.Home
+                        , Route.pushUrl ctx.key Route.Home
                         , storeJwt jwt
                         ]
                     )
