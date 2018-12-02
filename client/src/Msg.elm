@@ -24,3 +24,5 @@ type Msg
     | RegisterPasswordUpdated String
     | RegisterAttempted
     | Register (WebData RegisterResponse)
+      -- Add playlist
+    | AddPlaylistShown

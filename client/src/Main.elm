@@ -10,6 +10,7 @@ import List
 import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.AddPlaylist as AddPlaylist
 import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
@@ -37,6 +38,7 @@ init flags url key =
       , register = Register.init
       , auth = Auth.init flags.jwt
       , home = Home.init
+      , addPlaylist = AddPlaylist.init
       }
     , fetchUser flags.jwt
     )
@@ -77,18 +79,23 @@ update msg model =
 
         ( newAuthModel, authMsg ) =
             Auth.update msg model.auth { key = model.key, url = model.url }
+
+        ( newAddPlaylistModel, addPlaylistMsg ) =
+            AddPlaylist.update msg model.addPlaylist
     in
     Debug.log ""
         ( { newMainModel
             | login = newLoginModel
             , register = newRegisterModel
             , auth = newAuthModel
+            , addPlaylist = newAddPlaylistModel
           }
         , Cmd.batch
             [ mainMsg
             , loginMsg
             , registerMsg
             , authMsg
+            , addPlaylistMsg
             ]
         )
 

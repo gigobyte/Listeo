@@ -4,11 +4,13 @@ import Auth.Api exposing (User)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (attribute, title)
 import Html.Styled.Events exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Route
 import UI.Colors exposing (blue150, blue50)
+import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
 import Utils.Styles exposing (StyledElement)
@@ -53,6 +55,16 @@ logo =
         ]
 
 
+addButton : StyledElement msg
+addButton =
+    styled Icon.plusCircle
+        [ fontSize <| px 25
+        , paddingRight <| px 10
+        , color blue150
+        , cursor pointer
+        ]
+
+
 viewPublicNavItems : List (Html msg)
 viewPublicNavItems =
     [ navItem { to = Route.Login } [] [ text "Sign In" ]
@@ -63,7 +75,8 @@ viewPublicNavItems =
 
 viewPrivateNavItems : User -> List (Html Msg)
 viewPrivateNavItems user =
-    [ navItem { to = Route.Home } [] [ text user.username ]
+    [ addButton [ title "Add new playlist", attribute "role" "button", onClick AddPlaylistShown ] []
+    , navItem { to = Route.Home } [] [ text user.username ]
     , navItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
     ]
 
