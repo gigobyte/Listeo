@@ -1,4 +1,4 @@
-module Pages.Register exposing (Model, init, update, view)
+module Pages.Register exposing (Model, init, title, update, view)
 
 import Pages.Register.Model as Model
 import Pages.Register.Update as Update
@@ -19,3 +19,8 @@ update =
 
 init =
     Update.init
+
+
+title : Model -> String
+title _ =
+    "Register - Listeo"

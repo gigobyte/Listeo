@@ -114,7 +114,22 @@ update msg model =
 
 view : AppModel -> Browser.Document Msg
 view model =
-    { title = "Hello world"
+    { title =
+        case model.url of
+            Route.Login ->
+                Login.title model.login
+
+            Route.Register ->
+                Register.title model.register
+
+            Route.About ->
+                "NotImplementedException"
+
+            Route.Home ->
+                Home.title model.home
+
+            Route.NotFound404 ->
+                "404 - Listeo"
     , body =
         List.singleton <|
             case model.url of

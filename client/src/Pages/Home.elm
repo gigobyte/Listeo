@@ -1,4 +1,4 @@
-module Pages.Home exposing (Model, init, update, view)
+module Pages.Home exposing (Model, init, title, update, view)
 
 import Pages.Home.Model as Model
 import Pages.Home.Update as Update
@@ -19,3 +19,8 @@ update =
 
 init =
     Update.init
+
+
+title : Model -> String
+title _ =
+    "Home - Listeo"

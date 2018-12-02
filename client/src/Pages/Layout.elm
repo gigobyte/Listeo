@@ -23,7 +23,7 @@ view page model =
             text ""
 
         Loading ->
-            text "Loading..."
+            text ""
 
         _ ->
             container []

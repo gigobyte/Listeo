@@ -1,4 +1,4 @@
-module Pages.Login exposing (Model, init, update, view)
+module Pages.Login exposing (Model, init, title, update, view)
 
 import Pages.Login.Model as Model
 import Pages.Login.Update as Update
@@ -19,3 +19,8 @@ update =
 
 init =
     Update.init
+
+
+title : Model -> String
+title _ =
+    "Login - Listeo"
