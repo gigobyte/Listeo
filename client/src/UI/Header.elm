@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Route
-import UI.Colors exposing (blue150, blue50)
+import UI.Colors exposing (blue150, blue50, crimson100)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
@@ -60,7 +60,7 @@ addButton =
     styled Icon.plusCircle
         [ fontSize <| px 25
         , paddingRight <| px 10
-        , color blue150
+        , color crimson100
         , cursor pointer
         ]
 
@@ -75,7 +75,12 @@ viewPublicNavItems =
 
 viewPrivateNavItems : User -> List (Html Msg)
 viewPrivateNavItems user =
-    [ addButton [ title "Add new playlist", attribute "role" "button", onClick AddPlaylistShown ] []
+    [ addButton
+        [ title "Add new playlist"
+        , attribute "role" "button"
+        , onClick AddPlaylistOverlayShown
+        ]
+        []
     , navItem { to = Route.Home } [] [ text user.username ]
     , navItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
     ]

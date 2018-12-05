@@ -4,6 +4,7 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.AddPlaylist.AddPlaylistOverlay as AddPlaylistOverlay
 import RemoteData exposing (RemoteData(..))
 import UI.Header as Header
 import Utils.Styles exposing (StyledElement)
@@ -13,6 +14,8 @@ container : StyledElement msg
 container =
     styled main_
         [ height <| pct 100
+        , flexDirection column
+        , displayFlex
         ]
 
 
@@ -24,11 +27,14 @@ view page model =
 
         Loading ->
             text ""
-
         _ ->
+
             container []
                 [ Header.view model
-                , page
+                , case model.addPlaylist.isOverlayShown of
+                    True ->
+                        AddPlaylistOverlay.view model.addPlaylist
 
-                -- , AddPlaylistOverlay.view model.addPlaylist
+                    False ->
+                        page
                 ]

@@ -21,7 +21,6 @@ view =
         , cursor pointer
         , focus
             [ outline none
-            , boxShadow5 zero zero (px 3) (px 1) blue100
             ]
         , active
             [ transform (scale 0.95)

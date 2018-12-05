@@ -8,4 +8,6 @@ import Pages.Home.Model exposing (Model)
 
 view : Model -> Html Msg
 view model =
-    div [] []
+    div []
+        [ text "Home page"
+        ]

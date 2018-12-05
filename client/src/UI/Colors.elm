@@ -1,4 +1,14 @@
-module UI.Colors exposing (blue100, blue150, blue200, blue50, gray100, redOrange100, white, whiteGray100)
+module UI.Colors exposing
+    ( blue100
+    , blue150
+    , blue200
+    , blue50
+    , crimson100
+    , gray100
+    , redOrange100
+    , white
+    , whiteGray100
+    )
 
 import Css exposing (..)
 
@@ -33,3 +43,7 @@ whiteGray100 =
 
 redOrange100 =
     hex "#ff5007"
+
+
+crimson100 =
+    hex "#f03764"

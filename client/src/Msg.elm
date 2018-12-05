@@ -25,4 +25,4 @@ type Msg
     | RegisterAttempted
     | Register (WebData RegisterResponse)
       -- Add playlist
-    | AddPlaylistShown
+    | AddPlaylistOverlayShown
