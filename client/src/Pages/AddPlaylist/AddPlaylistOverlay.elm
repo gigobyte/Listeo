@@ -27,6 +27,7 @@ optionsContainer =
         [ displayFlex
         , paddingTop <| pct 5
         , height <| pct 100
+        , justifyContent center
         ]
 
 
@@ -56,7 +57,7 @@ subtitle =
 optionCard : StyledElement msg
 optionCard =
     styled div
-        [ flex <| int 1
+        [ flexBasis <| pct 25
         , displayFlex
         , flexDirection column
         , alignItems center
@@ -106,8 +107,7 @@ view model =
             , div [] [ subtitle [] [ text "Choose a starting point" ] ]
             ]
         , optionsContainer []
-            [ optionCard [] []
-            , optionCard []
+            [ optionCard []
                 [ optionIcon Icon.folderPlus [] []
                 , optionDescription []
                     [ text "Start with an empty playlist. "
@@ -121,6 +121,5 @@ view model =
                     ]
                 , optionButton [] [ text "Import" ]
                 ]
-            , optionCard [] []
             ]
         ]
