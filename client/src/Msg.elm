@@ -26,3 +26,4 @@ type Msg
     | Register (WebData RegisterResponse)
       -- Add playlist
     | AddPlaylistOverlayShown
+    | CreateNewPlaylistSelected

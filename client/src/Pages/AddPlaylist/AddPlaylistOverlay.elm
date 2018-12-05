@@ -4,12 +4,16 @@ import Css exposing (..)
 import Css.Global exposing (children, typeSelector)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes as Attributes
+import Html.Styled.Events exposing (onClick)
 import Msg exposing (Msg(..))
 import Pages.AddPlaylist.Model exposing (Model)
+import Route exposing (pushUrl)
 import UI.Button as Button
 import UI.Colors exposing (blue150)
 import UI.Container as Container
 import UI.Icon as Icon
+import UI.Link as Link
 import Utils.Styles exposing (StyledElement)
 
 
@@ -65,7 +69,7 @@ optionCard =
         , hover
             [ children
                 [ typeSelector "i"
-                    [ transform <| scale 1.2
+                    [ transform <| scale 1.1
                     ]
                 ]
             ]
@@ -112,14 +116,14 @@ view model =
                 , optionDescription []
                     [ text "Start with an empty playlist. "
                     ]
-                , optionButton [] [ text "Create new" ]
+                , optionButton [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
                 ]
             , optionCard []
                 [ optionIcon Icon.cloudDownload [] []
                 , optionDescription []
                     [ text "Import your existing playlist."
                     ]
-                , optionButton [] [ text "Import" ]
+                , optionButton [ Attributes.disabled True ] [ text "Import" ]
                 ]
             ]
         ]

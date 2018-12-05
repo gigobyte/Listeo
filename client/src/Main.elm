@@ -81,7 +81,7 @@ update msg model =
             Auth.update msg model.auth { key = model.key, url = model.url }
 
         ( newAddPlaylistModel, addPlaylistMsg ) =
-            AddPlaylist.update msg model.addPlaylist
+            AddPlaylist.update msg model.addPlaylist { key = model.key }
     in
     Debug.log ""
         ( { newMainModel
@@ -116,25 +116,31 @@ view model =
             Route.Home ->
                 Home.title model.home
 
+            Route.CreateNewPlaylist ->
+                "Not implemented"
+
             Route.NotFound404 ->
                 "404 - Listeo"
     , body =
-        List.singleton <|
-            case model.url of
-                Route.Login ->
-                    Layout.view (model.login |> Login.view) model |> toUnstyled
+        [ case model.url of
+            Route.Login ->
+                Layout.view (model.login |> Login.view) model |> toUnstyled
 
-                Route.Register ->
-                    Layout.view (model.register |> Register.view) model |> toUnstyled
+            Route.Register ->
+                Layout.view (model.register |> Register.view) model |> toUnstyled
 
-                Route.About ->
-                    text "NotImplementedException"
+            Route.About ->
+                text "NotImplementedException"
 
-                Route.Home ->
-                    Layout.view (model.home |> Home.view) model |> toUnstyled
+            Route.Home ->
+                Layout.view (model.home |> Home.view) model |> toUnstyled
 
-                Route.NotFound404 ->
-                    text "Not Found"
+            Route.CreateNewPlaylist ->
+                Layout.view (model.addPlaylist |> AddPlaylist.view) model |> toUnstyled
+
+            Route.NotFound404 ->
+                text "Not Found"
+        ]
     }
 
 
