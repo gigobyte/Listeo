@@ -8,6 +8,7 @@ module UI.Colors exposing
     , redOrange100
     , white
     , whiteGray100
+    , whiteGray50
     )
 
 import Css exposing (..)
@@ -35,6 +36,10 @@ blue200 =
 
 white =
     hex "#ffffff"
+
+
+whiteGray50 =
+    hex "#f7f8f9"
 
 
 whiteGray100 =
