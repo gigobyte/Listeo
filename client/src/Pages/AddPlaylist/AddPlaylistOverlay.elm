@@ -1,6 +1,8 @@
 module Pages.AddPlaylist.AddPlaylistOverlay exposing (view)
 
 import Css exposing (..)
+import Css.Global exposing (children, typeSelector)
+import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Msg exposing (Msg(..))
 import Pages.AddPlaylist.Model exposing (Model)
@@ -13,9 +15,18 @@ import Utils.Styles exposing (StyledElement)
 
 container : StyledElement msg
 container =
+    styled (Container.fullHeight div)
+        [ displayFlex
+        , flexDirection column
+        ]
+
+
+optionsContainer : StyledElement msg
+optionsContainer =
     styled div
         [ displayFlex
         , paddingTop <| pct 5
+        , height <| pct 100
         ]
 
 
@@ -44,9 +55,19 @@ subtitle =
 
 optionCard : StyledElement msg
 optionCard =
-    styled (Container.centered div)
+    styled div
         [ flex <| int 1
+        , displayFlex
+        , flexDirection column
+        , alignItems center
         , padding2 zero (px 10)
+        , hover
+            [ children
+                [ typeSelector "i"
+                    [ transform <| scale 1.2
+                    ]
+                ]
+            ]
         ]
 
 
@@ -56,6 +77,7 @@ optionIcon icon =
         [ textAlign center
         , fontSize <| rem 5
         , color blue150
+        , transition [ Transitions.transform 300 ]
         ]
 
 
@@ -77,13 +99,13 @@ optionButton =
 
 view : Model -> Html Msg
 view model =
-    Container.fullHeight div
+    container
         []
         [ header []
             [ div [] [ title [] [ text "New playlist" ] ]
             , div [] [ subtitle [] [ text "Choose a starting point" ] ]
             ]
-        , container []
+        , optionsContainer []
             [ optionCard [] []
             , optionCard []
                 [ optionIcon Icon.folderPlus [] []
