@@ -73,14 +73,19 @@ viewPublicNavItems =
     ]
 
 
-viewPrivateNavItems : User -> List (Html Msg)
-viewPrivateNavItems user =
-    [ addButton
-        [ title "Add new playlist"
-        , attribute "role" "button"
-        , onClick AddPlaylistOverlayShown
-        ]
-        []
+viewPrivateNavItems : User -> Bool -> List (Html Msg)
+viewPrivateNavItems user showAddPlaylistButton =
+    [ case showAddPlaylistButton of
+        True ->
+            addButton
+                [ title "Add new playlist"
+                , attribute "role" "button"
+                , onClick AddPlaylistOverlayShown
+                ]
+                []
+
+        False ->
+            text ""
     , navItem { to = Route.Home } [] [ text user.username ]
     , navItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
     ]
@@ -93,7 +98,7 @@ view model =
         , nav []
             (case model.auth.user of
                 Just user ->
-                    viewPrivateNavItems user
+                    viewPrivateNavItems user (model.url /= Route.CreatePlaylist)
 
                 Nothing ->
                     viewPublicNavItems
