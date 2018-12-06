@@ -3,6 +3,7 @@ module UI.Icon exposing
     , cloudUpload
     , folderPlus
     , plusCircle
+    , times
     )
 
 import Css exposing (..)
@@ -37,3 +38,8 @@ cloudUpload =
 cloudDownload : StyledElement msg
 cloudDownload =
     icon "fas fa-cloud-download-alt"
+
+
+times : StyledElement msg
+times =
+    icon "fas fa-times"

@@ -27,3 +27,4 @@ type Msg
       -- Add playlist
     | AddPlaylistOverlayShown
     | CreateNewPlaylistSelected
+    | AddPlaylistModalClosed

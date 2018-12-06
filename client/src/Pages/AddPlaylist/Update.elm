@@ -26,5 +26,8 @@ update msg model ctx =
         CreateNewPlaylistSelected ->
             ( { model | isOverlayShown = False }, pushUrl ctx.key Route.CreateNewPlaylist )
 
+        AddPlaylistModalClosed ->
+            ( { model | isOverlayShown = False }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )

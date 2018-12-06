@@ -45,10 +45,11 @@ view page model =
             container []
                 [ global globalStyle
                 , Header.view model
+                , page
                 , case model.addPlaylist.isOverlayShown of
                     True ->
                         AddPlaylistOverlay.view model.addPlaylist
 
                     False ->
-                        page
+                        text ""
                 ]

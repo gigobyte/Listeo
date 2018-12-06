@@ -14,6 +14,7 @@ import UI.Colors exposing (blue150)
 import UI.Container as Container
 import UI.Icon as Icon
 import UI.Link as Link
+import UI.Modal as Modal
 import Utils.Styles exposing (StyledElement)
 
 
@@ -39,7 +40,6 @@ header : StyledElement msg
 header =
     styled div
         [ textAlign center
-        , paddingTop <| pct 5
         ]
 
 
@@ -104,26 +104,29 @@ optionButton =
 
 view : Model -> Html Msg
 view model =
-    container
+    Modal.view { onClose = AddPlaylistModalClosed }
         []
-        [ header []
-            [ div [] [ title [] [ text "New playlist" ] ]
-            , div [] [ subtitle [] [ text "Choose a starting point" ] ]
-            ]
-        , optionsContainer []
-            [ optionCard []
-                [ optionIcon Icon.folderPlus [] []
-                , optionDescription []
-                    [ text "Start with an empty playlist. "
-                    ]
-                , optionButton [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
+        [ container
+            []
+            [ header []
+                [ div [] [ title [] [ text "New playlist" ] ]
+                , div [] [ subtitle [] [ text "Choose a starting point" ] ]
                 ]
-            , optionCard []
-                [ optionIcon Icon.cloudDownload [] []
-                , optionDescription []
-                    [ text "Import your existing playlist."
+            , optionsContainer []
+                [ optionCard []
+                    [ optionIcon Icon.folderPlus [] []
+                    , optionDescription []
+                        [ text "Start with an empty playlist. "
+                        ]
+                    , optionButton [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
                     ]
-                , optionButton [ Attributes.disabled True ] [ text "Import" ]
+                , optionCard []
+                    [ optionIcon Icon.cloudDownload [] []
+                    , optionDescription []
+                        [ text "Import your existing playlist."
+                        ]
+                    , optionButton [ Attributes.disabled True ] [ text "Import" ]
+                    ]
                 ]
             ]
         ]
