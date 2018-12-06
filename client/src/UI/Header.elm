@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Route
-import UI.Colors exposing (blue150, blue50, crimson100)
+import UI.Colors exposing (white, blue150, blue50, crimson100)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
@@ -21,6 +21,7 @@ container =
     styled div
         [ displayFlex
         , justifyContent spaceBetween
+        , backgroundColor white
         ]
 
 
@@ -50,7 +51,7 @@ navItem props =
 logo : StyledElement msg
 logo =
     styled div
-        [ padding <| px 20
+        [ padding2 (px 10) (px 20)
         , paddingLeft <| pct 4
         ]
 
