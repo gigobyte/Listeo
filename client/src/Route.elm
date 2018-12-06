@@ -12,7 +12,7 @@ type Route
     | Login
     | Register
     | About
-    | CreateNewPlaylist
+    | CreatePlaylist
     | NotFound404
 
 
@@ -31,7 +31,7 @@ toString route =
         About ->
             "about"
 
-        CreateNewPlaylist ->
+        CreatePlaylist ->
             "create-playlist"
 
         NotFound404 ->
@@ -55,7 +55,7 @@ parser =
         , Parser.map Login (s "login")
         , Parser.map Register (s "register")
         , Parser.map About (s "about")
-        , Parser.map CreateNewPlaylist (s "create-playlist")
+        , Parser.map CreatePlaylist (s "create-playlist")
         , Parser.map NotFound404 (s "404")
         ]
 

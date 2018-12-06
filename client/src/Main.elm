@@ -116,7 +116,7 @@ view model =
             Route.Home ->
                 Home.title model.home
 
-            Route.CreateNewPlaylist ->
+            Route.CreatePlaylist ->
                 "Not implemented"
 
             Route.NotFound404 ->
@@ -135,7 +135,7 @@ view model =
             Route.Home ->
                 Layout.view (model.home |> Home.view) model |> toUnstyled
 
-            Route.CreateNewPlaylist ->
+            Route.CreatePlaylist ->
                 Layout.view (model.addPlaylist |> AddPlaylist.view) model |> toUnstyled
 
             Route.NotFound404 ->
