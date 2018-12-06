@@ -5,7 +5,7 @@ import Css.Global exposing (Snippet, global, typeSelector)
 import Html.Styled exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
-import Pages.AddPlaylist.AddPlaylistOverlay as AddPlaylistOverlay
+import Pages.AddPlaylist.AddPlaylistModal as AddPlaylistModal
 import RemoteData exposing (RemoteData(..))
 import UI.Colors exposing (whiteGray50)
 import UI.Header as Header
@@ -48,7 +48,7 @@ view page model =
                 , page
                 , case model.addPlaylist.isOverlayShown of
                     True ->
-                        AddPlaylistOverlay.view model.addPlaylist
+                        AddPlaylistModal.view model.addPlaylist
 
                     False ->
                         text ""

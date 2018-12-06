@@ -1,4 +1,4 @@
-module Pages.AddPlaylist.AddPlaylistOverlay exposing (view)
+module Pages.AddPlaylist.AddPlaylistModal exposing (view)
 
 import Css exposing (..)
 import Css.Global exposing (children, typeSelector)
