@@ -112,7 +112,7 @@ view model =
     { title =
         case model.url of
             Route.Login ->
-                Login.title model.login
+                Login.title model
 
             Route.Register ->
                 Register.title model.register
@@ -131,7 +131,7 @@ view model =
     , body =
         [ case model.url of
             Route.Login ->
-                Layout.view (model.login |> Login.view) model |> toUnstyled
+                Layout.view (model |> Login.view) model |> toUnstyled
 
             Route.Register ->
                 Layout.view (model.register |> Register.view) model |> toUnstyled

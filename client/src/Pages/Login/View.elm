@@ -44,38 +44,36 @@ submitButton =
         ]
 
 
-view : Model -> Html Msg
-view model =
-    let
-        validationErrors =
-            Selectors.getValidationErrors model
+type alias Props =
+    { usernameError : Maybe String
+    , passwordError : Maybe String
+    , usernameValue : String
+    , passwordValue : String
+    , isSubmitButtonDisabled : Bool
+    , loginRequestErrorText : String
+    }
 
-        usernameError =
-            getErrorForField Username validationErrors
-                |> Maybe.map Validation.errToString
 
-        passwordError =
-            getErrorForField Password validationErrors
-                |> Maybe.map Validation.errToString
-    in
+view : Props -> Html Msg
+view props =
     loginForm [ onSubmit LoginAttempted ]
         [ title [] [ text "Sign In" ]
         , Input.view
-            { validationError = usernameError
+            { validationError = props.usernameError
             , inputAttributes =
                 [ placeholder "Username"
-                , value model.username
+                , value props.usernameValue
                 , onInput LoginUsernameUpdated
                 ]
             }
             []
             []
         , Input.view
-            { validationError = passwordError
+            { validationError = props.passwordError
             , inputAttributes =
                 [ placeholder "Password"
                 , type_ "password"
-                , value model.password
+                , value props.passwordValue
                 , onInput LoginPasswordUpdated
                 ]
             }
@@ -83,9 +81,9 @@ view model =
             []
         , submitButton
             [ type_ "submit"
-            , disabled <| Selectors.isSubmitButtonDisabled model
+            , disabled props.isSubmitButtonDisabled
             ]
             [ text "Let's go!" ]
-        , Error.text { error = Selectors.getLoginRequestErrorText model } [] []
+        , Error.text { error = props.loginRequestErrorText } [] []
         , Link.view { to = Route.Register } [] [ text "Don't have an account?" ]
         ]

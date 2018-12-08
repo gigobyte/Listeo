@@ -5,7 +5,7 @@ import Browser.Navigation as Nav
 import Pages.CreatePlaylist as CreatePlaylist
 import Pages.Header as Header
 import Pages.Home as Home
-import Pages.Login as Login
+import Pages.Login.Model as Login
 import Pages.Register as Register
 import Route exposing (Route)
 

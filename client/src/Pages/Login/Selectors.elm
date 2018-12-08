@@ -1,23 +1,28 @@
 module Pages.Login.Selectors exposing
     ( getLoginRequestErrorText
+    , getPasswordError
+    , getPasswordValue
+    , getUsernameError
+    , getUsernameValue
     , getValidationErrors
     , isSubmitButtonDisabled
     )
 
+import Model exposing (AppModel)
 import Pages.Login.Api as Api exposing (LoginResponse(..))
-import Pages.Login.Model exposing (Model)
-import Pages.Login.Validation exposing (LoginField, LoginValidationError, loginValidator)
+import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..), loginValidator)
 import RemoteData exposing (RemoteData(..))
 import Result.Extra as Result
 import Utils.Api exposing (isLoading)
+import Utils.Validation exposing (getErrorForField)
 import Validate exposing (validate)
 
 
-getValidationErrors : Model -> List ( LoginField, LoginValidationError )
+getValidationErrors : AppModel -> List ( LoginField, LoginValidationError )
 getValidationErrors model =
-    case model.showErrors of
+    case model.login.showErrors of
         True ->
-            validate loginValidator model
+            validate loginValidator model.login
                 |> Result.map (always [])
                 |> Result.merge
 
@@ -25,9 +30,9 @@ getValidationErrors model =
             []
 
 
-getLoginRequestErrorText : Model -> String
+getLoginRequestErrorText : AppModel -> String
 getLoginRequestErrorText model =
-    case model.loginResponse of
+    case model.login.loginResponse of
         Success res ->
             case res of
                 ErrorResponse { errorDescription } ->
@@ -40,7 +45,29 @@ getLoginRequestErrorText model =
             ""
 
 
-isSubmitButtonDisabled : Model -> Bool
+isSubmitButtonDisabled : AppModel -> Bool
 isSubmitButtonDisabled model =
-    isLoading model.loginResponse
+    isLoading model.login.loginResponse
         || (List.length (getValidationErrors model) > 0)
+
+
+getPasswordError : AppModel -> Maybe String
+getPasswordError model =
+    getErrorForField Password (getValidationErrors model)
+        |> Maybe.map Validation.errToString
+
+
+getPasswordValue : AppModel -> String
+getPasswordValue model =
+    model.login.password
+
+
+getUsernameError : AppModel -> Maybe String
+getUsernameError model =
+    getErrorForField Username (getValidationErrors model)
+        |> Maybe.map Validation.errToString
+
+
+getUsernameValue : AppModel -> String
+getUsernameValue model =
+    model.login.username
