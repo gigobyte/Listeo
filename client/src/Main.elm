@@ -74,7 +74,7 @@ update msg model =
             mainUpdate msg model
 
         ( newLoginModel, loginMsg ) =
-            Login.update msg model.login { key = model.key }
+            Login.update msg model
 
         ( newRegisterModel, registerMsg ) =
             Register.update msg model.register { key = model.key }
