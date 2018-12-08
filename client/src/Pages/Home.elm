@@ -1,26 +1,27 @@
-module Pages.Home exposing (Model, init, title, update, view)
+module Pages.Home exposing (init, title, update, view)
 
-import Pages.Home.Model as Model
+import Html.Styled exposing (Html)
+import Model exposing (AppModel)
+import Msg exposing (Msg)
+import Pages.Home.Model exposing (Model)
 import Pages.Home.Update as Update
 import Pages.Home.View as View
 
 
-type alias Model =
-    Model.Model
+view : AppModel -> Html Msg
+view model =
+    View.view {}
 
 
-view =
-    View.view
-
-
-update =
-    Update.update
+update : Msg -> AppModel -> ( Model, Cmd Msg )
+update msg model =
+    Update.update msg model.home
 
 
 init =
     Update.init
 
 
-title : Model -> String
+title : AppModel -> String
 title _ =
     "Home - Listeo"

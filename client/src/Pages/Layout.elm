@@ -44,7 +44,7 @@ view page model =
         _ ->
             container []
                 [ global globalStyle
-                , Header.view model.header
+                , Header.view model
                 , page
                 , case model.header.isOverlayShown of
                     True ->

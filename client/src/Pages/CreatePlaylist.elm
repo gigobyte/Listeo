@@ -1,26 +1,27 @@
-module Pages.CreatePlaylist exposing (Model, init, title, update, view)
+module Pages.CreatePlaylist exposing (init, title, update, view)
 
-import Pages.CreatePlaylist.Model as Model
+import Html.Styled exposing (Html)
+import Model exposing (AppModel)
+import Msg exposing (Msg)
+import Pages.CreatePlaylist.Model exposing (Model)
 import Pages.CreatePlaylist.Update as Update
 import Pages.CreatePlaylist.View as View
 
 
-type alias Model =
-    Model.Model
+view : AppModel -> Html Msg
+view model =
+    View.view {}
 
 
-view =
-    View.view
-
-
-update =
-    Update.update
+update : Msg -> AppModel -> ( Model, Cmd Msg )
+update msg model =
+    Update.update msg model.createPlaylist
 
 
 init =
     Update.init
 
 
-title : Model -> String
+title : AppModel -> String
 title _ =
     "Create playlist - Listeo"

@@ -10,10 +10,12 @@ import Auth.Api as Api exposing (User)
 import Auth.Model exposing (Model)
 import Browser.Navigation as Nav
 import Http
+import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Pages.Login.Api exposing (LoginResponse(..))
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
+import Selectors
 
 
 port removeJwt : () -> Cmd msg
@@ -61,8 +63,17 @@ pushAuthUrl route key user =
                 Route.pushUrl key route
 
 
-update : Msg -> Model -> Context -> ( Model, Cmd Msg )
-update msg model ctx =
+update : Msg -> AppModel -> ( Model, Cmd Msg )
+update msg model =
+    updateAuth msg
+        model.auth
+        { key = Selectors.getNavKey model
+        , url = Selectors.getRoute model
+        }
+
+
+updateAuth : Msg -> Model -> Context -> ( Model, Cmd Msg )
+updateAuth msg model ctx =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
