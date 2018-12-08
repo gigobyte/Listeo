@@ -7,6 +7,7 @@ import Pages.Login.Model exposing (Model)
 import Pages.Login.Selectors as Selectors
 import Pages.Login.Update as Update
 import Pages.Login.View as View
+import Selectors
 
 
 view : AppModel -> Html Msg
@@ -23,7 +24,10 @@ view model =
 
 update : Msg -> AppModel -> ( Model, Cmd Msg )
 update msg model =
-    Update.update msg model.login { key = model.key }
+    Update.update msg
+        model.login
+        { key = Selectors.getNavKey model
+        }
 
 
 init =

@@ -1,26 +1,39 @@
-module Pages.Register exposing (Model, init, title, update, view)
+module Pages.Register exposing (init, title, update, view)
 
-import Pages.Register.Model as Model
+import Html.Styled exposing (Html)
+import Model exposing (AppModel)
+import Msg exposing (Msg)
+import Pages.Register.Model exposing (Model)
+import Pages.Register.Selectors as Selectors
 import Pages.Register.Update as Update
 import Pages.Register.View as View
+import Selectors
 
 
-type alias Model =
-    Model.Model
-
-
-view =
+view : AppModel -> Html Msg
+view model =
     View.view
+        { passwordError = Selectors.getPasswordError model
+        , passwordValue = Selectors.getPasswordValue model
+        , usernameError = Selectors.getUsernameError model
+        , usernameValue = Selectors.getUsernameValue model
+        , registerRequestErrorText = Selectors.getRegisterRequestErrorText model
+        , isSubmitButtonDisabled = Selectors.isSubmitButtonDisabled model
+        }
 
 
-update =
-    Update.update
+update : Msg -> AppModel -> ( Model, Cmd Msg )
+update msg model =
+    Update.update msg
+        model.register
+        { key = Selectors.getNavKey model
+        }
 
 
 init =
     Update.init
 
 
-title : Model -> String
+title : AppModel -> String
 title _ =
     "Register - Listeo"

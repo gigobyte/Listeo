@@ -42,48 +42,46 @@ submitButton =
         ]
 
 
-view : Model -> Html Msg
-view model =
-    let
-        validationErrors =
-            Selectors.getValidationErrors model
+type alias Props =
+    { usernameError : Maybe String
+    , usernameValue : String
+    , passwordError : Maybe String
+    , passwordValue : String
+    , isSubmitButtonDisabled : Bool
+    , registerRequestErrorText : String
+    }
 
-        usernameError =
-            getErrorForField Username validationErrors
-                |> Maybe.map Validation.errToString
 
-        passwordError =
-            getErrorForField Password validationErrors
-                |> Maybe.map Validation.errToString
-    in
+view : Props -> Html Msg
+view props =
     registerForm [ onSubmit RegisterAttempted ]
-            [ title [] [ text "Register" ]
-            , Input.view
-                { validationError = usernameError
-                , inputAttributes =
-                    [ placeholder "Username"
-                    , value model.username
-                    , onInput RegisterUsernameUpdated
-                    ]
-                }
-                []
-                []
-            , Input.view
-                { validationError = passwordError
-                , inputAttributes =
-                    [ placeholder "Password"
-                    , type_ "password"
-                    , value model.password
-                    , onInput RegisterPasswordUpdated
-                    ]
-                }
-                []
-                []
-            , submitButton
-                [ type_ "submit"
-                , disabled <| Selectors.isSubmitButtonDisabled model
+        [ title [] [ text "Register" ]
+        , Input.view
+            { validationError = props.usernameError
+            , inputAttributes =
+                [ placeholder "Username"
+                , value props.usernameValue
+                , onInput RegisterUsernameUpdated
                 ]
-                [ text "Beam me up!" ]
-            , Error.text { error = Selectors.getRegisterRequestErrorText model } [] []
-            , Link.view { to = Route.Login } [] [ text "Already have an account?" ]
+            }
+            []
+            []
+        , Input.view
+            { validationError = props.passwordError
+            , inputAttributes =
+                [ placeholder "Password"
+                , type_ "password"
+                , value props.passwordValue
+                , onInput RegisterPasswordUpdated
+                ]
+            }
+            []
+            []
+        , submitButton
+            [ type_ "submit"
+            , disabled props.isSubmitButtonDisabled
             ]
+            [ text "Beam me up!" ]
+        , Error.text { error = props.registerRequestErrorText } [] []
+        , Link.view { to = Route.Login } [] [ text "Already have an account?" ]
+        ]

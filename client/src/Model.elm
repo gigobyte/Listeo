@@ -6,7 +6,7 @@ import Pages.CreatePlaylist as CreatePlaylist
 import Pages.Header as Header
 import Pages.Home as Home
 import Pages.Login.Model as Login
-import Pages.Register as Register
+import Pages.Register.Model as Register
 import Route exposing (Route)
 
 

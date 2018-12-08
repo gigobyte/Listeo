@@ -77,7 +77,7 @@ update msg model =
             Login.update msg model
 
         ( newRegisterModel, registerMsg ) =
-            Register.update msg model.register { key = model.key }
+            Register.update msg model
 
         ( newAuthModel, authMsg ) =
             Auth.update msg model.auth { key = model.key, url = model.url }
@@ -115,7 +115,7 @@ view model =
                 Login.title model
 
             Route.Register ->
-                Register.title model.register
+                Register.title model
 
             Route.About ->
                 "NotImplementedException"
@@ -131,10 +131,10 @@ view model =
     , body =
         [ case model.url of
             Route.Login ->
-                Layout.view (model |> Login.view) model |> toUnstyled
+                Layout.view (Login.view model) model |> toUnstyled
 
             Route.Register ->
-                Layout.view (model.register |> Register.view) model |> toUnstyled
+                Layout.view (Register.view model) model |> toUnstyled
 
             Route.About ->
                 text "NotImplementedException"
