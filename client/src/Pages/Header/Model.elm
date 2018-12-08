@@ -1,4 +1,4 @@
-module Pages.AddPlaylist.Model exposing (Model)
+module Pages.Header.Model exposing (Model)
 
 
 type alias Model =

@@ -1,4 +1,4 @@
-module UI.Header exposing (view)
+module Pages.Header.View exposing (view)
 
 import Auth.Api exposing (User)
 import Css exposing (..)
@@ -6,10 +6,10 @@ import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (attribute, title)
 import Html.Styled.Events exposing (..)
-import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.Header.Model exposing (Model)
 import Route
-import UI.Colors exposing (white, blue150, blue50, crimson100)
+import UI.Colors exposing (blue150, blue50, crimson100, white)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
@@ -92,15 +92,16 @@ viewPrivateNavItems user showAddPlaylistButton =
     ]
 
 
-view : AppModel -> Html Msg
+view : Model -> Html Msg
 view model =
     container []
         [ logo [] [ Logo.view ]
         , nav []
-            (case model.auth.user of
+            (case Nothing of
                 Just user ->
-                    viewPrivateNavItems user (model.url /= Route.CreatePlaylist)
+                    viewPrivateNavItems user True
 
+                --(model.url /= Route.CreatePlaylist)
                 Nothing ->
                     viewPublicNavItems
             )

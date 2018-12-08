@@ -5,10 +5,10 @@ import Css.Global exposing (Snippet, global, typeSelector)
 import Html.Styled exposing (..)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
-import Pages.AddPlaylist.AddPlaylistModal as AddPlaylistModal
+import Pages.Header as Header
+import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import RemoteData exposing (RemoteData(..))
 import UI.Colors exposing (whiteGray50)
-import UI.Header as Header
 import Utils.Styles exposing (StyledElement)
 
 
@@ -44,11 +44,11 @@ view page model =
         _ ->
             container []
                 [ global globalStyle
-                , Header.view model
+                , Header.view model.header
                 , page
-                , case model.addPlaylist.isOverlayShown of
+                , case model.header.isOverlayShown of
                     True ->
-                        AddPlaylistModal.view model.addPlaylist
+                        AddPlaylistModal.view
 
                     False ->
                         text ""

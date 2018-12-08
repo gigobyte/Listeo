@@ -2,7 +2,8 @@ module Model exposing (AppModel)
 
 import Auth.Model as Auth
 import Browser.Navigation as Nav
-import Pages.AddPlaylist as AddPlaylist
+import Pages.CreatePlaylist as CreatePlaylist
+import Pages.Header as Header
 import Pages.Home as Home
 import Pages.Login as Login
 import Pages.Register as Register
@@ -16,5 +17,6 @@ type alias AppModel =
     , register : Register.Model
     , auth : Auth.Model
     , home : Home.Model
-    , addPlaylist : AddPlaylist.Model
+    , createPlaylist : CreatePlaylist.Model
+    , header : Header.Model
     }

@@ -1,9 +1,9 @@
-module Pages.AddPlaylist.View exposing (view)
+module Pages.CreatePlaylist.View exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Msg exposing (Msg)
-import Pages.AddPlaylist.Model exposing (Model)
+import Pages.CreatePlaylist.Model exposing (Model)
 
 
 view : Model -> Html Msg

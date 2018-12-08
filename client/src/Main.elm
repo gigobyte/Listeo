@@ -10,7 +10,8 @@ import List
 import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
-import Pages.AddPlaylist as AddPlaylist
+import Pages.CreatePlaylist as CreatePlaylist
+import Pages.Header as Header
 import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
@@ -38,7 +39,8 @@ init flags url key =
       , register = Register.init
       , auth = Auth.init flags.jwt
       , home = Home.init
-      , addPlaylist = AddPlaylist.init
+      , createPlaylist = CreatePlaylist.init
+      , header = Header.init
       }
     , fetchUser flags.jwt
     )
@@ -80,22 +82,27 @@ update msg model =
         ( newAuthModel, authMsg ) =
             Auth.update msg model.auth { key = model.key, url = model.url }
 
-        ( newAddPlaylistModel, addPlaylistMsg ) =
-            AddPlaylist.update msg model.addPlaylist { key = model.key }
+        ( newCreatePlaylistModel, createPlaylistMsg ) =
+            CreatePlaylist.update msg model.createPlaylist
+
+        ( newHeaderModel, headerMsg ) =
+            Header.update msg model.header { key = model.key }
     in
     Debug.log ""
         ( { newMainModel
             | login = newLoginModel
             , register = newRegisterModel
             , auth = newAuthModel
-            , addPlaylist = newAddPlaylistModel
+            , createPlaylist = newCreatePlaylistModel
+            , header = newHeaderModel
           }
         , Cmd.batch
             [ mainMsg
             , loginMsg
             , registerMsg
             , authMsg
-            , addPlaylistMsg
+            , createPlaylistMsg
+            , headerMsg
             ]
         )
 
@@ -117,7 +124,7 @@ view model =
                 Home.title model.home
 
             Route.CreatePlaylist ->
-                "Not implemented"
+                CreatePlaylist.title model.createPlaylist
 
             Route.NotFound404 ->
                 "404 - Listeo"
@@ -136,7 +143,7 @@ view model =
                 Layout.view (model.home |> Home.view) model |> toUnstyled
 
             Route.CreatePlaylist ->
-                Layout.view (model.addPlaylist |> AddPlaylist.view) model |> toUnstyled
+                Layout.view (model.createPlaylist |> CreatePlaylist.view) model |> toUnstyled
 
             Route.NotFound404 ->
                 text "Not Found"

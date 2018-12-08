@@ -1,4 +1,4 @@
-module Pages.AddPlaylist.AddPlaylistModal exposing (view)
+module Pages.Header.AddPlaylistModal exposing (view)
 
 import Css exposing (..)
 import Css.Global exposing (children, typeSelector)
@@ -7,7 +7,6 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attributes
 import Html.Styled.Events exposing (onClick)
 import Msg exposing (Msg(..))
-import Pages.AddPlaylist.Model exposing (Model)
 import Route exposing (pushUrl)
 import UI.Button as Button
 import UI.Colors exposing (blue150)
@@ -102,8 +101,8 @@ optionButton =
         ]
 
 
-view : Model -> Html Msg
-view model =
+view : Html Msg
+view =
     Modal.view { onClose = AddPlaylistModalClosed }
         []
         [ container

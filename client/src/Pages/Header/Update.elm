@@ -1,8 +1,8 @@
-module Pages.AddPlaylist.Update exposing (init, update)
+module Pages.Header.Update exposing (init, update)
 
 import Browser.Navigation as Nav
 import Msg exposing (Msg(..))
-import Pages.AddPlaylist.Model exposing (Model)
+import Pages.Header.Model exposing (Model)
 import Route exposing (pushUrl)
 
 
