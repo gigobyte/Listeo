@@ -34,7 +34,7 @@ fetchUser token =
 init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
-      , url = Route.parseUrl url
+      , route = Route.parseUrl url
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
@@ -58,7 +58,7 @@ mainUpdate msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = Route.parseUrl url }, Cmd.none )
+            ( { model | route = Route.parseUrl url }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -110,7 +110,7 @@ update msg model =
 view : AppModel -> Browser.Document Msg
 view model =
     { title =
-        case model.url of
+        case model.route of
             Route.Login ->
                 Login.title model
 
@@ -129,7 +129,7 @@ view model =
             Route.NotFound404 ->
                 "404 - Listeo"
     , body =
-        [ case model.url of
+        [ case model.route of
             Route.Login ->
                 Layout.view (Login.view model) model |> toUnstyled
 

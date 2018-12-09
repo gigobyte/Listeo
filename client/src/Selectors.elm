@@ -12,4 +12,4 @@ getNavKey model =
 
 getRoute : AppModel -> Route
 getRoute model =
-    model.url
+    model.route

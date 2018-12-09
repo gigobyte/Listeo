@@ -23,7 +23,7 @@ port removeJwt : () -> Cmd msg
 
 type alias Context =
     { key : Nav.Key
-    , url : Route
+    , route : Route
     }
 
 
@@ -68,7 +68,7 @@ update msg model =
     updateAuth msg
         model.auth
         { key = Selectors.getNavKey model
-        , url = Selectors.getRoute model
+        , route = Selectors.getRoute model
         }
 
 
@@ -93,12 +93,12 @@ updateAuth msg model ctx =
             in
             case res of
                 Success user ->
-                    ( { newModel | user = Just user }, pushAuthUrl ctx.url ctx.key (Just user) )
+                    ( { newModel | user = Just user }, pushAuthUrl ctx.route ctx.key (Just user) )
 
                 Failure (Http.BadStatus { status }) ->
                     ( newModel
                     , if status.code == 401 then
-                        pushAuthUrl ctx.url ctx.key Nothing
+                        pushAuthUrl ctx.route ctx.key Nothing
 
                       else
                         Cmd.none
