@@ -27,6 +27,7 @@ update msg model =
     Update.update msg
         model.register
         { key = Selectors.getNavKey model
+        , route = Selectors.getRoute model
         }
 
 

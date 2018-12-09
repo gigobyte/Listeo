@@ -7,11 +7,12 @@ import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
-import Route as Route
+import Route exposing (Route)
 
 
 type alias Context =
     { key : Nav.Key
+    , route : Route
     }
 
 
@@ -61,6 +62,15 @@ update msg model ctx =
 
                 _ ->
                     ( newModel, Cmd.none )
+
+        UrlChanged _ ->
+            ( if ctx.route == Route.Login then
+                init
+
+              else
+                model
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )

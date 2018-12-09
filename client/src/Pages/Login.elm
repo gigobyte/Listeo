@@ -27,6 +27,7 @@ update msg model =
     Update.update msg
         model.login
         { key = Selectors.getNavKey model
+        , route = Selectors.getRoute model
         }
 
 

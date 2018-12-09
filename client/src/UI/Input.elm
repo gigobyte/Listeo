@@ -49,7 +49,7 @@ viewInput hasError =
     styled input
         ([ borderRadius <| px 2
          , padding <| px 7
-         , width <| pct 100
+         , width <| px 200
          , paddingLeft <| px 15
          , fontSize <| px 16
          , marginBottom <| px 10
