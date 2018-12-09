@@ -47,14 +47,22 @@ viewInput hasError =
                 ]
     in
     styled input
-        ([ borderRadius <| px 5
+        ([ borderRadius <| px 2
          , padding <| px 7
+         , width <| pct 100
+         , paddingLeft <| px 15
          , fontSize <| px 16
          , marginBottom <| px 10
-         , border3 (px 1) solid gray100
+         , height <| px 25
+         , border zero
          , transition [ Transitions.borderColor 1000 ]
          , fontFamilies [ "Museo-Sans" ]
          , backgroundColor whiteGray100
+         , boxShadow5 (px 1) (px 2) (px 3) zero gray100
+         , focus
+            [ outline zero
+            , boxShadow5 (px 1) (px 2) (px 3) (px 1) gray100
+            ]
          ]
             ++ errorStyle
         )
