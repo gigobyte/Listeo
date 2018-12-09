@@ -28,3 +28,5 @@ type Msg
     | AddPlaylistOverlayShown
     | CreateNewPlaylistSelected
     | AddPlaylistModalClosed
+      -- Create playlist
+    | PlaylistNameUpdated String

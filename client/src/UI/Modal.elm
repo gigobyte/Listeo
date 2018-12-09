@@ -44,7 +44,7 @@ container =
         , margin auto
         , top <| pct 20
         , backgroundColor white
-        , padding2 (px 30) zero
+        , padding2 (px 40) zero
         , borderRadius <| px 5
         , animationName fadeIn
         , animationDuration <| ms 200
