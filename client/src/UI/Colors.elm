@@ -1,6 +1,7 @@
 module UI.Colors exposing
     ( black
     , blue100
+    , blue125
     , blue150
     , blue200
     , blue50
@@ -25,6 +26,10 @@ blue50 =
 
 blue100 =
     hex "#2185d0"
+
+
+blue125 =
+    hex "#1e5f90"
 
 
 blue150 =

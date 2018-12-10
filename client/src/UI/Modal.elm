@@ -4,14 +4,13 @@ import Css exposing (..)
 import Css.Animations as Animations exposing (Keyframes, keyframes)
 import Html.Styled exposing (..)
 import Html.Styled.Events exposing (onClick)
-import Msg exposing (Msg)
 import UI.Colors exposing (black, blue150, white)
 import UI.Icon as Icon
 import Utils.Styles exposing (StyledElement)
 
 
-type alias ModalProps =
-    { onClose : Msg
+type alias ModalProps msg =
+    { onClose : msg
     }
 
 
@@ -76,7 +75,7 @@ closeIcon =
         ]
 
 
-view : ModalProps -> StyledElement Msg
+view : ModalProps msg -> StyledElement msg
 view props attrs children =
     div []
         [ overlay attrs

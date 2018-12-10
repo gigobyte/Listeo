@@ -14,6 +14,8 @@ view model =
     View.view
         { playlistNameValue = Selectors.getPlaylistNameValue model
         , playlistNameError = Nothing
+        , playlistTagInput = Selectors.getPlaylistTagInputValue model
+        , playlistTags = Selectors.getPlaylistTags model
         }
 
 

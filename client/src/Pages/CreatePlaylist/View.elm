@@ -8,6 +8,7 @@ import Msg exposing (Msg(..))
 import Pages.CreatePlaylist.Model exposing (Model)
 import UI.Container as Container
 import UI.Input as Input
+import UI.TagInput as TagInput
 import Utils.Styles exposing (StyledElement)
 
 
@@ -28,6 +29,8 @@ title =
 type alias Props =
     { playlistNameValue : String
     , playlistNameError : Maybe String
+    , playlistTagInput : String
+    , playlistTags : List TagInput.Tag
     }
 
 
@@ -42,6 +45,17 @@ view props =
                 , value props.playlistNameValue
                 , onInput PlaylistNameUpdated
                 ]
+            }
+            []
+            []
+        , TagInput.view
+            { validationError = Nothing
+            , onAddTag = PlaylistTagAdded
+            , onRemoveTag = PlaylistTagRemoved
+            , placeholder = "Tags (optional)"
+            , value = props.playlistTagInput
+            , onInput = PlaylistTagInputUpdated
+            , tags = props.playlistTags
             }
             []
             []

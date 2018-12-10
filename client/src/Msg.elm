@@ -5,6 +5,7 @@ import Browser exposing (UrlRequest)
 import Pages.Login.Api exposing (LoginResponse)
 import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
+import UI.TagInput exposing (Tag)
 import Url exposing (Url)
 
 
@@ -30,3 +31,6 @@ type Msg
     | AddPlaylistModalClosed
       -- Create playlist
     | PlaylistNameUpdated String
+    | PlaylistTagInputUpdated String
+    | PlaylistTagAdded Tag
+    | PlaylistTagRemoved Tag
