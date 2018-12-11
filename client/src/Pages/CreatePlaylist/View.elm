@@ -9,6 +9,7 @@ import Pages.CreatePlaylist.Model exposing (Model)
 import UI.Container as Container
 import UI.Input as Input
 import UI.TagInput as TagInput
+import UI.Textarea as Textarea
 import Utils.Styles exposing (StyledElement)
 
 
@@ -59,4 +60,5 @@ view props =
             }
             []
             []
+        , Textarea.view { validationError = Nothing, textareaAttributes = [] } [] []
         ]
