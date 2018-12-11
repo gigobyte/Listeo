@@ -81,7 +81,13 @@ view props attrs children =
                 ]
             , validationError = props.validationError
             }
-            [ onEnter (props.onAddTag tagToBeAdded) ]
+            (case props.value of
+                "" ->
+                    []
+
+                _ ->
+                    [ onEnter (props.onAddTag tagToBeAdded) ]
+            )
             []
          , div [] (List.map (viewTag props.onRemoveTag) props.tags)
          ]
