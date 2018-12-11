@@ -1,5 +1,6 @@
 module Pages.CreatePlaylist.Update exposing (init, update)
 
+import List.Extra as List
 import Msg exposing (Msg(..))
 import Pages.CreatePlaylist.Model exposing (Model)
 import UI.TagInput exposing (tagValue)
@@ -20,11 +21,11 @@ update msg model =
             ( { model | playlistName = value }, Cmd.none )
 
         PlaylistTagInputUpdated value ->
-            ( { model | playlistTagInput = value }, Cmd.none )
+            ( { model | playlistTagInput = String.trim value }, Cmd.none )
 
         PlaylistTagAdded tag ->
             ( { model
-                | playlistTags = List.append model.playlistTags [ tag ]
+                | playlistTags = List.uniqueBy tagValue (model.playlistTags ++ [ tag ])
                 , playlistTagInput = ""
               }
             , Cmd.none
@@ -32,7 +33,7 @@ update msg model =
 
         PlaylistTagRemoved tag ->
             ( { model
-                | playlistTags = List.filter (\x -> tagValue x /= tagValue tag) model.playlistTags
+                | playlistTags = List.remove tag model.playlistTags
               }
             , Cmd.none
             )
