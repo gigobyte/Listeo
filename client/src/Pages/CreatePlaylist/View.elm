@@ -50,15 +50,21 @@ view props =
             []
             []
         , TagInput.view
-            { validationError = Nothing
-            , onAddTag = PlaylistTagAdded
+            { onAddTag = PlaylistTagAdded
             , onRemoveTag = PlaylistTagRemoved
-            , placeholder = "Tags (optional)"
             , value = props.playlistTagInput
-            , onInput = PlaylistTagInputUpdated
             , tags = props.playlistTags
+            , inputAttributes =
+                [ placeholder "Tags (optional)"
+                , onInput PlaylistTagInputUpdated
+                ]
             }
             []
             []
-        , Textarea.view { validationError = Nothing, textareaAttributes = [] } [] []
+        , Textarea.view
+            { validationError = Nothing
+            , textareaAttributes = [ placeholder "Description" ]
+            }
+            []
+            []
         ]

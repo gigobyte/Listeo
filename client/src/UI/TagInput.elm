@@ -21,12 +21,10 @@ tagValue (Tag { value, id }) =
 
 
 type alias TagInputProps msg =
-    { validationError : Maybe String
-    , placeholder : String
-    , value : String
-    , onInput : String -> msg
+    { value : String
     , onAddTag : Tag -> msg
     , onRemoveTag : Tag -> msg
+    , inputAttributes : List (Attribute msg)
     , tags : List Tag
     }
 
@@ -74,12 +72,8 @@ view props attrs children =
         []
         attrs
         ([ Input.view
-            { inputAttributes =
-                [ placeholder props.placeholder
-                , onInput props.onInput
-                , value props.value
-                ]
-            , validationError = props.validationError
+            { inputAttributes = props.inputAttributes ++ [ value props.value ]
+            , validationError = Nothing
             }
             (case props.value of
                 "" ->
