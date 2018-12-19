@@ -1,6 +1,6 @@
 port module Pages.Login.Update exposing (init, update)
 
-import Auth.Api as Auth
+import Auth.Api as Api
 import Browser.Navigation as Nav
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
@@ -45,30 +45,25 @@ update msg model ctx =
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
 
-        Login response ->
-            let
-                newModel =
-                    { model | loginResponse = response }
-            in
-            case response of
-                Success (SuccessResponse { jwt }) ->
-                    ( newModel
-                    , Cmd.batch
-                        [ Auth.fetchUser jwt |> Cmd.map FetchUser
-                        , Route.pushUrl ctx.key Route.Home
-                        , storeJwt jwt
-                        ]
-                    )
+        Login ((Success (SuccessResponse { jwt })) as response) ->
+            ( { model | loginResponse = response }
+            , Cmd.batch
+                [ Api.fetchUser jwt |> Cmd.map FetchUser
+                , Route.pushUrl ctx.key Route.Home
+                , storeJwt jwt
+                ]
+            )
 
-                _ ->
-                    ( newModel, Cmd.none )
+        Login response ->
+            ( { model | loginResponse = response }, Cmd.none )
 
         UrlChanged _ ->
-            ( if ctx.route == Route.Login then
-                init
+            ( case ctx.route == Route.Login of
+                True ->
+                    init
 
-              else
-                model
+                False ->
+                    model
             , Cmd.none
             )
 

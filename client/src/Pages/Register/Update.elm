@@ -42,31 +42,26 @@ update msg model ctx =
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
 
-        Register response ->
+        Register ((Success { errorDescription }) as response) ->
             let
                 newModel =
                     { model | registerResponse = response }
             in
-            case response of
-                Success { errorDescription } ->
-                    case errorDescription of
-                        Just _ ->
-                            ( newModel, Cmd.none )
-
-                        Nothing ->
-                            ( newModel
-                            , Cmd.batch
-                                [ Api.login
-                                    { username = model.username
-                                    , password = model.password
-                                    }
-                                    |> Cmd.map Login
-                                , Route.pushUrl ctx.key Route.Home
-                                ]
-                            )
-
-                _ ->
+            case errorDescription of
+                Just _ ->
                     ( newModel, Cmd.none )
+
+                Nothing ->
+                    ( newModel
+                    , Cmd.batch
+                        [ Api.login
+                            { username = model.username
+                            , password = model.password
+                            }
+                            |> Cmd.map Login
+                        , Route.pushUrl ctx.key Route.Home
+                        ]
+                    )
 
         UrlChanged _ ->
             ( if ctx.route == Route.Login then

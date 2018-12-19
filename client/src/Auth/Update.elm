@@ -86,26 +86,20 @@ updateAuth msg model ctx =
                 ]
             )
 
-        FetchUser res ->
-            let
-                newModel =
-                    { model | fetchUserResponse = res }
-            in
-            case res of
-                Success user ->
-                    ( { newModel | user = Just user }, pushAuthUrl ctx.route ctx.key (Just user) )
+        FetchUser ((Success user) as response) ->
+            ( { model | fetchUserResponse = response, user = Just user }, pushAuthUrl ctx.route ctx.key (Just user) )
 
-                Failure (Http.BadStatus { status }) ->
-                    ( newModel
-                    , if status.code == 401 then
-                        pushAuthUrl ctx.route ctx.key Nothing
+        FetchUser ((Failure (Http.BadStatus { status })) as response) ->
+            ( { model | fetchUserResponse = response }
+            , if status.code == 401 then
+                pushAuthUrl ctx.route ctx.key Nothing
 
-                      else
-                        Cmd.none
-                    )
+              else
+                Cmd.none
+            )
 
-                _ ->
-                    ( newModel, Cmd.none )
+        FetchUser response ->
+            ( { model | fetchUserResponse = response }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
