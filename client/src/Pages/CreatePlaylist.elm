@@ -16,6 +16,7 @@ view model =
         , playlistNameError = Nothing
         , playlistTagInput = Selectors.getPlaylistTagInputValue model
         , playlistTags = Selectors.getPlaylistTags model
+        , privacyOption = Selectors.getPrivacyOption model
         }
 
 

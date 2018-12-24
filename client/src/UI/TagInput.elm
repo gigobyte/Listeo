@@ -40,6 +40,21 @@ tagContent =
         ]
 
 
+tagsContainer : StyledElement msg
+tagsContainer =
+    styled div
+        [ displayFlex
+        , paddingBottom <| px 10
+        ]
+
+
+tagContainer : StyledElement msg
+tagContainer =
+    styled div
+        [ displayFlex
+        ]
+
+
 tagRemoveButton : StyledElement msg
 tagRemoveButton =
     styled button
@@ -58,8 +73,12 @@ tagRemoveButton =
 
 viewTag : (Tag -> msg) -> Tag -> Html msg
 viewTag onRemoveTag tag =
-    span []
-        [ tagContent [] [ text (tagValue tag) ], tagRemoveButton [ onClick (onRemoveTag tag) ] [ Icon.times [] [] ] ]
+    tagContainer []
+        [ tagContent []
+            [ text (tagValue tag)
+            ]
+        , tagRemoveButton [ onClick (onRemoveTag tag) ] [ Icon.times [] [] ]
+        ]
 
 
 view : TagInputProps msg -> StyledElement msg
@@ -67,6 +86,14 @@ view props attrs children =
     let
         tagToBeAdded =
             Tag { value = props.value, id = List.length props.tags }
+
+        inputProps =
+            case props.value of
+                "" ->
+                    []
+
+                _ ->
+                    [ onEnter (props.onAddTag tagToBeAdded) ]
     in
     styled div
         []
@@ -75,15 +102,9 @@ view props attrs children =
             { inputAttributes = props.inputAttributes ++ [ value props.value ]
             , validationError = Nothing
             }
-            (case props.value of
-                "" ->
-                    []
-
-                _ ->
-                    [ onEnter (props.onAddTag tagToBeAdded) ]
-            )
+            inputProps
             []
-         , div [] (List.map (viewTag props.onRemoveTag) props.tags)
+         , tagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
          ]
             ++ children
         )
