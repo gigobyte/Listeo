@@ -5,7 +5,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (disabled, placeholder, type_, value)
 import Html.Styled.Events exposing (onInput)
 import Msg exposing (Msg(..))
-import Pages.CreatePlaylist.Model exposing (Model, PrivacyOption(..))
+import Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PrivacyOption(..))
 import UI.Container as Container
 import UI.Input as Input
 import UI.RadioButton as RadioButton
@@ -34,6 +34,7 @@ type alias Props =
     , playlistTagInput : String
     , playlistTags : List TagInput.Tag
     , privacyOption : PrivacyOption
+    , playlistStyle : PlaylistStyle
     }
 
 
@@ -82,6 +83,23 @@ view props =
                 { isChecked = props.privacyOption == Private
                 , label = "Private"
                 , onToggle = PlaylistPrivacySelected Private
+                }
+                []
+                []
+            ]
+        , div []
+            [ text "Style"
+            , RadioButton.view
+                { isChecked = props.playlistStyle == Unordered
+                , label = "Unordered"
+                , onToggle = PlaylistStyleSelected Unordered
+                }
+                []
+                []
+            , RadioButton.view
+                { isChecked = props.playlistStyle == Ranked
+                , label = "Ranked"
+                , onToggle = PlaylistStyleSelected Ranked
                 }
                 []
                 []

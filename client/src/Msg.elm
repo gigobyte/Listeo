@@ -2,7 +2,7 @@ module Msg exposing (Msg(..))
 
 import Auth.Api exposing (User)
 import Browser exposing (UrlRequest)
-import Pages.CreatePlaylist.Model exposing (PrivacyOption)
+import Pages.CreatePlaylist.Model exposing (PlaylistStyle, PrivacyOption)
 import Pages.Login.Api exposing (LoginResponse)
 import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
@@ -36,3 +36,4 @@ type Msg
     | PlaylistTagAdded Tag
     | PlaylistTagRemoved Tag
     | PlaylistPrivacySelected PrivacyOption
+    | PlaylistStyleSelected PlaylistStyle

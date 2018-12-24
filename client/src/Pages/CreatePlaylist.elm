@@ -12,11 +12,12 @@ import Pages.CreatePlaylist.View as View
 view : AppModel -> Html Msg
 view model =
     View.view
-        { playlistNameValue = Selectors.getPlaylistNameValue model
+        { playlistNameValue = Selectors.getPlaylistName model
         , playlistNameError = Nothing
         , playlistTagInput = Selectors.getPlaylistTagInputValue model
         , playlistTags = Selectors.getPlaylistTags model
         , privacyOption = Selectors.getPrivacyOption model
+        , playlistStyle = Selectors.getPlaylistStyle model
         }
 
 

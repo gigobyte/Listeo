@@ -2,7 +2,7 @@ module Pages.CreatePlaylist.Update exposing (init, update)
 
 import List.Extra as List
 import Msg exposing (Msg(..))
-import Pages.CreatePlaylist.Model exposing (Model, PrivacyOption(..))
+import Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PrivacyOption(..))
 import UI.TagInput exposing (tagValue)
 
 
@@ -12,6 +12,7 @@ init =
     , playlistTagInput = ""
     , playlistTags = []
     , privacyOption = Public
+    , playlistStyle = Unordered
     }
 
 
@@ -41,6 +42,9 @@ update msg model =
 
         PlaylistPrivacySelected option ->
             ( { model | privacyOption = option }, Cmd.none )
+
+        PlaylistStyleSelected option ->
+            ( { model | playlistStyle = option }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
