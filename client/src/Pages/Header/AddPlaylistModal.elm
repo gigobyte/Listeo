@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (onClick)
 import Msg exposing (Msg(..))
 import Route exposing (pushUrl)
 import UI.Button as Button
-import UI.Colors exposing (blue150)
+import UI.Colors exposing (blue200)
 import UI.Container as Container
 import UI.Icon as Icon
 import UI.Link as Link
@@ -80,7 +80,7 @@ optionIcon icon =
     styled icon
         [ textAlign center
         , fontSize <| rem 5
-        , color blue150
+        , color blue200
         , transition [ Transitions.transform 300 ]
         ]
 

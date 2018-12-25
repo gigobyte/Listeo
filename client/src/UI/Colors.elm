@@ -1,10 +1,9 @@
 module UI.Colors exposing
     ( black
     , blue100
-    , blue125
-    , blue150
     , blue200
-    , blue50
+    , blue300
+    , blue400
     , crimson100
     , gray100
     , gray200
@@ -25,24 +24,20 @@ gray400 =
     hex "#a4a7ab"
 
 
-blue50 =
-    hex "#0c97ff"
-
-
 blue100 =
-    hex "#2185d0"
+    hex "#258bd6"
 
 
-blue125 =
-    hex "#1e5f90"
-
-
-blue150 =
-    hex "1d74b4"
+blue300 =
+    hex "#185e92"
 
 
 blue200 =
-    hex "#114063"
+    hex "#1d74b4"
+
+
+blue400 =
+    hex "#124469"
 
 
 white =

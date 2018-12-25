@@ -34,7 +34,7 @@ tagContent =
     styled div
         [ display inlineBlock
         , color white
-        , backgroundColor blue150
+        , backgroundColor blue200
         , padding <| px 4
         , borderRadius4 (px 2) zero zero (px 2)
         ]
@@ -58,7 +58,7 @@ tagContainer =
 tagRemoveButton : StyledElement msg
 tagRemoveButton =
     styled button
-        [ backgroundColor blue125
+        [ backgroundColor blue300
         , border zero
         , cursor pointer
         , marginRight <| px 7

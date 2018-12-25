@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (..)
 import Msg exposing (Msg(..))
 import Pages.Header.Model exposing (Model)
 import Route exposing (Route)
-import UI.Colors exposing (blue150, blue50, crimson100, white)
+import UI.Colors exposing (blue200, crimson100, white)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
@@ -43,7 +43,7 @@ navItem props =
         [ padding2 zero (px 10)
         , transition [ Transitions.color 500 ]
         , hover
-            [ color blue50
+            [ color blue200
             ]
         ]
 
