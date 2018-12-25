@@ -10,6 +10,7 @@ import List
 import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
+import Pages.Colors as Colors
 import Pages.CreatePlaylist as CreatePlaylist
 import Pages.Header as Header
 import Pages.Home as Home
@@ -26,11 +27,6 @@ type alias Flags =
     }
 
 
-fetchUser : Maybe String -> Cmd Msg
-fetchUser token =
-    Api.fetchUser (token |> Maybe.withDefault "") |> Cmd.map FetchUser
-
-
 init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
@@ -42,7 +38,7 @@ init flags url key =
       , createPlaylist = CreatePlaylist.init
       , header = Header.init
       }
-    , fetchUser flags.jwt
+    , Api.fetchUser (Maybe.withDefault "" flags.jwt) |> Cmd.map FetchUser
     )
 
 
@@ -128,6 +124,9 @@ view model =
 
             Route.NotFound404 ->
                 "404 - Listeo"
+
+            Route.DebugColors ->
+                "Colors page - DEBUG ONLY"
     , body =
         [ case model.route of
             Route.Login ->
@@ -147,6 +146,9 @@ view model =
 
             Route.NotFound404 ->
                 text "Not Found"
+
+            Route.DebugColors ->
+                Layout.view Colors.view model |> toUnstyled
         ]
     }
 
