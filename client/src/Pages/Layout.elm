@@ -8,7 +8,7 @@ import Msg exposing (Msg(..))
 import Pages.Header as Header
 import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import RemoteData exposing (RemoteData(..))
-import UI.Colors exposing (whiteGray50)
+import UI.Colors exposing (gray200)
 import Utils.Styles exposing (StyledElement)
 
 
@@ -27,7 +27,7 @@ globalStyle =
         [ height <| pct 100
         , margin zero
         , fontFamilies [ "Museo-Sans" ]
-        , backgroundColor whiteGray50
+        , backgroundColor gray200
         ]
     ]
 

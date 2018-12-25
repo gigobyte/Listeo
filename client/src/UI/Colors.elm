@@ -6,17 +6,17 @@ module UI.Colors exposing
     , blue200
     , blue50
     , crimson100
-    , gray100
+    , gray300
     , redOrange100
     , white
-    , whiteGray100
-    , whiteGray50
+    , gray100
+    , gray200
     )
 
 import Css exposing (..)
 
 
-gray100 =
+gray300 =
     hex "#c9ccd0"
 
 
@@ -48,11 +48,11 @@ black =
     hex "#000000"
 
 
-whiteGray50 =
+gray200 =
     hex "#f7f8f9"
 
 
-whiteGray100 =
+gray100 =
     hex "#fdfdfd"
 
 

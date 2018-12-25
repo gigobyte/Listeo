@@ -5,7 +5,7 @@ import Css.Global exposing (adjacentSiblings, typeSelector)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (checked, id, type_)
 import Html.Styled.Events exposing (onClick)
-import UI.Colors exposing (gray100, white)
+import UI.Colors exposing (gray300, white)
 import Utils.Styles exposing (StyledElement)
 
 
@@ -43,7 +43,7 @@ styledLabel =
             , height <| px 18
             , borderRadius <| pct 100
             , backgroundColor white
-            , border3 (px 1) solid gray100
+            , border3 (px 1) solid gray300
             ]
         ]
 
