@@ -18,6 +18,22 @@ module UI.Colors exposing
 import Css exposing (..)
 
 
+white =
+    hex "#ffffff"
+
+
+black =
+    hex "#000000"
+
+
+gray100 =
+    hex "#fdfdfd"
+
+
+gray200 =
+    hex "#f7f8f9"
+
+
 gray300 =
     hex "#c9ccd0"
 
@@ -30,32 +46,16 @@ blue100 =
     hex "#258bd6"
 
 
-blue300 =
-    hex "#185e92"
-
-
 blue200 =
     hex "#1d74b4"
 
 
+blue300 =
+    hex "#185e92"
+
+
 blue400 =
     hex "#124469"
-
-
-white =
-    hex "#ffffff"
-
-
-black =
-    hex "#000000"
-
-
-gray200 =
-    hex "#f7f8f9"
-
-
-gray100 =
-    hex "#fdfdfd"
 
 
 crimson100 =
