@@ -13,6 +13,7 @@ init =
     , playlistTags = []
     , privacyOption = Public
     , playlistStyle = Unordered
+    , showErrors = False
     }
 
 
@@ -45,6 +46,14 @@ update msg model =
 
         PlaylistStyleSelected option ->
             ( { model | playlistStyle = option }, Cmd.none )
+
+        CreatePlaylistAttempted ->
+            case Nothing of
+                Just request ->
+                    ( model, Cmd.none )
+
+                Nothing ->
+                    ( { model | showErrors = True }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

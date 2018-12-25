@@ -37,3 +37,4 @@ type Msg
     | PlaylistTagRemoved Tag
     | PlaylistPrivacySelected PrivacyOption
     | PlaylistStyleSelected PlaylistStyle
+    | CreatePlaylistAttempted

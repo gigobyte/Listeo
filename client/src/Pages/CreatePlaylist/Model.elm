@@ -19,4 +19,5 @@ type alias Model =
     , playlistTags : List Tag
     , privacyOption : PrivacyOption
     , playlistStyle : PlaylistStyle
+    , showErrors : Bool
     }
