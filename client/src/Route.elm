@@ -14,6 +14,7 @@ type Route
     | About
     | CreatePlaylist
     | NotFound404
+    | DebugColors
 
 
 toString : Route -> String
@@ -37,6 +38,9 @@ toString route =
         NotFound404 ->
             "404"
 
+        DebugColors ->
+            "colors"
+
 
 pushUrl : Nav.Key -> Route -> Cmd msg
 pushUrl key route =
@@ -57,6 +61,7 @@ parser =
         , Parser.map About (s "about")
         , Parser.map CreatePlaylist (s "create-playlist")
         , Parser.map NotFound404 (s "404")
+        , Parser.map DebugColors (s "colors")
         ]
 
 
