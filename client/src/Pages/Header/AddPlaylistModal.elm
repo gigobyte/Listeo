@@ -94,13 +94,6 @@ optionDescription =
         ]
 
 
-optionButton : StyledElement msg
-optionButton =
-    styled Button.view
-        [ fontSize <| rem 1
-        ]
-
-
 view : Html Msg
 view =
     Modal.view { onClose = AddPlaylistModalClosed }
@@ -117,14 +110,14 @@ view =
                     , optionDescription []
                         [ text "Start with an empty playlist. "
                         ]
-                    , optionButton [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
+                    , Button.view [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
                     ]
                 , optionCard []
                     [ optionIcon Icon.cloudDownload [] []
                     , optionDescription []
                         [ text "Import your existing playlist."
                         ]
-                    , optionButton [ Attributes.disabled True ] [ text "Import" ]
+                    , Button.view [ Attributes.disabled True ] [ text "Import" ]
                     ]
                 ]
             ]

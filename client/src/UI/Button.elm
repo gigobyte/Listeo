@@ -17,6 +17,7 @@ view =
         , color white
         , padding2 (px 10) (px 20)
         , fontWeight bold
+        , fontSize <| rem 1
         , fontFamilies [ "Museo-Sans" ]
         , cursor pointer
         , focus

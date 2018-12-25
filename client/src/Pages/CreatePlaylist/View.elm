@@ -3,9 +3,10 @@ module Pages.CreatePlaylist.View exposing (view)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (disabled, placeholder, type_, value)
-import Html.Styled.Events exposing (onInput)
+import Html.Styled.Events exposing (onClick, onInput)
 import Msg exposing (Msg(..))
 import Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PrivacyOption(..))
+import UI.Button as Button
 import UI.Container as Container
 import UI.Input as Input
 import UI.RadioButton as RadioButton
@@ -66,7 +67,7 @@ view props =
             []
         , Textarea.view
             { validationError = Nothing
-            , textareaAttributes = [ placeholder "Description" ]
+            , textareaAttributes = [ placeholder "Description (optional)" ]
             }
             []
             []
@@ -104,4 +105,5 @@ view props =
                 []
                 []
             ]
+        , Button.view [ onClick CreatePlaylistAttempted ] [ text "Create" ]
         ]

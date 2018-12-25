@@ -38,7 +38,6 @@ submitButton =
     styled Button.view
         [ marginTop <| px 10
         , marginBottom <| px 15
-        , fontSize <| rem 1
         ]
 
 
