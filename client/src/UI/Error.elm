@@ -3,7 +3,7 @@ module UI.Error exposing (text)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
-import UI.Colors exposing (redOrange100)
+import UI.Colors exposing (crimson100)
 import Utils.Styles exposing (StyledElement, stylesIfNotEmpty)
 
 
@@ -15,7 +15,7 @@ text : ErrorTextProps -> StyledElement msg
 text props attrs children =
     let
         baseStyle =
-            [ color redOrange100
+            [ color crimson100
             , maxHeight zero
             , opacity zero
             , transition [ Transitions.maxHeight 3000, Transitions.opacity 1000 ]

@@ -5,7 +5,7 @@ import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
-import UI.Colors exposing (gray300, redOrange100, gray100)
+import UI.Colors exposing (crimson100, gray100, gray300)
 import Utils.Styles exposing (StyledElement, stylesIfJust, stylesIfTrue)
 
 
@@ -19,7 +19,7 @@ viewError : Maybe String -> Html msg
 viewError errorText =
     let
         baseStyle =
-            [ color redOrange100
+            [ color crimson100
             , maxHeight zero
             , transition [ Transitions.maxHeight 3000, Transitions.opacity 1000 ]
             , opacity zero
@@ -43,7 +43,7 @@ viewInput hasError =
         errorStyle =
             stylesIfTrue hasError
                 [ marginBottom <| px 5
-                , borderColor redOrange100
+                , borderColor crimson100
                 ]
     in
     styled textarea

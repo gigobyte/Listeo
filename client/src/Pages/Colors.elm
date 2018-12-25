@@ -25,6 +25,7 @@ colorContainer =
         , alignItems center
         , paddingBottom <| px 25
         , paddingRight <| px 25
+        , minWidth <| px 110
         ]
 
 
@@ -44,6 +45,12 @@ view =
     Container.centered div
         []
         [ container []
+            [ colorContainer []
+                [ text "white", viewColor white ]
+            , colorContainer []
+                [ text "black", viewColor black ]
+            ]
+        , container []
             [ colorContainer []
                 [ text "gray100", viewColor gray100 ]
             , colorContainer []
@@ -65,14 +72,12 @@ view =
             ]
         , container []
             [ colorContainer []
-                [ text "white", viewColor white ]
-            , colorContainer []
-                [ text "black", viewColor black ]
-            ]
-        , container []
-            [ colorContainer []
-                [ text "redOrange100", viewColor redOrange100 ]
-            , colorContainer []
                 [ text "crimson100", viewColor crimson100 ]
+            , colorContainer []
+                [ text "crimson200", viewColor crimson200 ]
+            , colorContainer []
+                [ text "crimson300", viewColor crimson300 ]
+            , colorContainer []
+                [ text "crimson400", viewColor crimson400 ]
             ]
         ]

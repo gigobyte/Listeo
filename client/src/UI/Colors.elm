@@ -5,11 +5,13 @@ module UI.Colors exposing
     , blue300
     , blue400
     , crimson100
+    , crimson200
+    , crimson300
+    , crimson400
     , gray100
     , gray200
     , gray300
     , gray400
-    , redOrange100
     , white
     )
 
@@ -56,9 +58,17 @@ gray100 =
     hex "#fdfdfd"
 
 
-redOrange100 =
-    hex "#ff5007"
-
-
 crimson100 =
     hex "#f03764"
+
+
+crimson200 =
+    hex "#ca2f54"
+
+
+crimson300 =
+    hex "#a72746"
+
+
+crimson400 =
+    hex "#7d1e35"
