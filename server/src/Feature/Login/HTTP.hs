@@ -16,10 +16,9 @@ toHttpResult :: Either LoginError Text -> ActionM ()
 toHttpResult (Left err)       = json $ ErrorResponse err
 toHttpResult (Right jwtToken) = json $ SuccessResponse jwtToken
 
-
 parseBody :: ByteString -> Either LoginError LoginBody
-parseBody b =
-    maybeToRight ValidationFailed $ decode b
+parseBody rawBody =
+    maybeToRight ValidationFailed (decode rawBody)
 
 login :: DB.Pipe -> ActionM ()
 login pipe = do

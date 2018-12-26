@@ -36,5 +36,3 @@ auth endpoint pipe = do
                 Just u  -> endpoint pipe $ dbUserToPublicUser u
                 Nothing -> status status401
         Nothing -> status status401
-
-    pure undefined

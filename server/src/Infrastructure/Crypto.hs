@@ -7,7 +7,7 @@ import           Crypto.BCrypt         (HashingPolicy (..),
                                         hashPasswordUsingPolicy,
                                         validatePassword)
 import           Data.ByteString.Char8 (pack)
-import           Protolude
+import           Protolude             hiding (hash)
 
 hashingPolicy :: HashingPolicy
 hashingPolicy =
