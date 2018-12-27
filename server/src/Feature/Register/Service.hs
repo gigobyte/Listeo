@@ -6,14 +6,14 @@ module Feature.Register.Service
 import           Data.Bson              (ObjectId (..))
 import qualified Data.Text              as T
 import qualified Data.Time.Clock        as Time
-import           Database.MongoDB       (Action, Value)
+import           Database.MongoDB       (Action)
 import           Feature.Register.Types (RegisterBody (..), RegisterError (..))
 import qualified Feature.User.DB        as DB
 import qualified Feature.User.Types     as User
 import qualified Infrastructure.Crypto  as Crypto
 import           Protolude
 
-insertUser :: User.User -> Action IO (Either RegisterError Value)
+insertUser :: User.User -> Action IO (Either RegisterError ())
 insertUser user = do
     userInDB <- DB.findUser $ User.username (user :: User.User)
 
