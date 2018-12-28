@@ -1,6 +1,6 @@
 module Infrastructure.Secrets.Example where
 
-import           Protolude
+import Protolude
 
 jwtSecret :: Text
 jwtSecret = ""

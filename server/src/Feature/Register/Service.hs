@@ -4,17 +4,15 @@ module Feature.Register.Service
   )
 where
 
-import           Data.Bson                      ( ObjectId(..) )
-import qualified Data.Text                     as T
-import qualified Data.Time.Clock               as Time
-import           Database.MongoDB               ( Action )
-import           Feature.Register.Types         ( RegisterBody(..)
-                                                , RegisterError(..)
-                                                )
-import qualified Feature.User.DB               as DB
-import qualified Feature.User.Types            as User
-import qualified Infrastructure.Crypto         as Crypto
-import           Protolude
+import Data.Bson (ObjectId(..))
+import qualified Data.Text as T
+import qualified Data.Time.Clock as Time
+import Database.MongoDB (Action)
+import Feature.Register.Types (RegisterBody(..), RegisterError(..))
+import qualified Feature.User.DB as DB
+import qualified Feature.User.Types as User
+import qualified Infrastructure.Crypto as Crypto
+import Protolude
 
 insertUser :: User.User -> Action IO (Either RegisterError ())
 insertUser user = do
@@ -36,12 +34,14 @@ mkUser dateNow req =
     <*> pure dateNow
 
 validateUsername :: Text -> Maybe Text
-validateUsername str | T.length str < 4 = Nothing
-                     | otherwise        = Just $ T.strip str
+validateUsername str
+  | T.length str < 4 = Nothing
+  | otherwise        = Just $ T.strip str
 
 validatePassword :: Text -> Maybe Text
-validatePassword str | T.length str < 6 = Nothing
-                     | otherwise        = Just $ T.strip str
+validatePassword str
+  | T.length str < 6 = Nothing
+  | otherwise        = Just $ T.strip str
 
 hashPasswordInUser :: User.User -> IO (Maybe User.User)
 hashPasswordInUser user = do

@@ -4,14 +4,9 @@ module Feature.User.DB
   )
 where
 
-import           Database.MongoDB               ( Action
-                                                , findOne
-                                                , insert
-                                                , select
-                                                , (=:)
-                                                )
-import qualified Feature.User.Types            as User
-import           Protolude
+import Database.MongoDB (Action, findOne, insert, select, (=:))
+import qualified Feature.User.Types as User
+import Protolude
 
 insertUser :: User.User -> Action IO ()
 insertUser = void . insert "user" . User.toBson

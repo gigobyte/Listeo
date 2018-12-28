@@ -1,21 +1,14 @@
 module Infrastructure.Middleware.Auth where
 
-import           Data.Text.Lazy                 ( drop )
-import qualified Database.MongoDB              as DB
-import qualified Feature.User.DB               as DB
-import           Feature.User.Types            as User
-import qualified Infrastructure.DB             as DB
-import           Network.HTTP.Types.Status      ( status401 )
-import           Protolude               hiding ( drop )
-import           Web.JWT                        ( claims
-                                                , decode
-                                                , stringOrURIToText
-                                                , sub
-                                                )
-import           Web.Scotty                     ( ActionM
-                                                , header
-                                                , status
-                                                )
+import Data.Text.Lazy (drop)
+import qualified Database.MongoDB as DB
+import qualified Feature.User.DB as DB
+import Feature.User.Types as User
+import qualified Infrastructure.DB as DB
+import Network.HTTP.Types.Status (status401)
+import Protolude hiding (drop)
+import Web.JWT (claims, decode, stringOrURIToText, sub)
+import Web.Scotty (ActionM, header, status)
 
 headerToUsername :: Text -> Maybe Text
 headerToUsername authHeader =

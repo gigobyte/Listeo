@@ -6,14 +6,10 @@ module Feature.User.Types
   )
 where
 
-import           Data.Aeson                     ( ToJSON )
-import           Data.Bson                      ( Document
-                                                , ObjectId
-                                                , lookup
-                                                , (=:)
-                                                )
-import qualified Data.Time.Clock               as Time
-import           Protolude
+import Data.Aeson (ToJSON)
+import Data.Bson (Document, ObjectId, lookup, (=:))
+import qualified Data.Time.Clock as Time
+import Protolude
 
 data User = User
     { id        :: ObjectId

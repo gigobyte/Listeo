@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.0.
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8c4ac94456c48bda138b67c26497509a02cb07dfd8998ac9e11f570f6d5d45bc
+-- hash: 705262f35347e306dc7af2b7d294f2c76f9fbcbf4324765bfb58c328e71b6bf9
 
 name:           listeo
 version:        0.1.0.0
@@ -24,8 +24,9 @@ executable listeo-exe
   main-is: Main.hs
   other-modules:
       Feature.Login.HTTP
+      Feature.Login.Models.LoginBody
+      Feature.Login.Models.LoginResponse
       Feature.Login.Service
-      Feature.Login.Types
       Feature.Register.HTTP
       Feature.Register.Service
       Feature.Register.Types

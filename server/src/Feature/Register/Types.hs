@@ -1,9 +1,7 @@
 module Feature.Register.Types where
 
-import           Data.Aeson                     ( FromJSON
-                                                , ToJSON
-                                                )
-import           Protolude
+import Data.Aeson (FromJSON, ToJSON)
+import Protolude
 
 instance FromJSON RegisterBody
 data RegisterBody = RegisterBody

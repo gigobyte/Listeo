@@ -4,12 +4,10 @@ module Infrastructure.Crypto
   )
 where
 
-import           Crypto.BCrypt                  ( HashingPolicy(..)
-                                                , hashPasswordUsingPolicy
-                                                , validatePassword
-                                                )
-import           Data.ByteString.Char8          ( pack )
-import           Protolude               hiding ( hash )
+import Crypto.BCrypt
+  (HashingPolicy(..), hashPasswordUsingPolicy, validatePassword)
+import Data.ByteString.Char8 (pack)
+import Protolude hiding (hash)
 
 hashingPolicy :: HashingPolicy
 hashingPolicy = HashingPolicy 12 $ pack "$2y$"
