@@ -1,10 +1,10 @@
 name: listeo
 version: 0.1.0.0
-github: "gigobyte/Listeo"
+github: 'gigobyte/Listeo'
 license: MIT
-author: "Stanislav Iliev"
-maintainer: "s.iliev3@gmail.com"
-copyright: "2018 Stanislav Iliev"
+author: 'Stanislav Iliev'
+maintainer: 's.iliev3@gmail.com'
+copyright: '2018 Stanislav Iliev'
 
 dependencies:
   - base >= 4.7 && < 5
@@ -22,6 +22,7 @@ dependencies:
   - jwt
   - containers
   - bson
+  - flow
 
 executables:
   listeo-exe:

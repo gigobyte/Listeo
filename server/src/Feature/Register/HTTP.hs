@@ -4,6 +4,7 @@ module Feature.Register.HTTP
 where
 
 import Protolude
+import Flow
 import Feature.Register.Models.RegisterBody (RegisterBody(..))
 import Feature.Register.Models.RegisterResponse
   (RegisterError(..), RegisterResponse(..))
@@ -15,11 +16,11 @@ import qualified Infrastructure.DB as DB
 import qualified Web.Scotty as Scotty
 
 toHttpResult :: Either RegisterError a -> Scotty.ActionM ()
-toHttpResult (Left err) = Scotty.json $ RegisterResponse $ Just err
-toHttpResult _          = Scotty.json $ RegisterResponse Nothing
+toHttpResult (Left err) = Scotty.json <| RegisterResponse (Just err)
+toHttpResult _          = Scotty.json <| RegisterResponse Nothing
 
 parseBody :: LByteString -> Either RegisterError RegisterBody
-parseBody body = maybeToRight ValidationFailed $ Aeson.decode body
+parseBody body = maybeToRight ValidationFailed (Aeson.decode body)
 
 register :: DB.Pipe -> Scotty.ActionM ()
 register pipe = do
@@ -30,6 +31,6 @@ register pipe = do
   let query     = Service.insertUser <$> user
   let flatQuery = join <$> sequence query
 
-  result <- liftIO $ DB.runQuery pipe flatQuery
+  result <- liftIO (DB.runQuery pipe flatQuery)
 
   toHttpResult result

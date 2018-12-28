@@ -5,6 +5,7 @@ module Feature.Login.Service
 where
 
 import Protolude
+import Flow
 import Control.Monad (mfilter)
 import Feature.Login.Models.LoginBody (LoginBody)
 import Feature.Login.Models.LoginResponse (LoginError(..))
@@ -23,7 +24,7 @@ findUserByCredentials :: LoginBody -> MongoDB.Action IO (Either LoginError User)
 findUserByCredentials req = do
   userInDb <- DB.findUser (LoginBody.username req)
 
-  pure $ maybeToRight UserNotFound $ mfilter isPasswordValid userInDb
+  mfilter isPasswordValid userInDb |> maybeToRight UserNotFound |> pure
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =

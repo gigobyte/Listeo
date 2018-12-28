@@ -1,6 +1,7 @@
 module Infrastructure.Middleware.Auth where
 
 import Protolude hiding (drop)
+import Flow
 import Data.Text.Lazy (drop)
 import Feature.User.Models.User (User)
 import Feature.User.Models.PublicUser (PublicUser(..))
@@ -31,9 +32,9 @@ auth endpoint pipe = do
 
   case maybeUsername of
     Just username -> do
-      user <- liftIO $ DB.runQuery pipe $ DB.findUser username
+      user <- liftIO <| DB.runQuery pipe (DB.findUser username)
 
       case user of
-        Just u  -> endpoint pipe $ dbUserToPublicUser u
+        Just u  -> endpoint pipe (dbUserToPublicUser u)
         Nothing -> Scotty.status Status.status401
     Nothing -> Scotty.status Status.status401

@@ -9,7 +9,7 @@ import Data.ByteString.Char8 (pack)
 import qualified Crypto.BCrypt as BCrypt
 
 hashingPolicy :: BCrypt.HashingPolicy
-hashingPolicy = BCrypt.HashingPolicy 12 $ pack "$2y$"
+hashingPolicy = BCrypt.HashingPolicy 12 (pack "$2y$")
 
 hash :: ByteString -> IO (Maybe ByteString)
 hash = BCrypt.hashPasswordUsingPolicy hashingPolicy

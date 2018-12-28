@@ -15,4 +15,4 @@ insertUser = void . insert "user" . User.toBson
 findUser :: Text -> Action IO (Maybe User)
 findUser username = do
   doc <- findOne (select ["username" =: username] "user")
-  pure $ doc >>= User.fromBson
+  pure (doc >>= User.fromBson)

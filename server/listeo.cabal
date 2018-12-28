@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7abe9272d0b3049253e9b6deb673b9edd331aa2f66c7d60833ef4c4c5b846dab
+-- hash: aabb59aadc4db5af52b6eaf411e9877eb036c2843d0fd629227dcf6365ba6407
 
 name:           listeo
 version:        0.1.0.0
@@ -51,6 +51,7 @@ executable listeo-exe
     , bson
     , bytestring
     , containers
+    , flow
     , http-types
     , jwt
     , mongoDB

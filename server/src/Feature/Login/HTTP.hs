@@ -13,8 +13,8 @@ import qualified Infrastructure.DB as DB
 import qualified Web.Scotty as Scotty
 
 toHttpResult :: Either LoginError Text -> Scotty.ActionM ()
-toHttpResult (Left  err     ) = Scotty.json $ ErrorResponse err
-toHttpResult (Right jwtToken) = Scotty.json $ SuccessResponse jwtToken
+toHttpResult (Left  err     ) = Scotty.json (ErrorResponse err)
+toHttpResult (Right jwtToken) = Scotty.json (SuccessResponse jwtToken)
 
 parseBody :: LByteString -> Either LoginError LoginBody
 parseBody rawBody = maybeToRight ValidationFailed (Aeson.decode rawBody)
@@ -26,7 +26,7 @@ login pipe = do
   let query     = Service.findUserByCredentials <$> parsedBody
   let flatQuery = join <$> sequence query
 
-  result <- liftIO $ DB.runQuery pipe flatQuery
+  result <- liftIO (DB.runQuery pipe flatQuery)
 
   let jwtToken = Service.generateJwtToken <$> result
 
