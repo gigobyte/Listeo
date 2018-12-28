@@ -4,18 +4,17 @@ module Infrastructure.Crypto
   )
 where
 
-import Crypto.BCrypt
-  (HashingPolicy(..), hashPasswordUsingPolicy, validatePassword)
-import Data.ByteString.Char8 (pack)
 import Protolude hiding (hash)
+import Data.ByteString.Char8 (pack)
+import qualified Crypto.BCrypt as BCrypt
 
-hashingPolicy :: HashingPolicy
-hashingPolicy = HashingPolicy 12 $ pack "$2y$"
+hashingPolicy :: BCrypt.HashingPolicy
+hashingPolicy = BCrypt.HashingPolicy 12 $ pack "$2y$"
 
 hash :: ByteString -> IO (Maybe ByteString)
-hash = hashPasswordUsingPolicy hashingPolicy
+hash = BCrypt.hashPasswordUsingPolicy hashingPolicy
 
 
 validate :: Text -> Text -> Bool
 validate hashed attempt =
-  validatePassword (encodeUtf8 hashed) (encodeUtf8 attempt)
+  BCrypt.validatePassword (encodeUtf8 hashed) (encodeUtf8 attempt)

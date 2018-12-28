@@ -4,16 +4,16 @@ module Feature.Login.Models.LoginResponse
   )
 where
 
-import Data.Aeson (FromJSON, ToJSON)
 import Protolude
+import qualified Data.Aeson as Aeson
 
-instance ToJSON LoginResponse
+instance Aeson.ToJSON LoginResponse
 data LoginResponse
     = ErrorResponse { errorDescription :: LoginError }
     | SuccessResponse { jwt :: Text }
     deriving Generic
 
-instance ToJSON LoginError
+instance Aeson.ToJSON LoginError
 data LoginError
     = ValidationFailed
     | UserNotFound

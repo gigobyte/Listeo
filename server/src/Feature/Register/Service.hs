@@ -4,17 +4,18 @@ module Feature.Register.Service
   )
 where
 
-import Data.Bson (ObjectId(..))
+import Protolude
+import Feature.Register.Models.RegisterBody (RegisterBody(..))
+import Feature.Register.Models.RegisterResponse (RegisterError(..))
+import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Time.Clock as Time
-import Database.MongoDB (Action)
-import Feature.Register.Types (RegisterBody(..), RegisterError(..))
+import qualified Database.MongoDB as MongoDB
 import qualified Feature.User.DB as DB
-import qualified Feature.User.Types as User
+import qualified Feature.User.Models.User as User
 import qualified Infrastructure.Crypto as Crypto
-import Protolude
 
-insertUser :: User.User -> Action IO (Either RegisterError ())
+insertUser :: User.User -> MongoDB.Action IO (Either RegisterError ())
 insertUser user = do
   userInDB <- DB.findUser $ User.username (user :: User.User)
 
@@ -28,7 +29,7 @@ mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User.User
 mkUser dateNow req =
   maybeToRight ValidationFailed
     $   User.User
-    <$> (pure $ Oid 0 0)
+    <$> (pure $ Bson.Oid 0 0)
     <*> (validateUsername $ username req)
     <*> (validatePassword $ password req)
     <*> pure dateNow

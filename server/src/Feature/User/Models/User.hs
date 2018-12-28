@@ -1,28 +1,21 @@
-module Feature.User.Types
+module Feature.User.Models.User
   ( User(..)
-  , PublicUser(..)
   , fromBson
   , toBson
   )
 where
 
-import Data.Aeson (ToJSON)
+import Protolude
 import Data.Bson (Document, ObjectId, lookup, (=:))
 import qualified Data.Time.Clock as Time
-import Protolude
 
 data User = User
     { id        :: ObjectId
     , username  :: Text
     , password  :: Text
     , createdOn :: Time.UTCTime
-    } deriving Eq
+    }
 
-instance ToJSON PublicUser
-data PublicUser = PublicUser
-    { username  :: Text
-    , createdOn :: Time.UTCTime
-    } deriving Generic
 
 fromBson :: Document -> Maybe User
 fromBson doc =
@@ -34,7 +27,8 @@ fromBson doc =
 
 toBson :: User -> Document
 toBson user =
-  [ "username" =: username (user :: User) -- TODO some language extension to fix this
+  [ "username" =: username user
   , "password" =: password user
-  , "createdOn" =: createdOn (user :: User)
+  , "createdOn" =: createdOn user
   ]
+
