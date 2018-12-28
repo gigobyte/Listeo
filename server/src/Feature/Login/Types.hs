@@ -1,6 +1,8 @@
 module Feature.Login.Types where
 
-import           Data.Aeson (FromJSON, ToJSON)
+import           Data.Aeson                     ( FromJSON
+                                                , ToJSON
+                                                )
 import           Protolude
 
 instance FromJSON LoginBody
