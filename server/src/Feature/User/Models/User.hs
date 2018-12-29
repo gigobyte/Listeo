@@ -10,11 +10,11 @@ import Data.Bson (Document, ObjectId, lookup, (=:))
 import qualified Data.Time.Clock as Time
 
 data User = User
-    { id        :: ObjectId
-    , username  :: Text
-    , password  :: Text
-    , createdOn :: Time.UTCTime
-    }
+  { id        :: ObjectId
+  , username  :: Text
+  , password  :: Text
+  , createdOn :: Time.UTCTime
+  }
 
 
 fromBson :: Document -> Maybe User

@@ -12,7 +12,7 @@ import Feature.Login.Models.LoginResponse (LoginError(..))
 import Feature.User.Models.User (User)
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
-import qualified Database.MongoDB as MongoDB
+import qualified Database.MongoDB as DB
 import qualified Feature.Login.Models.LoginBody as LoginBody
 import qualified Feature.User.DB as DB
 import qualified Feature.User.Models.User as User
@@ -20,7 +20,7 @@ import qualified Infrastructure.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
 import qualified Web.JWT as JWT
 
-findUserByCredentials :: LoginBody -> MongoDB.Action IO (Either LoginError User)
+findUserByCredentials :: LoginBody -> DB.Action IO (Either LoginError User)
 findUserByCredentials req = do
   userInDb <- DB.findUser (LoginBody.username req)
 

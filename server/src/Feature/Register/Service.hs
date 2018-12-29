@@ -12,13 +12,13 @@ import Feature.User.Models.User (User(..))
 import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Time.Clock as Time
-import qualified Database.MongoDB as MongoDB
+import qualified Database.MongoDB as DB
 import qualified Feature.User.DB as DB
 import qualified Feature.User.Models.User as User
 import qualified Feature.Register.Models.RegisterBody as RegisterBody
 import qualified Infrastructure.Crypto as Crypto
 
-insertUser :: User -> MongoDB.Action IO (Either RegisterError ())
+insertUser :: User -> DB.Action IO (Either RegisterError ())
 insertUser user = do
   userInDB <- DB.findUser (User.username user)
 

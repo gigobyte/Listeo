@@ -1,16 +1,16 @@
 module Main where
 
-import Database.MongoDB
+import Protolude hiding (get)
 import Flow
+import Web.Scotty
+import Network.Wai.Middleware.Cors
+import qualified Database.MongoDB as DB
 import qualified Feature.Login.HTTP as HTTP
 import qualified Feature.Register.HTTP as HTTP
 import qualified Feature.User.HTTP as HTTP
 import qualified Infrastructure.Middleware.Auth as Middleware
-import Network.Wai.Middleware.Cors
-import Protolude hiding (get)
-import Web.Scotty
 
-server :: Pipe -> ScottyM ()
+server :: DB.Pipe -> ScottyM ()
 server pipe = do
   post "/register" <| HTTP.register pipe
   post "/login" <| HTTP.login pipe
@@ -35,7 +35,7 @@ policy = CorsResourcePolicy
 
 main :: IO ()
 main = do
-  pipe <- connect $ host "127.0.0.1"
+  pipe <- DB.connect $ DB.host "127.0.0.1"
   scotty 8081 $ do
     middleware (cors $ const (Just policy))
     server pipe

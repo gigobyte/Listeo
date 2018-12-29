@@ -1,9 +1,9 @@
-module Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PrivacyOption(..))
+module Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PlaylistPrivacy(..))
 
 import UI.TagInput exposing (Tag)
 
 
-type PrivacyOption
+type PlaylistPrivacy
     = Public
     | Private
 
@@ -17,7 +17,7 @@ type alias Model =
     { playlistName : String
     , playlistTagInput : String
     , playlistTags : List Tag
-    , privacyOption : PrivacyOption
+    , playlistPrivacy : PlaylistPrivacy
     , playlistStyle : PlaylistStyle
     , showErrors : Bool
     }

@@ -7,7 +7,7 @@ module Pages.CreatePlaylist.Selectors exposing
     )
 
 import Model exposing (AppModel)
-import Pages.CreatePlaylist.Model exposing (PlaylistStyle, PrivacyOption)
+import Pages.CreatePlaylist.Model exposing (PlaylistStyle, PlaylistPrivacy)
 import UI.TagInput exposing (Tag)
 
 
@@ -26,9 +26,9 @@ getPlaylistTags model =
     model.createPlaylist.playlistTags
 
 
-getPrivacyOption : AppModel -> PrivacyOption
+getPrivacyOption : AppModel -> PlaylistPrivacy
 getPrivacyOption model =
-    model.createPlaylist.privacyOption
+    model.createPlaylist.playlistPrivacy
 
 
 getPlaylistStyle : AppModel -> PlaylistStyle
