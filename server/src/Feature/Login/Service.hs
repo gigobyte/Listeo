@@ -4,7 +4,6 @@ module Feature.Login.Service
 where
 
 import Protolude
-import Flow
 import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
 import Feature.Login.Models.LoginBody (LoginBody)
@@ -29,13 +28,13 @@ login pipe rawBody = runExceptT $ do
   pure jwtToken
 
 parseBody :: LByteString -> Either LoginError LoginBody
-parseBody rawBody = Aeson.decode rawBody |> maybeToRight ValidationFailed
+parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
 
 findUserByCredentials :: DB.Pipe -> LoginBody -> IO (Either LoginError User)
 findUserByCredentials pipe req = do
   userInDb <- DB.findUser pipe (LoginBody.username req)
 
-  pure (userInDb |> mfilter isPasswordValid |> maybeToRight UserNotFound)
+  pure $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =

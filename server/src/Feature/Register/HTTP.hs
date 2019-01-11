@@ -4,7 +4,6 @@ module Feature.Register.HTTP
 where
 
 import Protolude
-import Flow
 import Feature.Register.Models.RegisterResponse
   (RegisterError(..), RegisterResponse(..))
 import qualified Database.MongoDB as DB
@@ -12,8 +11,8 @@ import qualified Feature.Register.Service as Service
 import qualified Web.Scotty as Scotty
 
 toHttpResult :: Either RegisterError a -> Scotty.ActionM ()
-toHttpResult (Left err) = Scotty.json <| RegisterResponse (Just err)
-toHttpResult _          = Scotty.json <| RegisterResponse Nothing
+toHttpResult (Left err) = Scotty.json $ RegisterResponse (Just err)
+toHttpResult _          = Scotty.json $ RegisterResponse Nothing
 
 register :: DB.Pipe -> Scotty.ActionM ()
 register pipe = do

@@ -21,7 +21,6 @@ dependencies:
   - jwt
   - containers
   - bson
-  - flow
   - mtl
   - transformers
 

@@ -4,7 +4,6 @@ module Feature.Register.Service
 where
 
 import Protolude
-import Flow
 import Feature.Register.Models.RegisterBody (RegisterBody(..))
 import Feature.Register.Models.RegisterResponse (RegisterError(..))
 import Feature.User.Models.User (User(..))
@@ -43,12 +42,12 @@ insertUser pipe user = runExceptT $ do
 
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User
 mkUser dateNow req =
-  User
-    <$> (pure <| Bson.Oid 0 0)
-    <*> (validateUsername <| RegisterBody.username req)
-    <*> (validatePassword <| RegisterBody.password req)
+  maybeToRight ValidationFailed
+    $   User
+    <$> (pure $ Bson.Oid 0 0)
+    <*> (validateUsername $ RegisterBody.username req)
+    <*> (validatePassword $ RegisterBody.password req)
     <*> pure dateNow
-    |>  maybeToRight ValidationFailed
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
@@ -62,7 +61,7 @@ validatePassword str
 
 hashPasswordInUser :: User -> IO (Maybe User)
 hashPasswordInUser user@User { password } = do
-  hashedPassword <- password |> encodeUtf8 |> Crypto.hash
+  hashedPassword <- Crypto.hash $ encodeUtf8 $ password
   pure (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> User

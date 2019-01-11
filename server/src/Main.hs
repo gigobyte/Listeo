@@ -1,7 +1,6 @@
 module Main where
 
 import Protolude hiding (get)
-import Flow
 import Web.Scotty
 import Network.Wai.Middleware.Cors
 import qualified Database.MongoDB as DB
@@ -12,9 +11,9 @@ import qualified Infrastructure.Middleware.Auth as Middleware
 
 server :: DB.Pipe -> ScottyM ()
 server pipe = do
-  post "/register" <| HTTP.register pipe
-  post "/login" <| HTTP.login pipe
-  get "/me" <| Middleware.auth HTTP.me pipe
+  post "/register" $ HTTP.register pipe
+  post "/login" $ HTTP.login pipe
+  get "/me" $ Middleware.auth HTTP.me pipe
 
 policy :: CorsResourcePolicy
 policy = CorsResourcePolicy
