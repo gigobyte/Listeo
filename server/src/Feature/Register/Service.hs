@@ -9,6 +9,7 @@ import Flow
 import Feature.Register.Models.RegisterBody (RegisterBody(..))
 import Feature.Register.Models.RegisterResponse (RegisterError(..))
 import Feature.User.Models.User (User(..))
+import Control.Monad.Trans.Maybe
 import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Time.Clock as Time
@@ -18,15 +19,15 @@ import qualified Feature.User.Models.User as User
 import qualified Feature.Register.Models.RegisterBody as RegisterBody
 import qualified Infrastructure.Crypto as Crypto
 
-insertUser :: User -> DB.Action IO (Either RegisterError ())
-insertUser user = do
-  userInDB <- DB.findUser (User.username user)
+insertUser :: DB.Pipe -> User -> IO (Either RegisterError ())
+insertUser pipe user = runExceptT $ do
+  userExists <- liftIO $ DB.doesUserAlreadyExist pipe user
 
-  case userInDB of
-    Just _  -> pure (Left UserAlreadyExists)
-    Nothing -> do
-      updatedUser <- liftIO (hashPasswordInUser user)
-      DB.insertUser <$> updatedUser |> maybeToRight ServerError |> sequence
+  when userExists (throwError UserAlreadyExists)
+
+  maybeToExceptT ServerError $ do
+    updatedUser <- MaybeT $ hashPasswordInUser user
+    liftIO $ DB.insertUser pipe updatedUser
 
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User
 mkUser dateNow req =

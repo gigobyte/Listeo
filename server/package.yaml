@@ -17,12 +17,13 @@ dependencies:
   - text
   - time
   - bytestring
-  - transformers
   - bcrypt
   - jwt
   - containers
   - bson
   - flow
+  - mtl
+  - transformers
 
 executables:
   listeo-exe:

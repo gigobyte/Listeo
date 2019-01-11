@@ -1,12 +1,12 @@
 module Feature.Login.Service
-  ( findUserByCredentials
-  , generateJwtToken
+  ( login
   )
 where
 
 import Protolude
 import Flow
 import Control.Monad (mfilter)
+import Control.Monad.Except (liftEither)
 import Feature.Login.Models.LoginBody (LoginBody)
 import Feature.Login.Models.LoginResponse (LoginError(..))
 import Feature.User.Models.User (User)
@@ -20,11 +20,22 @@ import qualified Infrastructure.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
 import qualified Web.JWT as JWT
 
-findUserByCredentials :: LoginBody -> DB.Action IO (Either LoginError User)
-findUserByCredentials req = do
-  userInDb <- DB.findUser (LoginBody.username req)
+login :: DB.Pipe -> LByteString -> IO (Either LoginError Text)
+login pipe rawBody = runExceptT $ do
+  body     <- liftEither $ parseBody rawBody
+  user     <- ExceptT $ findUserByCredentials pipe body
+  jwtToken <- pure $ generateJwtToken user
 
-  mfilter isPasswordValid userInDb |> maybeToRight UserNotFound |> pure
+  pure jwtToken
+
+parseBody :: LByteString -> Either LoginError LoginBody
+parseBody rawBody = Aeson.decode rawBody |> maybeToRight ValidationFailed
+
+findUserByCredentials :: DB.Pipe -> LoginBody -> IO (Either LoginError User)
+findUserByCredentials pipe req = do
+  userInDb <- DB.findUser pipe (LoginBody.username req)
+
+  pure (userInDb |> mfilter isPasswordValid |> maybeToRight UserNotFound)
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =
