@@ -16,7 +16,7 @@ headerToUsername authHeader = do
   unverifiedJwt <- JWT.decode authHeader
   subject       <- JWT.sub $ JWT.claims unverifiedJwt
 
-  pure $ JWT.stringOrURIToText subject
+  return $ JWT.stringOrURIToText subject
 
 dbUserToPublicUser :: User -> PublicUser
 dbUserToPublicUser user =

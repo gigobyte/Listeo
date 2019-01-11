@@ -23,9 +23,9 @@ login :: DB.Pipe -> LByteString -> IO (Either LoginError Text)
 login pipe rawBody = runExceptT $ do
   body     <- liftEither $ parseBody rawBody
   user     <- ExceptT $ findUserByCredentials pipe body
-  jwtToken <- pure $ generateJwtToken user
+  jwtToken <- return $ generateJwtToken user
 
-  pure jwtToken
+  return jwtToken
 
 parseBody :: LByteString -> Either LoginError LoginBody
 parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
@@ -34,7 +34,7 @@ findUserByCredentials :: DB.Pipe -> LoginBody -> IO (Either LoginError User)
 findUserByCredentials pipe req = do
   userInDb <- DB.findUser pipe (LoginBody.username req)
 
-  pure $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
+  return $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =

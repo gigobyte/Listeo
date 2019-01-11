@@ -44,10 +44,10 @@ mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User
 mkUser dateNow req =
   maybeToRight ValidationFailed
     $   User
-    <$> (pure $ Bson.Oid 0 0)
+    <$> (return $ Bson.Oid 0 0)
     <*> (validateUsername $ RegisterBody.username req)
     <*> (validatePassword $ RegisterBody.password req)
-    <*> pure dateNow
+    <*> return dateNow
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
@@ -62,7 +62,7 @@ validatePassword str
 hashPasswordInUser :: User -> IO (Maybe User)
 hashPasswordInUser user@User { password } = do
   hashedPassword <- Crypto.hash $ encodeUtf8 $ password
-  pure (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
+  return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> User
   setHashedPassword p = user { User.password = p }
