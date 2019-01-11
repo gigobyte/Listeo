@@ -12,8 +12,11 @@ import qualified Web.JWT as JWT
 import qualified Web.Scotty as Scotty
 
 headerToUsername :: Text -> Maybe Text
-headerToUsername authHeader =
-  JWT.stringOrURIToText <$> (JWT.sub =<< JWT.claims <$> JWT.decode authHeader)
+headerToUsername authHeader = do
+  unverifiedJwt <- JWT.decode authHeader
+  subject       <- JWT.sub $ JWT.claims unverifiedJwt
+
+  return $ JWT.stringOrURIToText subject
 
 dbUserToPublicUser :: User -> PublicUser
 dbUserToPublicUser user =

@@ -1,6 +1,5 @@
 module Feature.Register.Service
-  ( insertUser
-  , mkUser
+  ( register
   )
 where
 
@@ -10,14 +9,27 @@ import Feature.Register.Models.RegisterBody (RegisterBody(..))
 import Feature.Register.Models.RegisterResponse (RegisterError(..))
 import Feature.User.Models.User (User(..))
 import Control.Monad.Trans.Maybe
+import Control.Monad.Except (liftEither)
 import qualified Data.Bson as Bson
 import qualified Data.Text as T
+import qualified Data.Aeson as Aeson
 import qualified Data.Time.Clock as Time
 import qualified Database.MongoDB as DB
 import qualified Feature.User.DB as DB
 import qualified Feature.User.Models.User as User
 import qualified Feature.Register.Models.RegisterBody as RegisterBody
 import qualified Infrastructure.Crypto as Crypto
+
+register :: DB.Pipe -> LByteString -> IO (Either RegisterError ())
+register pipe rawBody = runExceptT $ do
+  dateNow <- liftIO Time.getCurrentTime
+  body    <- liftEither $ parseBody rawBody
+  user    <- liftEither $ mkUser dateNow body
+
+  ExceptT $ insertUser pipe user
+
+parseBody :: LByteString -> Either RegisterError RegisterBody
+parseBody body = maybeToRight ValidationFailed (Aeson.decode body)
 
 insertUser :: DB.Pipe -> User -> IO (Either RegisterError ())
 insertUser pipe user = runExceptT $ do
