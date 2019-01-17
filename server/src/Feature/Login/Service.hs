@@ -19,8 +19,8 @@ import qualified Web.JWT as JWT
 
 instance Aeson.FromJSON LoginBody
 data LoginBody = LoginBody
-    { loginBodyUsername :: Text
-    , loginBodyPassword :: Text
+    { username :: Text
+    , password :: Text
     } deriving Generic
 
 instance Aeson.ToJSON LoginError
@@ -43,13 +43,12 @@ parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
 
 findUserByCredentials :: (UserRepo m) => LoginBody -> m (Either LoginError User)
 findUserByCredentials req = do
-  userInDb <- findUser (loginBodyUsername req)
+  userInDb <- findUser (username req)
 
   return $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
  where
   isPasswordValid :: User -> Bool
-  isPasswordValid user =
-    Crypto.validate (User.password user) (loginBodyPassword req)
+  isPasswordValid user = Crypto.validate (User.password user) (password req)
 
 generateJwtToken :: User -> Text
 generateJwtToken user =

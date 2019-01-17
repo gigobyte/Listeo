@@ -6,7 +6,7 @@ module Feature.Register.Service
 where
 
 import Protolude
-import Feature.User.DB (User(..))
+import Feature.User.DB (User(User))
 import Feature.User.Service
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
@@ -19,8 +19,8 @@ import qualified Feature.User.DB as User
 
 instance Aeson.FromJSON RegisterBody
 data RegisterBody = RegisterBody
-    { registerBodyUsername :: Text
-    , registerBodyPassword :: Text
+    { username :: Text
+    , password :: Text
     } deriving Generic
 
 instance Aeson.ToJSON RegisterError
@@ -61,8 +61,8 @@ mkUser dateNow req =
   maybeToRight ValidationFailed
     $   User
     <$> (return $ Bson.Oid 0 0)
-    <*> (validateUsername $ registerBodyUsername req)
-    <*> (validatePassword $ registerBodyPassword req)
+    <*> (validateUsername $ username req)
+    <*> (validatePassword $ password req)
     <*> return dateNow
 
 validateUsername :: Text -> Maybe Text

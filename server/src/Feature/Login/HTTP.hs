@@ -19,13 +19,9 @@ data LoginResponse
 class Monad m => Service m where
   login :: LByteString -> m (Either LoginError Text)
 
-toHttpResult :: (Monad m) => LoginResponse -> ActionT LText m ()
-toHttpResult (SuccessResponse jwtToken) = ScottyT.json jwtToken
-toHttpResult (ErrorResponse   error   ) = ScottyT.json error
-
-toLoginResponse :: Either LoginError Text -> LoginResponse
-toLoginResponse (Left  error   ) = ErrorResponse error
-toLoginResponse (Right jwtToken) = SuccessResponse jwtToken
+toHttpResult :: (Monad m) => Either LoginError Text -> ActionT LText m ()
+toHttpResult (Left  error   ) = ScottyT.json $ ErrorResponse error
+toHttpResult (Right jwtToken) = ScottyT.json $ SuccessResponse jwtToken
 
 routes :: (Service m, MonadIO m) => ScottyT LText m ()
 routes = do
@@ -33,4 +29,4 @@ routes = do
     body   <- ScottyT.body
     result <- lift $ login body
 
-    toHttpResult $ toLoginResponse $ result
+    toHttpResult $ result
