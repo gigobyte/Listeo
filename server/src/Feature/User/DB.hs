@@ -34,16 +34,16 @@ toBson user =
   , "createdOn" =: createdOn user
   ]
 
-insertUser :: MonadDB r m => User -> m ()
+insertUser :: MonadDB m => User -> m ()
 insertUser user =
   withConn $ \conn -> runQuery conn (void $ insert "user" (toBson user))
 
-findUser :: MonadDB r m => Text -> m (Maybe User)
+findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do
   maybeUser <- runQuery conn $ findOne (select ["username" =: username] "user")
   return $ fromBson =<< maybeUser
 
-doesUserAlreadyExist :: MonadDB r m => User -> m Bool
+doesUserAlreadyExist :: MonadDB m => User -> m Bool
 doesUserAlreadyExist user = do
   userInDB <- findUser (username user)
   return $ isJust userInDB

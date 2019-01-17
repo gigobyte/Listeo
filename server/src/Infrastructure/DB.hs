@@ -12,9 +12,9 @@ import Database.MongoDB (Action, Pipe, access, master)
 type Connection = Pipe
 type Env = Connection
 
-type MonadDB r m = (MonadReader Connection m, MonadIO m)
+type MonadDB m = (MonadReader Connection m, MonadIO m)
 
-withConn :: MonadDB r m => (Connection -> IO a) -> m a
+withConn :: MonadDB m => (Connection -> IO a) -> m a
 withConn action = do
   conn <- ask
   liftIO $ action conn
