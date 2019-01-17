@@ -14,6 +14,7 @@ server pipe = do
   post "/register" $ HTTP.register pipe
   post "/login" $ HTTP.login pipe
   get "/me" $ Middleware.auth HTTP.me pipe
+  get "/health" $ json True
 
 policy :: CorsResourcePolicy
 policy = CorsResourcePolicy

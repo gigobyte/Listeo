@@ -4,18 +4,29 @@ module Feature.Login.HTTP
 where
 
 import Protolude
-import Feature.Login.Models.LoginResponse (LoginResponse(..), LoginError(..))
+import Feature.Login.Service (LoginError)
 import qualified Database.MongoDB as DB
 import qualified Feature.Login.Service as Service
 import qualified Web.Scotty as Scotty
+import qualified Data.Aeson as Aeson
 
-toHttpResult :: Either LoginError Text -> Scotty.ActionM ()
-toHttpResult (Left  error   ) = Scotty.json (ErrorResponse error)
-toHttpResult (Right jwtToken) = Scotty.json (SuccessResponse jwtToken)
+instance Aeson.ToJSON LoginResponse
+data LoginResponse
+    = ErrorResponse { errorDescription :: LoginError }
+    | SuccessResponse { jwt :: Text }
+    deriving Generic
+
+toHttpResult :: LoginResponse -> Scotty.ActionM ()
+toHttpResult (SuccessResponse jwtToken) = Scotty.json jwtToken
+toHttpResult (ErrorResponse   error   ) = Scotty.json error
+
+toLoginResponse :: Either LoginError Text -> LoginResponse
+toLoginResponse (Left  error   ) = ErrorResponse error
+toLoginResponse (Right jwtToken) = SuccessResponse jwtToken
 
 login :: DB.Pipe -> Scotty.ActionM ()
 login pipe = do
   body   <- Scotty.body
   result <- liftIO $ Service.login pipe body
 
-  toHttpResult result
+  toHttpResult $ toLoginResponse $ result

@@ -1,12 +1,12 @@
 module Feature.Register.Service
   ( register
+  , RegisterError
+  , RegisterBody
   )
 where
 
 import Protolude
-import Feature.Register.Models.RegisterBody (RegisterBody(..))
-import Feature.Register.Models.RegisterResponse (RegisterError(..))
-import Feature.User.Models.User (User(..))
+import Feature.User.DB (User(..))
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import qualified Data.Bson as Bson
@@ -15,9 +15,21 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Time.Clock as Time
 import qualified Database.MongoDB as DB
 import qualified Feature.User.DB as DB
-import qualified Feature.User.Models.User as User
-import qualified Feature.Register.Models.RegisterBody as RegisterBody
+import qualified Feature.User.DB as User
 import qualified Infrastructure.Crypto as Crypto
+
+instance Aeson.FromJSON RegisterBody
+data RegisterBody = RegisterBody
+    { registerBodyUsername :: Text
+    , registerBodyPassword :: Text
+    } deriving Generic
+
+instance Aeson.ToJSON RegisterError
+data RegisterError
+    = ValidationFailed
+    | UserAlreadyExists
+    | ServerError
+    deriving Generic
 
 register :: DB.Pipe -> LByteString -> IO (Either RegisterError ())
 register pipe rawBody = runExceptT $ do
@@ -45,8 +57,8 @@ mkUser dateNow req =
   maybeToRight ValidationFailed
     $   User
     <$> (return $ Bson.Oid 0 0)
-    <*> (validateUsername $ RegisterBody.username req)
-    <*> (validatePassword $ RegisterBody.password req)
+    <*> (validateUsername $ registerBodyUsername req)
+    <*> (validatePassword $ registerBodyPassword req)
     <*> return dateNow
 
 validateUsername :: Text -> Maybe Text
