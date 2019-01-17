@@ -17,13 +17,13 @@ import qualified Infrastructure.Middleware.Cors as Middleware
 
 type Env = DB.Env
 
-type App r m = (MonadIO m, Login.Service m, Register.Service m)
+type App m = (MonadIO m, Login.Service m, Register.Service m)
 
 newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a
   } deriving (Applicative, Functor, Monad, MonadIO, MonadReader Env)
 
-routes :: App r m => ScottyT LText m ()
+routes :: App m => ScottyT LText m ()
 routes = do
   Register.routes
   Login.routes
