@@ -11,6 +11,7 @@ import Feature.User.Service
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import Infrastructure.Types
+import Infrastructure.AppError
 import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
@@ -23,17 +24,17 @@ data RegisterBody = RegisterBody
     , password :: Text
     } deriving Generic
 
-instance Aeson.ToJSON RegisterError
+instance Aeson.ToJSON RegisterError where
+  toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
+
 data RegisterError
-    = ValidationFailed
-    | UserAlreadyExists
-    | ServerError
+    = UserAlreadyExists
     deriving Generic
 
 register
   :: (UserRepo m, MonadTime m, MonadCrypto m)
   => LByteString
-  -> m (Either RegisterError ())
+  -> m (Either (AppError RegisterError) ())
 register rawBody = do
   dateNow <- currentTime
 
@@ -42,21 +43,23 @@ register rawBody = do
     user <- liftEither $ mkUser dateNow body
     ExceptT $ tryToInsertUser user
 
-parseBody :: LByteString -> Either RegisterError RegisterBody
+parseBody :: LByteString -> Either (AppError RegisterError) RegisterBody
 parseBody body = maybeToRight ValidationFailed (Aeson.decode body)
 
 tryToInsertUser
-  :: (UserRepo m, MonadCrypto m) => User -> m (Either RegisterError ())
+  :: (UserRepo m, MonadCrypto m)
+  => User
+  -> m (Either (AppError RegisterError) ())
 tryToInsertUser user = runExceptT $ do
   userExists <- lift $ doesUserAlreadyExist user
 
-  when userExists (throwError UserAlreadyExists)
+  when userExists (throwError (DomainError UserAlreadyExists))
 
   maybeToExceptT ServerError $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
     lift $ insertUser updatedUser
 
-mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User
+mkUser :: Time.UTCTime -> RegisterBody -> Either (AppError RegisterError) User
 mkUser dateNow req =
   maybeToRight ValidationFailed
     $   User

@@ -10,6 +10,7 @@ import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
 import Feature.User.Service
 import Feature.User.DB (User)
+import Infrastructure.AppError
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
 import qualified Feature.User.DB as User
@@ -23,14 +24,14 @@ data LoginBody = LoginBody
     , password :: Text
     } deriving Generic
 
-instance Aeson.ToJSON LoginError
+instance Aeson.ToJSON LoginError where
+  toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
+
 data LoginError
-    = ValidationFailed
-    | UserNotFound
-    | ServerError
+    = UserNotFound
     deriving Generic
 
-login :: (UserRepo m) => LByteString -> m (Either LoginError Text)
+login :: UserRepo m => LByteString -> m (Either (AppError LoginError) Text)
 login rawBody = runExceptT $ do
   body     <- liftEither $ parseBody rawBody
   user     <- ExceptT $ findUserByCredentials body
@@ -38,14 +39,18 @@ login rawBody = runExceptT $ do
 
   return jwtToken
 
-parseBody :: LByteString -> Either LoginError LoginBody
+parseBody :: LByteString -> Either (AppError LoginError) LoginBody
 parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
 
-findUserByCredentials :: (UserRepo m) => LoginBody -> m (Either LoginError User)
+findUserByCredentials
+  :: (UserRepo m) => LoginBody -> m (Either (AppError LoginError) User)
 findUserByCredentials req = do
   userInDb <- findUser (username req)
 
-  return $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
+  return
+    $ maybeToRight (DomainError UserNotFound)
+    $ mfilter isPasswordValid
+    $ userInDb
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user = Crypto.validate (User.password user) (password req)
