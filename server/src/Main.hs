@@ -2,7 +2,6 @@ module Main where
 
 import Protolude hiding (get)
 import Web.Scotty.Trans
-import Network.Wai.Middleware.Cors
 import Infrastructure.Types
 import qualified Database.MongoDB as DB
 import qualified Feature.Login.HTTP as Login
@@ -14,7 +13,7 @@ import qualified Feature.User.Service as UserService
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Crypto as Crypto
 import qualified Data.Time.Clock as Time
--- import qualified Infrastructure.Middleware.Auth as Middleware
+import qualified Infrastructure.Middleware.Cors as Middleware
 
 type Env = DB.Env
 
@@ -35,25 +34,8 @@ main :: IO ()
 main = do
   pipe <- DB.connect $ DB.host "127.0.0.1"
   scottyT 8081 (\app -> flip runReaderT pipe $ unAppT app) $ do
-    middleware (cors $ const (Just policy))
+    Middleware.cors
     routes
-
-policy :: CorsResourcePolicy
-policy = CorsResourcePolicy
-  { corsOrigins        = Nothing
-  , corsMethods        = simpleMethods
-  , corsRequestHeaders = [ "Accept"
-                         , "Accept-Language"
-                         , "Content-Language"
-                         , "Content-Type"
-                         , "Authorization"
-                         ]
-  , corsExposedHeaders = Nothing
-  , corsMaxAge         = Nothing
-  , corsVaryOrigin     = False
-  , corsRequireOrigin  = False
-  , corsIgnoreFailures = False
-  }
 
 instance MonadTime AppT where
   currentTime = liftIO Time.getCurrentTime
