@@ -20,7 +20,7 @@ class Monad m => Service m where
   register :: LByteString -> m (Either (AppError RegisterError) ())
 
 toHttpResult
-  :: (Monad m) => Either (AppError RegisterError) () -> ActionT LText m ()
+  :: Monad m => Either (AppError RegisterError) () -> ActionT LText m ()
 toHttpResult (Left err) = ScottyT.json $ RegisterResponse (Just err)
 toHttpResult _          = ScottyT.json $ RegisterResponse Nothing
 

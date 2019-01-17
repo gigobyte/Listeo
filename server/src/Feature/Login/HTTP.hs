@@ -21,7 +21,7 @@ class Monad m => Service m where
   login :: LByteString -> m (Either (AppError LoginError) Text)
 
 toHttpResult
-  :: (Monad m) => Either (AppError LoginError) Text -> ActionT LText m ()
+  :: Monad m => Either (AppError LoginError) Text -> ActionT LText m ()
 toHttpResult (Left  error   ) = ScottyT.json $ ErrorResponse error
 toHttpResult (Right jwtToken) = ScottyT.json $ SuccessResponse jwtToken
 

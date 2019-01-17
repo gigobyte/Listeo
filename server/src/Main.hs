@@ -23,7 +23,7 @@ newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a
   } deriving (Applicative, Functor, Monad, MonadIO, MonadReader Env)
 
-routes :: (App r m) => ScottyT LText m ()
+routes :: App r m => ScottyT LText m ()
 routes = do
   Register.routes
   Login.routes

@@ -43,7 +43,7 @@ parseBody :: LByteString -> Either (AppError LoginError) LoginBody
 parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
 
 findUserByCredentials
-  :: (UserRepo m) => LoginBody -> m (Either (AppError LoginError) User)
+  :: UserRepo m => LoginBody -> m (Either (AppError LoginError) User)
 findUserByCredentials req = do
   userInDb <- findUser (username req)
 

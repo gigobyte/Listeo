@@ -78,7 +78,7 @@ validatePassword str
   | T.length str < 6 = Nothing
   | otherwise        = Just (T.strip str)
 
-hashPasswordInUser :: (MonadCrypto m) => User -> m (Maybe User)
+hashPasswordInUser :: MonadCrypto m => User -> m (Maybe User)
 hashPasswordInUser user@User { password } = do
   hashedPassword <- cryptoHash $ encodeUtf8 $ password
   return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
