@@ -40,7 +40,7 @@ login rawBody = runExceptT $ do
   return jwtToken
 
 parseBody :: LByteString -> Either (AppError LoginError) LoginBody
-parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
+parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
 
 findUserByCredentials
   :: UserRepo m => LoginBody -> m (Either (AppError LoginError) User)

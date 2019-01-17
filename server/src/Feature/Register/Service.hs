@@ -44,7 +44,7 @@ register rawBody = do
     ExceptT $ tryToInsertUser user
 
 parseBody :: LByteString -> Either (AppError RegisterError) RegisterBody
-parseBody body = maybeToRight ValidationFailed (Aeson.decode body)
+parseBody body = maybeToRight InvalidRequest (Aeson.decode body)
 
 tryToInsertUser
   :: (UserRepo m, MonadCrypto m)
