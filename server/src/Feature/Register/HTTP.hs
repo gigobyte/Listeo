@@ -1,13 +1,13 @@
 module Feature.Register.HTTP
-  ( register
+  ( routes
+  , Service(..)
   )
 where
 
 import Protolude
+import Web.Scotty.Trans (post, ScottyT, ActionT)
 import Feature.Register.Service (RegisterError)
-import qualified Database.MongoDB as DB
-import qualified Feature.Register.Service as Service
-import qualified Web.Scotty as Scotty
+import qualified Web.Scotty.Trans as ScottyT
 import qualified Data.Aeson as Aeson
 
 instance Aeson.ToJSON RegisterResponse
@@ -15,13 +15,17 @@ data RegisterResponse = RegisterResponse
     { errorDescription :: Maybe RegisterError
     } deriving Generic
 
-toHttpResult :: Either RegisterError a -> Scotty.ActionM ()
-toHttpResult (Left err) = Scotty.json $ RegisterResponse (Just err)
-toHttpResult _          = Scotty.json $ RegisterResponse Nothing
+class Monad m => Service m where
+  register :: LByteString -> m (Either RegisterError ())
 
-register :: DB.Pipe -> Scotty.ActionM ()
-register pipe = do
-  body   <- Scotty.body
-  result <- liftIO $ Service.register pipe body
+toHttpResult :: (Monad m) => Either RegisterError () -> ActionT LText m ()
+toHttpResult (Left err) = ScottyT.json $ RegisterResponse (Just err)
+toHttpResult _          = ScottyT.json $ RegisterResponse Nothing
 
-  toHttpResult result
+routes :: (Service m, MonadIO m) => ScottyT LText m ()
+routes = do
+  post "/register" $ do
+    body   <- ScottyT.body
+    result <- lift $ register body
+
+    toHttpResult result

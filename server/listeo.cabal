@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d34bc749c28bb411f689d83becb909d2892cacd9c0d9b04745da56bc3dd6dc4d
+-- hash: 31121e3cf79becba31733b4e7621313d19c88f236719baed6b8525bba2302d23
 
 name:           listeo
 version:        0.1.0.0
@@ -29,14 +29,16 @@ executable listeo-exe
       Feature.Register.Service
       Feature.User.DB
       Feature.User.HTTP
+      Feature.User.Service
       Infrastructure.Crypto
       Infrastructure.DB
       Infrastructure.Middleware.Auth
       Infrastructure.Secrets
+      Infrastructure.Types
       Paths_listeo
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields
+  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields ConstraintKinds FlexibleContexts GeneralizedNewtypeDeriving
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       aeson
@@ -45,6 +47,7 @@ executable listeo-exe
     , bson
     , bytestring
     , containers
+    , data-has
     , http-types
     , jwt
     , mongoDB

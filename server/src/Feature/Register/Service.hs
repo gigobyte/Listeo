@@ -7,16 +7,15 @@ where
 
 import Protolude
 import Feature.User.DB (User(..))
+import Feature.User.Service
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
+import Infrastructure.Types
 import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
 import qualified Data.Time.Clock as Time
-import qualified Database.MongoDB as DB
-import qualified Feature.User.DB as DB
 import qualified Feature.User.DB as User
-import qualified Infrastructure.Crypto as Crypto
 
 instance Aeson.FromJSON RegisterBody
 data RegisterBody = RegisterBody
@@ -31,26 +30,31 @@ data RegisterError
     | ServerError
     deriving Generic
 
-register :: DB.Pipe -> LByteString -> IO (Either RegisterError ())
-register pipe rawBody = runExceptT $ do
-  dateNow <- liftIO Time.getCurrentTime
-  body    <- liftEither $ parseBody rawBody
-  user    <- liftEither $ mkUser dateNow body
+register
+  :: (UserRepo m, MonadTime m, MonadCrypto m)
+  => LByteString
+  -> m (Either RegisterError ())
+register rawBody = do
+  dateNow <- currentTime
 
-  ExceptT $ insertUser pipe user
+  runExceptT $ do
+    body <- liftEither $ parseBody rawBody
+    user <- liftEither $ mkUser dateNow body
+    ExceptT $ tryToInsertUser user
 
 parseBody :: LByteString -> Either RegisterError RegisterBody
 parseBody body = maybeToRight ValidationFailed (Aeson.decode body)
 
-insertUser :: DB.Pipe -> User -> IO (Either RegisterError ())
-insertUser pipe user = runExceptT $ do
-  userExists <- liftIO $ DB.doesUserAlreadyExist pipe user
+tryToInsertUser
+  :: (UserRepo m, MonadCrypto m) => User -> m (Either RegisterError ())
+tryToInsertUser user = runExceptT $ do
+  userExists <- lift $ doesUserAlreadyExist user
 
   when userExists (throwError UserAlreadyExists)
 
   maybeToExceptT ServerError $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
-    liftIO $ DB.insertUser pipe updatedUser
+    lift $ insertUser updatedUser
 
 mkUser :: Time.UTCTime -> RegisterBody -> Either RegisterError User
 mkUser dateNow req =
@@ -71,10 +75,11 @@ validatePassword str
   | T.length str < 6 = Nothing
   | otherwise        = Just (T.strip str)
 
-hashPasswordInUser :: User -> IO (Maybe User)
+hashPasswordInUser :: (MonadCrypto m) => User -> m (Maybe User)
 hashPasswordInUser user@User { password } = do
-  hashedPassword <- Crypto.hash $ encodeUtf8 $ password
+  hashedPassword <- cryptoHash $ encodeUtf8 $ password
   return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> User
   setHashedPassword p = user { User.password = p }
+

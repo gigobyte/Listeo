@@ -8,11 +8,10 @@ where
 import Protolude
 import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
+import Feature.User.Service
 import Feature.User.DB (User)
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
-import qualified Database.MongoDB as DB
-import qualified Feature.User.DB as DB
 import qualified Feature.User.DB as User
 import qualified Infrastructure.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
@@ -31,10 +30,10 @@ data LoginError
     | ServerError
     deriving Generic
 
-login :: DB.Pipe -> LByteString -> IO (Either LoginError Text)
-login pipe rawBody = runExceptT $ do
+login :: (UserRepo m) => LByteString -> m (Either LoginError Text)
+login rawBody = runExceptT $ do
   body     <- liftEither $ parseBody rawBody
-  user     <- ExceptT $ findUserByCredentials pipe body
+  user     <- ExceptT $ findUserByCredentials body
   jwtToken <- return $ generateJwtToken user
 
   return jwtToken
@@ -42,9 +41,9 @@ login pipe rawBody = runExceptT $ do
 parseBody :: LByteString -> Either LoginError LoginBody
 parseBody rawBody = maybeToRight ValidationFailed $ Aeson.decode rawBody
 
-findUserByCredentials :: DB.Pipe -> LoginBody -> IO (Either LoginError User)
-findUserByCredentials pipe req = do
-  userInDb <- DB.findUser pipe (loginBodyUsername req)
+findUserByCredentials :: (UserRepo m) => LoginBody -> m (Either LoginError User)
+findUserByCredentials req = do
+  userInDb <- findUser (loginBodyUsername req)
 
   return $ maybeToRight UserNotFound $ mfilter isPasswordValid $ userInDb
  where

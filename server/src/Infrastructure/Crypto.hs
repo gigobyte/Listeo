@@ -11,8 +11,8 @@ import qualified Crypto.BCrypt as BCrypt
 hashingPolicy :: BCrypt.HashingPolicy
 hashingPolicy = BCrypt.HashingPolicy 12 (pack "$2y$")
 
-hash :: ByteString -> IO (Maybe ByteString)
-hash = BCrypt.hashPasswordUsingPolicy hashingPolicy
+hash :: (MonadIO m) => ByteString -> m (Maybe ByteString)
+hash = liftIO . BCrypt.hashPasswordUsingPolicy hashingPolicy
 
 validate :: Text -> Text -> Bool
 validate hashed attempt =

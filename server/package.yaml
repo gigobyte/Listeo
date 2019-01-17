@@ -23,6 +23,7 @@ dependencies:
   - bson
   - mtl
   - transformers
+  - data-has
 
 executables:
   listeo-exe:
@@ -40,3 +41,6 @@ default-extensions:
   - DeriveGeneric
   - NamedFieldPuns
   - DuplicateRecordFields
+  - ConstraintKinds
+  - FlexibleContexts
+  - GeneralizedNewtypeDeriving
