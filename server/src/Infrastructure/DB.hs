@@ -7,17 +7,16 @@ module Infrastructure.DB
 where
 
 import Protolude
-import Data.Has
 import Database.MongoDB (Action, Pipe, access, master)
 
 type Connection = Pipe
 type Env = Connection
 
-type MonadDB r m = (MonadReader r m, Has Connection r, MonadIO m)
+type MonadDB r m = (MonadReader Connection m, MonadIO m)
 
 withConn :: MonadDB r m => (Connection -> IO a) -> m a
 withConn action = do
-  conn <- asks getter
+  conn <- ask
   liftIO $ action conn
 
 runQuery :: Connection -> Action IO a -> IO a

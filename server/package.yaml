@@ -23,7 +23,6 @@ dependencies:
   - bson
   - mtl
   - transformers
-  - data-has
 
 executables:
   listeo-exe:
