@@ -15,7 +15,7 @@ import qualified Infrastructure.Crypto as Crypto
 import qualified Data.Time.Clock as Time
 import qualified Infrastructure.Middleware.Cors as Middleware
 
-type Env = DB.Env
+type Env = (DB.Env)
 
 type App m = (MonadIO m, Login.Service m, Register.Service m)
 

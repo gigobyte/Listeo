@@ -26,7 +26,6 @@ data LoginBody = LoginBody
 
 instance Aeson.ToJSON LoginError where
   toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
-
 data LoginError
     = UserNotFound
     deriving Generic

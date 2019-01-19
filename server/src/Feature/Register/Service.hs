@@ -26,7 +26,6 @@ data RegisterBody = RegisterBody
 
 instance Aeson.ToJSON RegisterError where
   toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
-
 data RegisterError
     = UserAlreadyExists
     deriving Generic
