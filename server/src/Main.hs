@@ -2,7 +2,7 @@ module Main where
 
 import Protolude hiding (get)
 import Web.Scotty.Trans
-import Infrastructure.Types
+import Infrastructure.IO (MonadTime, MonadCrypto)
 import qualified Database.MongoDB as DB
 import qualified Feature.Login.HTTP as Login
 import qualified Feature.Login.Service as LoginService
@@ -18,7 +18,7 @@ import qualified Infrastructure.Middleware.Cors as Middleware
 
 type Env = (DB.Env)
 
-type App m = (MonadIO m, Login.Service m, Register.Service m, UserService.UserRepo m)
+type App m = (MonadIO m, Login.LoginService m, Register.RegisterService m, UserService.UserRepo m)
 
 newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a
@@ -50,8 +50,8 @@ instance UserService.UserRepo AppT where
   doesUserAlreadyExist = UserDB.doesUserAlreadyExist
   findUser = UserDB.findUser
 
-instance Register.Service AppT where
+instance Register.RegisterService AppT where
   register = RegisterService.register
 
-instance Login.Service AppT where
+instance Login.LoginService AppT where
   login = LoginService.login

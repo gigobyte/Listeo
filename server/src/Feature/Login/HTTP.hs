@@ -1,6 +1,6 @@
 module Feature.Login.HTTP
   ( routes
-  , Service(..)
+  , LoginService(..)
   )
 where
 
@@ -17,7 +17,7 @@ data LoginResponse
     | SuccessResponse { jwt :: Text }
     deriving Generic
 
-class Monad m => Service m where
+class Monad m => LoginService m where
   login :: LByteString -> m (Either (AppError LoginError) Text)
 
 toHttpResult
@@ -25,7 +25,7 @@ toHttpResult
 toHttpResult (Left  error   ) = ScottyT.json $ ErrorResponse error
 toHttpResult (Right jwtToken) = ScottyT.json $ SuccessResponse jwtToken
 
-routes :: (Service m, MonadIO m) => ScottyT LText m ()
+routes :: (LoginService m, MonadIO m) => ScottyT LText m ()
 routes = do
   post "/login" $ do
     body   <- ScottyT.body

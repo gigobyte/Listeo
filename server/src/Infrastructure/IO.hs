@@ -1,4 +1,4 @@
-module Infrastructure.Types where
+module Infrastructure.IO where
 
 import Protolude
 import qualified Data.Time.Clock as Time

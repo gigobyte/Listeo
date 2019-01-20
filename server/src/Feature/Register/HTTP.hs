@@ -1,6 +1,6 @@
 module Feature.Register.HTTP
   ( routes
-  , Service(..)
+  , RegisterService(..)
   )
 where
 
@@ -16,7 +16,7 @@ data RegisterResponse = RegisterResponse
     { errorDescription :: Maybe (AppError RegisterError)
     } deriving Generic
 
-class Monad m => Service m where
+class Monad m => RegisterService m where
   register :: LByteString -> m (Either (AppError RegisterError) ())
 
 toHttpResult
@@ -24,7 +24,7 @@ toHttpResult
 toHttpResult (Left err) = ScottyT.json $ RegisterResponse (Just err)
 toHttpResult _          = ScottyT.json $ RegisterResponse Nothing
 
-routes :: (Service m, MonadIO m) => ScottyT LText m ()
+routes :: (RegisterService m, MonadIO m) => ScottyT LText m ()
 routes = do
   post "/register" $ do
     body   <- ScottyT.body
