@@ -10,7 +10,7 @@ import Feature.User.DB (User(User))
 import Feature.User.Service
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
-import Infrastructure.Types
+import Infrastructure.IO
 import Infrastructure.AppError
 import qualified Data.Bson as Bson
 import qualified Data.Text as T

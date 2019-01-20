@@ -2,7 +2,7 @@ module Main where
 
 import Protolude hiding (get)
 import Web.Scotty.Trans
-import Infrastructure.IO (MonadTime, MonadCrypto)
+import Infrastructure.IO (MonadTime(..), MonadCrypto(..))
 import qualified Database.MongoDB as DB
 import qualified Feature.Login.HTTP as Login
 import qualified Feature.Login.Service as LoginService
@@ -35,7 +35,7 @@ routes = do
 main :: IO ()
 main = do
   pipe <- DB.connect $ DB.host "127.0.0.1"
-  scottyT 8081 (\app -> flip runReaderT pipe $ unAppT app) $ do
+  scottyT 8081 (\app -> flip runReaderT (pipe) $ unAppT app) $ do
     Middleware.cors
     routes
 
