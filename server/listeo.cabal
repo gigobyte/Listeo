@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7cb4bcb190f3076c2627c800ae85b5e14ab8750288ab0855613013993cd86f1e
+-- hash: 294a65eee33dbac50f434ee8b7a1da0ee1107a528120df8a3b91d41a44094097
 
 name:           listeo
 version:        0.1.0.0
@@ -23,6 +23,7 @@ source-repository head
 executable listeo-exe
   main-is: Main.hs
   other-modules:
+      Feature.Auth.HTTP
       Feature.Login.HTTP
       Feature.Login.Service
       Feature.Register.HTTP
@@ -33,7 +34,6 @@ executable listeo-exe
       Infrastructure.AppError
       Infrastructure.Crypto
       Infrastructure.DB
-      Infrastructure.Middleware.Auth
       Infrastructure.Middleware.Cors
       Infrastructure.Secrets
       Infrastructure.Types
