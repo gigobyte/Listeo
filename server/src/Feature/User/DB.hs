@@ -3,6 +3,7 @@ module Feature.User.DB
   , insertUser
   , doesUserAlreadyExist
   , User(..)
+  , UserDTO(..)
   )
 where
 
@@ -19,32 +20,33 @@ data User = User
   , createdOn :: Time.UTCTime
   }
 
-fromBson :: Document -> Maybe User
-fromBson doc =
+data UserDTO = UserDTO
+  { dtoUsername :: Text
+  , dtoPassword :: Text }
+
+userFromBson :: Document -> Maybe User
+userFromBson doc =
   User
     <$> lookup "_id"       doc
     <*> lookup "username"  doc
     <*> lookup "password"  doc
     <*> lookup "createdOn" doc
 
-toBson :: User -> Document
-toBson user =
-  [ "username" =: username user
-  , "password" =: password user
-  , "createdOn" =: createdOn user
-  ]
+userDtoToBson :: UserDTO -> Document
+userDtoToBson user =
+  ["username" =: dtoUsername user, "password" =: dtoPassword user]
 
-insertUser :: MonadDB m => User -> m ()
+insertUser :: MonadDB m => UserDTO -> m ()
 insertUser user =
-  withConn $ \conn -> runQuery conn (void $ insert "user" (toBson user))
+  withConn $ \conn -> runQuery conn (void $ insert "user" (userDtoToBson user))
 
 findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do
   maybeUser <- runQuery conn $ findOne (select ["username" =: username] "user")
-  return $ fromBson =<< maybeUser
+  return $ userFromBson =<< maybeUser
 
-doesUserAlreadyExist :: MonadDB m => User -> m Bool
-doesUserAlreadyExist user = do
-  userInDB <- findUser (username user)
+doesUserAlreadyExist :: MonadDB m => Text -> m Bool
+doesUserAlreadyExist username = do
+  userInDB <- findUser username
   return $ isJust userInDB
 

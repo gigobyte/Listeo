@@ -1,9 +1,9 @@
 module Feature.User.Service where
 
 import Protolude
-import Feature.User.DB (User)
+import Feature.User.DB (User, UserDTO)
 
 class Monad m => UserRepo m where
-  insertUser :: User -> m ()
-  doesUserAlreadyExist :: User -> m Bool
+  insertUser :: UserDTO -> m ()
+  doesUserAlreadyExist :: Text -> m Bool
   findUser :: Text -> m (Maybe User)

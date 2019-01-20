@@ -6,17 +6,14 @@ module Feature.Register.Service
 where
 
 import Protolude
-import Feature.User.DB (User(User))
+import Feature.User.DB (UserDTO(..))
 import Feature.User.Service
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import Infrastructure.IO
 import Infrastructure.AppError
-import qualified Data.Bson as Bson
 import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
-import qualified Data.Time.Clock as Time
-import qualified Feature.User.DB as User
 
 instance Aeson.FromJSON RegisterBody
 data RegisterBody = RegisterBody
@@ -31,26 +28,23 @@ data RegisterError
     deriving Generic
 
 register
-  :: (UserRepo m, MonadTime m, MonadCrypto m)
+  :: (UserRepo m, MonadCrypto m)
   => LByteString
   -> m (Either (AppError RegisterError) ())
-register rawBody = do
-  dateNow <- currentTime
-
-  runExceptT $ do
-    body <- liftEither $ parseBody rawBody
-    user <- liftEither $ mkUser dateNow body
-    ExceptT $ tryToInsertUser user
+register rawBody = runExceptT $ do
+  body <- liftEither $ parseBody rawBody
+  user <- liftEither $ mkUserDTO body
+  ExceptT $ tryToInsertUser user
 
 parseBody :: LByteString -> Either (AppError RegisterError) RegisterBody
 parseBody body = maybeToRight InvalidRequest (Aeson.decode body)
 
 tryToInsertUser
   :: (UserRepo m, MonadCrypto m)
-  => User
+  => UserDTO
   -> m (Either (AppError RegisterError) ())
 tryToInsertUser user = runExceptT $ do
-  userExists <- lift $ doesUserAlreadyExist user
+  userExists <- lift $ doesUserAlreadyExist (dtoUsername user)
 
   when userExists (throwError (DomainError UserAlreadyExists))
 
@@ -58,14 +52,12 @@ tryToInsertUser user = runExceptT $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
     lift $ insertUser updatedUser
 
-mkUser :: Time.UTCTime -> RegisterBody -> Either (AppError RegisterError) User
-mkUser dateNow req =
+mkUserDTO :: RegisterBody -> Either (AppError RegisterError) UserDTO
+mkUserDTO req =
   maybeToRight ValidationFailed
-    $   User
-    <$> (return $ Bson.Oid 0 0)
-    <*> (validateUsername $ username req)
+    $   UserDTO
+    <$> (validateUsername $ username req)
     <*> (validatePassword $ password req)
-    <*> return dateNow
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
@@ -77,11 +69,11 @@ validatePassword str
   | T.length str < 6 = Nothing
   | otherwise        = Just (T.strip str)
 
-hashPasswordInUser :: MonadCrypto m => User -> m (Maybe User)
-hashPasswordInUser user@User { password } = do
-  hashedPassword <- cryptoHash $ encodeUtf8 $ password
+hashPasswordInUser :: MonadCrypto m => UserDTO -> m (Maybe UserDTO)
+hashPasswordInUser user@UserDTO { dtoPassword } = do
+  hashedPassword <- cryptoHash $ encodeUtf8 $ dtoPassword
   return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
-  setHashedPassword :: Text -> User
-  setHashedPassword p = user { User.password = p }
+  setHashedPassword :: Text -> UserDTO
+  setHashedPassword p = user { dtoPassword = p }
 
