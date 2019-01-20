@@ -8,6 +8,7 @@ import qualified Feature.Login.HTTP as Login
 import qualified Feature.Login.Service as LoginService
 import qualified Feature.Register.HTTP as Register
 import qualified Feature.Register.Service as RegisterService
+import qualified Feature.User.HTTP as User
 import qualified Feature.User.DB as UserDB
 import qualified Feature.User.Service as UserService
 import qualified Infrastructure.DB as DB
@@ -17,7 +18,7 @@ import qualified Infrastructure.Middleware.Cors as Middleware
 
 type Env = (DB.Env)
 
-type App m = (MonadIO m, Login.Service m, Register.Service m)
+type App m = (MonadIO m, Login.Service m, Register.Service m, UserService.UserRepo m)
 
 newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a
@@ -27,6 +28,7 @@ routes :: App m => ScottyT LText m ()
 routes = do
   Register.routes
   Login.routes
+  User.routes
 
   get "/health" $ json True
 
