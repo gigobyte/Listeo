@@ -46,7 +46,7 @@ tryToInsertUser
 tryToInsertUser user = runExceptT $ do
   userExists <- lift $ doesUserAlreadyExist (dtoUsername user)
 
-  when userExists (throwError (DomainError UserAlreadyExists))
+  when userExists (throwE (DomainError UserAlreadyExists))
 
   maybeToExceptT ServerError $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
