@@ -11,7 +11,7 @@ import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status
 import Feature.User.UserRepoClass (UserRepo, findUser)
 import Feature.User.User (User)
-import Infrastructure.Utils (liftMaybe)
+import Infrastructure.Utils.Maybe (liftMaybe)
 import qualified Web.JWT as JWT
 
 requireUser :: (UserRepo m) => ActionT LText m User

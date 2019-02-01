@@ -2,7 +2,8 @@ module Main where
 
 import Protolude hiding (get)
 import Web.Scotty.Trans
-import Infrastructure.IO (MonadTime(..), MonadCrypto(..))
+import Infrastructure.MonadTime
+import Infrastructure.MonadCrypto
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import Feature.User.UserRepoClass (UserRepo(..))
@@ -14,7 +15,7 @@ import qualified Feature.Register.RegisterService as RegisterService
 import qualified Feature.User.UserHTTP as User
 import qualified Feature.User.UserRepo as UserRepo
 import qualified Infrastructure.DB as DB
-import qualified Infrastructure.Crypto as Crypto
+import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
 import qualified Infrastructure.Middleware.Cors as Middleware
 
@@ -42,10 +43,10 @@ main = do
     routes
 
 instance MonadTime AppT where
-  currentTime = liftIO Time.getCurrentTime
+  getCurrentTime = liftIO Time.getCurrentTime
 
 instance MonadCrypto AppT where
-  cryptoHash = Crypto.hash
+  hash = Crypto.hash
 
 instance UserRepo AppT where
   insertUser = UserRepo.insertUser

@@ -3,11 +3,11 @@ module Feature.Register.RegisterService
   )
 where
 
-import Protolude
+import Protolude hiding (hash)
 import Feature.User.UserDTO (UserDTO(..))
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
-import Infrastructure.IO
+import Infrastructure.MonadCrypto
 import Infrastructure.AppError
 import Feature.Register.RegisterError (RegisterError(..))
 import Feature.Register.RegisterBody (RegisterBody)
@@ -61,7 +61,7 @@ validatePassword str
 
 hashPasswordInUser :: MonadCrypto m => UserDTO -> m (Maybe UserDTO)
 hashPasswordInUser user@UserDTO { UserDTO.password } = do
-  hashedPassword <- cryptoHash $ encodeUtf8 $ password
+  hashedPassword <- hash $ encodeUtf8 $ password
   return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> UserDTO

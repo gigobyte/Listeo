@@ -1,4 +1,4 @@
-module Infrastructure.Crypto
+module Infrastructure.Utils.Crypto
   ( hash
   , validate
   )

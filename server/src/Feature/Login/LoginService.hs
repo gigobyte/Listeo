@@ -15,7 +15,7 @@ import qualified Feature.Login.LoginBody as LoginBody
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
 import qualified Feature.User.User as User
-import qualified Infrastructure.Crypto as Crypto
+import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
 import qualified Web.JWT as JWT
 
