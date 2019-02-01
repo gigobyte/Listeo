@@ -3,14 +3,16 @@ module Main where
 import Protolude hiding (get)
 import Web.Scotty.Trans
 import Infrastructure.IO (MonadTime(..), MonadCrypto(..))
+import Feature.Login.LoginServiceClass (LoginService(..))
+import Feature.Register.RegisterServiceClass (RegisterService(..))
+import Feature.User.UserRepoClass (UserRepo(..))
 import qualified Database.MongoDB as DB
-import qualified Feature.Login.HTTP as Login
-import qualified Feature.Login.Service as LoginService
-import qualified Feature.Register.HTTP as Register
-import qualified Feature.Register.Service as RegisterService
-import qualified Feature.User.HTTP as User
-import qualified Feature.User.DB as UserDB
-import qualified Feature.User.Service as UserService
+import qualified Feature.Login.LoginHTTP as LoginHTTP
+import qualified Feature.Login.LoginService as LoginService
+import qualified Feature.Register.RegisterHTTP as RegisterHTTP
+import qualified Feature.Register.RegisterService as RegisterService
+import qualified Feature.User.UserHTTP as User
+import qualified Feature.User.UserRepo as UserRepo
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Crypto as Crypto
 import qualified Data.Time.Clock as Time
@@ -18,7 +20,7 @@ import qualified Infrastructure.Middleware.Cors as Middleware
 
 type Env = (DB.Env)
 
-type App m = (MonadIO m, Login.LoginService m, Register.RegisterService m, UserService.UserRepo m)
+type App m = (MonadIO m, LoginService m, RegisterService m, UserRepo m)
 
 newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a
@@ -26,8 +28,8 @@ newtype AppT a = AppT
 
 routes :: App m => ScottyT LText m ()
 routes = do
-  Register.routes
-  Login.routes
+  RegisterHTTP.routes
+  LoginHTTP.routes
   User.routes
 
   get "/health" $ json True
@@ -45,13 +47,13 @@ instance MonadTime AppT where
 instance MonadCrypto AppT where
   cryptoHash = Crypto.hash
 
-instance UserService.UserRepo AppT where
-  insertUser = UserDB.insertUser
-  doesUserAlreadyExist = UserDB.doesUserAlreadyExist
-  findUser = UserDB.findUser
+instance UserRepo AppT where
+  insertUser = UserRepo.insertUser
+  doesUserAlreadyExist = UserRepo.doesUserAlreadyExist
+  findUser = UserRepo.findUser
 
-instance Register.RegisterService AppT where
+instance RegisterService AppT where
   register = RegisterService.register
 
-instance Login.LoginService AppT where
+instance LoginService AppT where
   login = LoginService.login

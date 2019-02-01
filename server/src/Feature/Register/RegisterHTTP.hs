@@ -1,23 +1,15 @@
-module Feature.Register.HTTP
+module Feature.Register.RegisterHTTP
   ( routes
-  , RegisterService(..)
   )
 where
 
 import Protolude
 import Infrastructure.AppError
 import Web.Scotty.Trans (post, ScottyT, ActionT)
-import Feature.Register.Service (RegisterError)
+import Feature.Register.RegisterError (RegisterError)
+import Feature.Register.RegisterResponse (RegisterResponse(..))
+import Feature.Register.RegisterServiceClass (RegisterService(..))
 import qualified Web.Scotty.Trans as ScottyT
-import qualified Data.Aeson as Aeson
-
-instance Aeson.ToJSON RegisterResponse
-data RegisterResponse = RegisterResponse
-    { errorDescription :: Maybe (AppError RegisterError)
-    } deriving Generic
-
-class Monad m => RegisterService m where
-  register :: LByteString -> m (Either (AppError RegisterError) ())
 
 toHttpResult
   :: Monad m => Either (AppError RegisterError) () -> ActionT LText m ()

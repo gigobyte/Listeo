@@ -1,31 +1,21 @@
-module Feature.Register.Service
+module Feature.Register.RegisterService
   ( register
-  , RegisterError
-  , RegisterBody
   )
 where
 
 import Protolude
-import Feature.User.DB (UserDTO(..))
-import Feature.User.Service
+import Feature.User.UserDTO (UserDTO(..))
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import Infrastructure.IO
 import Infrastructure.AppError
+import Feature.Register.RegisterError (RegisterError(..))
+import Feature.Register.RegisterBody (RegisterBody)
+import qualified Feature.Register.RegisterBody as RegisterBody
+import Feature.User.UserRepoClass (UserRepo(..))
+import qualified Feature.User.UserDTO as UserDTO
 import qualified Data.Text as T
-import qualified Data.Aeson as Aeson
-
-instance Aeson.FromJSON RegisterBody
-data RegisterBody = RegisterBody
-    { username :: Text
-    , password :: Text
-    } deriving Generic
-
-instance Aeson.ToJSON RegisterError where
-  toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
-data RegisterError
-    = UserAlreadyExists
-    deriving Generic
+import Data.Aeson (decode)
 
 register
   :: (UserRepo m, MonadCrypto m)
@@ -37,16 +27,16 @@ register rawBody = runExceptT $ do
   ExceptT $ tryToInsertUser user
 
 parseBody :: LByteString -> Either (AppError RegisterError) RegisterBody
-parseBody body = maybeToRight InvalidRequest (Aeson.decode body)
+parseBody body = maybeToRight InvalidRequest (decode body)
 
 tryToInsertUser
   :: (UserRepo m, MonadCrypto m)
   => UserDTO
   -> m (Either (AppError RegisterError) ())
 tryToInsertUser user = runExceptT $ do
-  userExists <- lift $ doesUserAlreadyExist (dtoUsername user)
+  userExists <- lift $ doesUserAlreadyExist (UserDTO.username user)
 
-  when userExists (throwE (DomainError UserAlreadyExists))
+  when userExists $ throwE (DomainError UserAlreadyExists)
 
   maybeToExceptT ServerError $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
@@ -56,8 +46,8 @@ mkUserDTO :: RegisterBody -> Either (AppError RegisterError) UserDTO
 mkUserDTO req =
   maybeToRight ValidationFailed
     $   UserDTO
-    <$> (validateUsername $ username req)
-    <*> (validatePassword $ password req)
+    <$> (validateUsername $ RegisterBody.username req)
+    <*> (validatePassword $ RegisterBody.password req)
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
@@ -70,10 +60,10 @@ validatePassword str
   | otherwise        = Just (T.strip str)
 
 hashPasswordInUser :: MonadCrypto m => UserDTO -> m (Maybe UserDTO)
-hashPasswordInUser user@UserDTO { dtoPassword } = do
-  hashedPassword <- cryptoHash $ encodeUtf8 $ dtoPassword
+hashPasswordInUser user@UserDTO { UserDTO.password } = do
+  hashedPassword <- cryptoHash $ encodeUtf8 $ password
   return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> UserDTO
-  setHashedPassword p = user { dtoPassword = p }
+  setHashedPassword p = user { UserDTO.password = p }
 

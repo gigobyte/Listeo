@@ -1,4 +1,4 @@
-module Feature.Auth.HTTP
+module Feature.Auth
   ( requireUser
   )
 where
@@ -9,8 +9,8 @@ import Web.Scotty.Trans (ActionT)
 import Web.Scotty.Trans as ScottyT
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status
-import Feature.User.Service (UserRepo, findUser)
-import Feature.User.DB (User)
+import Feature.User.UserRepoClass (UserRepo, findUser)
+import Feature.User.User (User)
 import Infrastructure.Utils (liftMaybe)
 import qualified Web.JWT as JWT
 

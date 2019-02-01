@@ -1,34 +1,23 @@
-module Feature.Login.Service
+module Feature.Login.LoginService
   ( login
-  , LoginBody
-  , LoginError
   )
 where
 
 import Protolude
 import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
-import Feature.User.Service
-import Feature.User.DB (User)
+import Feature.User.User (User)
+import Feature.User.UserRepoClass (UserRepo(..))
 import Infrastructure.AppError
+import Feature.Login.LoginError (LoginError(..))
+import Feature.Login.LoginBody (LoginBody)
+import qualified Feature.Login.LoginBody as LoginBody
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
-import qualified Feature.User.DB as User
+import qualified Feature.User.User as User
 import qualified Infrastructure.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
 import qualified Web.JWT as JWT
-
-instance Aeson.FromJSON LoginBody
-data LoginBody = LoginBody
-    { username :: Text
-    , password :: Text
-    } deriving Generic
-
-instance Aeson.ToJSON LoginError where
-  toJSON err = Aeson.genericToJSON (Aeson.defaultOptions { Aeson.tagSingleConstructors = True }) err
-data LoginError
-    = UserNotFound
-    deriving Generic
 
 login :: UserRepo m => LByteString -> m (Either (AppError LoginError) Text)
 login rawBody = runExceptT $ do
@@ -44,7 +33,7 @@ parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
 findUserByCredentials
   :: UserRepo m => LoginBody -> m (Either (AppError LoginError) User)
 findUserByCredentials req = do
-  userInDb <- findUser (username req)
+  userInDb <- findUser (LoginBody.username req)
 
   return
     $ maybeToRight (DomainError UserNotFound)
@@ -52,7 +41,8 @@ findUserByCredentials req = do
     $ userInDb
  where
   isPasswordValid :: User -> Bool
-  isPasswordValid user = Crypto.validate (User.password user) (password req)
+  isPasswordValid user =
+    Crypto.validate (User.password user) (LoginBody.password req)
 
 generateJwtToken :: User -> Text
 generateJwtToken user =
