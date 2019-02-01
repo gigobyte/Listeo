@@ -42,6 +42,11 @@ tryToInsertUser user = runExceptT $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
     lift $ insertUser updatedUser
 
+doesUserAlreadyExist :: (UserRepo m) => Text -> m Bool
+doesUserAlreadyExist username = do
+  userInDB <- findUser username
+  return $ isJust userInDB
+
 mkUserDTO :: RegisterBody -> Either (AppError RegisterError) UserDTO
 mkUserDTO req =
   maybeToRight ValidationFailed

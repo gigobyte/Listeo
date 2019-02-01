@@ -50,7 +50,6 @@ instance MonadCrypto AppT where
 
 instance UserRepo AppT where
   insertUser = UserRepo.insertUser
-  doesUserAlreadyExist = UserRepo.doesUserAlreadyExist
   findUser = UserRepo.findUser
 
 instance RegisterService AppT where

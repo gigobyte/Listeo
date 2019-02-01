@@ -1,7 +1,6 @@
 module Feature.User.UserRepo
   ( findUser
   , insertUser
-  , doesUserAlreadyExist
   )
 where
 
@@ -24,9 +23,3 @@ findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do
   maybeUser <- runQuery conn $ findOne (select ["username" =: username] "user")
   return $ User.fromBson =<< maybeUser
-
-doesUserAlreadyExist :: MonadDB m => Text -> m Bool
-doesUserAlreadyExist username = do
-  userInDB <- findUser username
-  return $ isJust userInDB
-

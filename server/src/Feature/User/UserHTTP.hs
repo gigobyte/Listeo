@@ -10,7 +10,6 @@ import Feature.User.PublicUser
 import qualified Feature.User.User as User
 import qualified Feature.Auth as Auth
 
-
 dbUserToPublicUser :: User.User -> PublicUser
 dbUserToPublicUser user =
   PublicUser {username = User.username user, createdOn = User.createdOn user}
