@@ -9,7 +9,7 @@ import Pages.Home.View as View
 
 
 view : AppModel -> Html Msg
-view model =
+view _ =
     View.view {}
 
 
@@ -18,6 +18,7 @@ update msg model =
     Update.update msg model.home
 
 
+init : Model
 init =
     Update.init
 

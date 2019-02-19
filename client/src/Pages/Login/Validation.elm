@@ -8,7 +8,7 @@ module Pages.Login.Validation exposing
 
 import Pages.Login.Api exposing (LoginRequest)
 import Pages.Login.Model exposing (Model)
-import Validate exposing (Validator, fromValid, ifBlank, ifTrue, validate)
+import Validate exposing (Validator, fromValid, ifBlank, validate)
 
 
 type LoginValidationError

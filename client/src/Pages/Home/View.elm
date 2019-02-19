@@ -10,7 +10,7 @@ type alias Props =
 
 
 view : Props -> Html Msg
-view props =
+view _ =
     div []
         [ text "Home page"
         ]

@@ -1,9 +1,8 @@
 module UI.RadioButton exposing (view)
 
 import Css exposing (..)
-import Css.Global exposing (adjacentSiblings, typeSelector)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (checked, id, type_)
+import Html.Styled.Attributes exposing (checked, type_)
 import Html.Styled.Events exposing (onClick)
 import UI.Colors exposing (gray300, white)
 import Utils.Styles exposing (StyledElement)

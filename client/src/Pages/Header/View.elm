@@ -7,7 +7,6 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (attribute, title)
 import Html.Styled.Events exposing (..)
 import Msg exposing (Msg(..))
-import Pages.Header.Model exposing (Model)
 import Route exposing (Route)
 import UI.Colors exposing (blue200, crimson100, white)
 import UI.Icon as Icon

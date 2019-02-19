@@ -4,7 +4,7 @@ import Browser.Navigation as Nav
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attributes
 import Url
-import Url.Parser as Parser exposing ((</>), Parser, oneOf, parse, s)
+import Url.Parser as Parser exposing (Parser, oneOf, parse, s)
 
 
 type Route

@@ -7,7 +7,7 @@ module UI.Icon exposing
     )
 
 import Css exposing (..)
-import Html.Styled exposing (Html, i, styled)
+import Html.Styled exposing (i, styled)
 import Html.Styled.Attributes exposing (class)
 import Utils.Styles exposing (StyledElement)
 

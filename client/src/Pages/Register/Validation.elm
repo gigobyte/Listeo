@@ -23,10 +23,12 @@ type RegisterField
     | Password
 
 
+usernameMinimumLength : number
 usernameMinimumLength =
     4
 
 
+passwordMinimumLength : number
 passwordMinimumLength =
     6
 

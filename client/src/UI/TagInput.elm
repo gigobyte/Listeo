@@ -2,8 +2,8 @@ module UI.TagInput exposing (Tag, tagValue, view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (placeholder, value)
-import Html.Styled.Events exposing (onClick, onInput)
+import Html.Styled.Attributes exposing (value)
+import Html.Styled.Events exposing (onClick)
 import UI.Colors exposing (..)
 import UI.Icon as Icon
 import UI.Input as Input
@@ -16,7 +16,7 @@ type Tag
 
 
 tagValue : Tag -> String
-tagValue (Tag { value, id }) =
+tagValue (Tag { value }) =
     value
 
 

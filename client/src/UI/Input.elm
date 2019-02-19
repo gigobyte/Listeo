@@ -3,7 +3,6 @@ module UI.Input exposing (view)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (type_)
 import Maybe.Extra as Maybe
 import UI.Colors exposing (crimson100, gray100, gray300)
 import Utils.Styles exposing (StyledElement, stylesIfJust, stylesIfTrue)

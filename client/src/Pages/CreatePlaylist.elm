@@ -26,6 +26,7 @@ update msg model =
     Update.update msg model.createPlaylist
 
 
+init : Model
 init =
     Update.init
 

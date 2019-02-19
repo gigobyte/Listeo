@@ -30,4 +30,4 @@ text props attrs children =
         style =
             baseStyle ++ stylesIfNotEmpty props.error errorStyle
     in
-    styled span style attrs ([ Html.Styled.text props.error ] ++ children)
+    styled span style attrs (Html.Styled.text props.error :: children)

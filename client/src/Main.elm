@@ -6,7 +6,6 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
-import List
 import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
@@ -17,9 +16,8 @@ import Pages.Home as Home
 import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
-import Route exposing (Route)
+import Route
 import Url
-import Url.Parser exposing (parse)
 
 
 type alias Flags =
@@ -154,10 +152,11 @@ view model =
 
 
 subscriptions : AppModel -> Sub Msg
-subscriptions model =
-    Sub.none
+subscriptions =
+    always Sub.none
 
 
+main : Program Flags AppModel Msg
 main =
     Browser.application
         { init = init

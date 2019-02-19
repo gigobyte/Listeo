@@ -2,7 +2,7 @@ module Pages.CreatePlaylist.Update exposing (init, update)
 
 import List.Extra as List
 import Msg exposing (Msg(..))
-import Pages.CreatePlaylist.Model exposing (Model, PlaylistStyle(..), PlaylistPrivacy(..))
+import Pages.CreatePlaylist.Model exposing (Model, PlaylistPrivacy(..), PlaylistStyle(..))
 import UI.TagInput exposing (tagValue)
 
 
@@ -49,7 +49,7 @@ update msg model =
 
         CreatePlaylistAttempted ->
             case Nothing of
-                Just request ->
+                Just _ ->
                     ( model, Cmd.none )
 
                 Nothing ->

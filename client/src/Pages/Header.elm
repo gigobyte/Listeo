@@ -23,5 +23,6 @@ update msg model =
     Update.update msg model.header { key = Selectors.getNavKey model }
 
 
+init : Model
 init =
     Update.init

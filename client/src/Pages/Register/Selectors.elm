@@ -9,7 +9,7 @@ module Pages.Register.Selectors exposing
     )
 
 import Model exposing (AppModel)
-import Pages.Register.Api as Api exposing (RegisterResponse)
+import Pages.Register.Api as Api
 import Pages.Register.Validation as Validation exposing (RegisterField(..), RegisterValidationError(..), registerValidator)
 import RemoteData exposing (RemoteData(..))
 import Result.Extra as Result

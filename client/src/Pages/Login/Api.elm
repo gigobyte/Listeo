@@ -11,7 +11,6 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
 import Utils.Api exposing (endpoint)
-import Validate exposing (fromValid, validate)
 
 
 type alias LoginRequest =

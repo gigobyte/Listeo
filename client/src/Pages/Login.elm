@@ -31,6 +31,7 @@ update msg model =
         }
 
 
+init : Model
 init =
     Update.init
 

@@ -79,7 +79,7 @@ view : ModalProps msg -> StyledElement msg
 view props attrs children =
     div []
         [ overlay attrs
-            [ container [] ([ closeIcon [ onClick props.onClose ] [] ] ++ children)
+            [ container [] (closeIcon [ onClick props.onClose ] [] :: children)
             ]
         , backdrop [] []
         ]
