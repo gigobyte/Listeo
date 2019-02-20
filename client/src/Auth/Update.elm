@@ -77,9 +77,9 @@ updateAuth msg model { pushUrl, route } =
         FetchUser ((Success user) as response) ->
             ( { model | user = response }, pushAuthUrl pushUrl route (Just user) )
 
-        FetchUser ((Failure (Http.BadStatus { status })) as response) ->
+        FetchUser ((Failure (Http.BadStatus status)) as response) ->
             ( { model | user = response }
-            , if status.code == 401 then
+            , if status == 401 then
                 pushAuthUrl pushUrl route Nothing
 
               else

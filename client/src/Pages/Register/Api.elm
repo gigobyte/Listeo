@@ -5,12 +5,13 @@ module Pages.Register.Api exposing
     , registerErrorToString
     )
 
-import Http
+import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (optional)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
 import Utils.Api exposing (endpoint)
+import Utils.Fetch as Fetch
 
 
 type alias RegisterRequest =
@@ -32,8 +33,11 @@ type alias RegisterResponse =
 
 register : RegisterRequest -> Cmd (WebData RegisterResponse)
 register model =
-    Http.post (endpoint "/register") (model |> registerRequestEncoder |> Http.jsonBody) registerResponseDecoder
-        |> RemoteData.sendRequest
+    Fetch.post
+        { url = endpoint "/register"
+        , body = model |> registerRequestEncoder |> Http.jsonBody
+        , expect = expectJson RemoteData.fromResult registerResponseDecoder
+        }
 
 
 registerRequestEncoder : RegisterRequest -> Encode.Value

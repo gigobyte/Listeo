@@ -11,9 +11,8 @@ module Pages.Login.Selectors exposing
 import Model exposing (AppModel)
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..), loginValidator)
-import RemoteData exposing (RemoteData(..))
+import RemoteData exposing (RemoteData(..), isLoading)
 import Result.Extra as Result
-import Utils.Api exposing (isLoading)
 import Utils.Validation exposing (getErrorForField)
 import Validate exposing (validate)
 

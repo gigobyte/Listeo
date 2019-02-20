@@ -5,12 +5,13 @@ module Pages.Login.Api exposing
     , loginErrorToString
     )
 
-import Http
+import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
 import Utils.Api exposing (endpoint)
+import Utils.Fetch as Fetch
 
 
 type alias LoginRequest =
@@ -32,8 +33,11 @@ type LoginResponse
 
 login : LoginRequest -> Cmd (WebData LoginResponse)
 login model =
-    Http.post (endpoint "/login") (model |> loginRequestEncoder |> Http.jsonBody) loginResponseDecoder
-        |> RemoteData.sendRequest
+    Fetch.post
+        { url = endpoint "/login"
+        , expect = expectJson RemoteData.fromResult loginResponseDecoder
+        , body = model |> loginRequestEncoder |> Http.jsonBody
+        }
 
 
 loginRequestEncoder : LoginRequest -> Encode.Value
