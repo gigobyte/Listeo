@@ -1,5 +1,6 @@
 module Pages.CreatePlaylist exposing (init, title, update, view)
 
+import Env exposing (Env)
 import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
@@ -21,9 +22,9 @@ view model =
         }
 
 
-update : Msg -> AppModel -> ( Model, Cmd Msg )
-update msg model =
-    Update.update msg model.createPlaylist
+update : Msg -> AppModel -> Env -> ( Model, Cmd Msg )
+update msg model env =
+    Update.update msg model.createPlaylist env
 
 
 init : Model

@@ -1,5 +1,6 @@
 module Pages.CreatePlaylist.Update exposing (init, update)
 
+import Env exposing (Env)
 import List.Extra as List
 import Msg exposing (Msg(..))
 import Pages.CreatePlaylist.Model exposing (Model, PlaylistPrivacy(..), PlaylistStyle(..))
@@ -17,8 +18,8 @@ init =
     }
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update : Msg -> Model -> Env -> ( Model, Cmd Msg )
+update msg model _ =
     case msg of
         PlaylistNameUpdated value ->
             ( { model | playlistName = value }, Cmd.none )

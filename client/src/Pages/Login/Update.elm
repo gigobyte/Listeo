@@ -1,19 +1,13 @@
 port module Pages.Login.Update exposing (init, update)
 
 import Auth.Api as Api
-import Browser.Navigation as Nav
+import Env exposing (Env)
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
-import Route exposing (Route)
-
-
-type alias Context =
-    { key : Nav.Key
-    , route : Route
-    }
+import Route
 
 
 init : Model
@@ -28,8 +22,8 @@ init =
 port storeJwt : String -> Cmd msg
 
 
-update : Msg -> Model -> Context -> ( Model, Cmd Msg )
-update msg model ctx =
+update : Msg -> Model -> Env -> ( Model, Cmd Msg )
+update msg model { pushUrl, route } =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -49,7 +43,7 @@ update msg model ctx =
             ( { model | loginResponse = response }
             , Cmd.batch
                 [ Api.fetchUser jwt |> Cmd.map FetchUser
-                , Route.pushUrl ctx.key Route.Home
+                , pushUrl Route.Home
                 , storeJwt jwt
                 ]
             )
@@ -58,7 +52,7 @@ update msg model ctx =
             ( { model | loginResponse = response }, Cmd.none )
 
         UrlChanged _ ->
-            ( case ctx.route == Route.Login of
+            ( case route == Route.Login of
                 True ->
                     init
 

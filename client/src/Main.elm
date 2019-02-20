@@ -46,7 +46,7 @@ mainUpdate msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Auth.pushAuthUrl (Route.parseUrl url) model.key model.auth.user )
+                    ( model, Auth.pushAuthUrl (\route -> Route.pushUrl model.key route) (Route.parseUrl url) model.auth.user )
 
                 Browser.External href ->
                     ( model, Nav.load href )
@@ -64,23 +64,28 @@ update msg model =
         _ =
             Debug.log "Msg: " msg
 
+        env =
+            { route = model.route
+            , pushUrl = \route -> Route.pushUrl model.key route
+            }
+
         ( newMainModel, mainMsg ) =
             mainUpdate msg model
 
         ( newLoginModel, loginMsg ) =
-            Login.update msg model
+            Login.update msg model env
 
         ( newRegisterModel, registerMsg ) =
-            Register.update msg model
+            Register.update msg model env
 
         ( newAuthModel, authMsg ) =
-            Auth.update msg model
+            Auth.update msg model env
 
         ( newCreatePlaylistModel, createPlaylistMsg ) =
-            CreatePlaylist.update msg model
+            CreatePlaylist.update msg model env
 
         ( newHeaderModel, headerMsg ) =
-            Header.update msg model
+            Header.update msg model env
     in
     Debug.log ""
         ( { newMainModel

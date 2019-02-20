@@ -1,6 +1,7 @@
 module Pages.Header exposing (init, update, view)
 
 import Auth.Selectors as Selectors
+import Env exposing (Env)
 import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
@@ -18,9 +19,9 @@ view model =
         }
 
 
-update : Msg -> AppModel -> ( Model, Cmd Msg )
-update msg model =
-    Update.update msg model.header { key = Selectors.getNavKey model }
+update : Msg -> AppModel -> Env -> ( Model, Cmd Msg )
+update msg model env =
+    Update.update msg model.header env
 
 
 init : Model

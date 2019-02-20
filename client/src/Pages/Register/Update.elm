@@ -1,19 +1,13 @@
 module Pages.Register.Update exposing (init, update)
 
-import Browser.Navigation as Nav
+import Env exposing (Env)
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api
 import Pages.Register.Api as Api
 import Pages.Register.Model exposing (Model)
 import Pages.Register.Validation exposing (makeRegisterRequestModel)
 import RemoteData exposing (RemoteData(..))
-import Route exposing (Route)
-
-
-type alias Context =
-    { key : Nav.Key
-    , route : Route
-    }
+import Route
 
 
 init : Model
@@ -25,8 +19,8 @@ init =
     }
 
 
-update : Msg -> Model -> Context -> ( Model, Cmd Msg )
-update msg model ctx =
+update : Msg -> Model -> Env -> ( Model, Cmd Msg )
+update msg model { pushUrl, route } =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -59,12 +53,12 @@ update msg model ctx =
                             , password = model.password
                             }
                             |> Cmd.map Login
-                        , Route.pushUrl ctx.key Route.Home
+                        , pushUrl Route.Home
                         ]
                     )
 
         UrlChanged _ ->
-            ( if ctx.route == Route.Login then
+            ( if route == Route.Login then
                 init
 
               else

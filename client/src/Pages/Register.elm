@@ -1,5 +1,6 @@
 module Pages.Register exposing (init, title, update, view)
 
+import Env exposing (Env)
 import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
@@ -7,7 +8,6 @@ import Pages.Register.Model exposing (Model)
 import Pages.Register.Selectors as Selectors
 import Pages.Register.Update as Update
 import Pages.Register.View as View
-import Selectors
 
 
 view : AppModel -> Html Msg
@@ -22,13 +22,9 @@ view model =
         }
 
 
-update : Msg -> AppModel -> ( Model, Cmd Msg )
-update msg model =
-    Update.update msg
-        model.register
-        { key = Selectors.getNavKey model
-        , route = Selectors.getRoute model
-        }
+update : Msg -> AppModel -> Env -> ( Model, Cmd Msg )
+update msg model env =
+    Update.update msg model.register env
 
 
 init : Model
