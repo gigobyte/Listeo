@@ -1,16 +1,16 @@
-const { Elm } = require("./Main.elm");
+const { Elm } = require('./Main.elm')
 
 const app = Elm.Main.init({
-  node: document.querySelector("main"),
+  node: document.querySelector('main'),
   flags: {
-    jwt: localStorage.getItem("jwt-token")
+    jwt: localStorage.getItem('jwt-token')
   }
-});
+})
 
 app.ports.storeJwt.subscribe(jwt => {
-  localStorage.setItem("jwt-token", jwt);
-});
+  localStorage.setItem('jwt-token', jwt)
+})
 
 app.ports.removeJwt.subscribe(() => {
-  localStorage.removeItem("jwt-token");
-});
+  localStorage.removeItem('jwt-token')
+})

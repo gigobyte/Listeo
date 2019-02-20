@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Auth.Api as Api
+import Auth.Selectors as Selectors
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
@@ -46,7 +47,12 @@ mainUpdate msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Auth.pushAuthUrl (\route -> Route.pushUrl model.key route) (Route.parseUrl url) model.auth.user )
+                    ( model
+                    , Auth.pushAuthUrl
+                        (\route -> Route.pushUrl model.key route)
+                        (Route.parseUrl url)
+                        (Selectors.getUser model)
+                    )
 
                 Browser.External href ->
                     ( model, Nav.load href )

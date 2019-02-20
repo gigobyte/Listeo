@@ -34,7 +34,7 @@ globalStyle =
 
 view : Html Msg -> AppModel -> Html Msg
 view page model =
-    case model.auth.fetchUserResponse of
+    case model.auth.user of
         NotAsked ->
             text ""
 

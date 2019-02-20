@@ -6,6 +6,5 @@ import RemoteData exposing (WebData)
 
 type alias Model =
     { jwt : Maybe String
-    , user : Maybe User
-    , fetchUserResponse : WebData User
+    , user : WebData User
     }

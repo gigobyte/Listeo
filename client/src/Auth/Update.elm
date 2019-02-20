@@ -23,8 +23,7 @@ port removeJwt : () -> Cmd msg
 init : Maybe String -> Model
 init jwtFromFlag =
     { jwt = jwtFromFlag
-    , user = Nothing
-    , fetchUserResponse = NotAsked
+    , user = NotAsked
     }
 
 
@@ -76,10 +75,10 @@ updateAuth msg model { pushUrl, route } =
             )
 
         FetchUser ((Success user) as response) ->
-            ( { model | fetchUserResponse = response, user = Just user }, pushAuthUrl pushUrl route (Just user) )
+            ( { model | user = response }, pushAuthUrl pushUrl route (Just user) )
 
         FetchUser ((Failure (Http.BadStatus { status })) as response) ->
-            ( { model | fetchUserResponse = response }
+            ( { model | user = response }
             , if status.code == 401 then
                 pushAuthUrl pushUrl route Nothing
 
@@ -88,7 +87,7 @@ updateAuth msg model { pushUrl, route } =
             )
 
         FetchUser response ->
-            ( { model | fetchUserResponse = response }, Cmd.none )
+            ( { model | user = response }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
