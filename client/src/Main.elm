@@ -2,12 +2,12 @@ module Main exposing (main)
 
 import Auth.Api as Api
 import Auth.Selectors as Selectors
+import Auth.Token exposing (Token(..))
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Styled exposing (toUnstyled)
-import Maybe.Extra as Maybe
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Pages.Colors as Colors
@@ -39,7 +39,7 @@ init flags url key =
       , createPlaylist = CreatePlaylist.init
       , header = Header.init
       }
-    , Api.fetchUser flags.apiRoot (Maybe.withDefault "" flags.jwt) |> Cmd.map FetchUser
+    , Api.fetchUser flags.apiRoot (Token flags.jwt) |> Cmd.map FetchUser
     )
 
 

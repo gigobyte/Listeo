@@ -1,6 +1,7 @@
 port module Pages.Login.Update exposing (init, update)
 
 import Auth.Api as Api
+import Auth.Token as Token
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
@@ -42,7 +43,7 @@ update msg model { pushUrl, route, apiRoot } =
         Login ((Success (SuccessResponse { jwt })) as response) ->
             ( { model | loginResponse = response }
             , Cmd.batch
-                [ Api.fetchUser apiRoot jwt |> Cmd.map FetchUser
+                [ Api.fetchUser apiRoot (Token.from jwt) |> Cmd.map FetchUser
                 , pushUrl Route.Home
                 , storeJwt jwt
                 ]

@@ -8,6 +8,7 @@ port module Auth.Update exposing
 
 import Auth.Api as Api exposing (User)
 import Auth.Model exposing (Model)
+import Auth.Token as Token exposing (Token(..))
 import Http
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
@@ -22,7 +23,7 @@ port removeJwt : () -> Cmd msg
 
 init : Maybe String -> Model
 init jwtFromFlag =
-    { jwt = jwtFromFlag
+    { jwt = Token jwtFromFlag
     , user = NotAsked
     }
 
@@ -64,13 +65,13 @@ updateAuth : Msg -> Model -> Session -> ( Model, Cmd Msg )
 updateAuth msg model { pushUrl, route, apiRoot } =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
-            ( { model | jwt = Just jwt }, Cmd.none )
+            ( { model | jwt = Token.from jwt }, Cmd.none )
 
         Logout ->
             ( init Nothing
             , Cmd.batch
                 [ removeJwt ()
-                , Api.fetchUser "" apiRoot |> Cmd.map FetchUser
+                , Api.fetchUser apiRoot Token.empty |> Cmd.map FetchUser
                 ]
             )
 
