@@ -39,7 +39,7 @@ init flags url key =
       , createPlaylist = CreatePlaylist.init
       , header = Header.init
       }
-    , Api.fetchUser (Maybe.withDefault "" flags.jwt) |> Cmd.map FetchUser
+    , Api.fetchUser flags.apiRoot (Maybe.withDefault "" flags.jwt) |> Cmd.map FetchUser
     )
 
 
@@ -72,7 +72,7 @@ update msg model =
         _ =
             Debug.log "Msg: " msg
 
-        env =
+        session =
             { route = model.route
             , pushUrl = \route -> Route.pushUrl model.key route
             , apiRoot = model.apiRoot
@@ -82,19 +82,19 @@ update msg model =
             mainUpdate msg model
 
         ( newLoginModel, loginMsg ) =
-            Login.update msg model env
+            Login.update msg model session
 
         ( newRegisterModel, registerMsg ) =
-            Register.update msg model env
+            Register.update msg model session
 
         ( newAuthModel, authMsg ) =
-            Auth.update msg model env
+            Auth.update msg model session
 
         ( newCreatePlaylistModel, createPlaylistMsg ) =
-            CreatePlaylist.update msg model env
+            CreatePlaylist.update msg model session
 
         ( newHeaderModel, headerMsg ) =
-            Header.update msg model env
+            Header.update msg model session
     in
     Debug.log ""
         ( { newMainModel

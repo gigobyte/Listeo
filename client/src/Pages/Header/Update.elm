@@ -1,6 +1,6 @@
 module Pages.Header.Update exposing (init, update)
 
-import Env exposing (Env)
+import Session exposing (Session)
 import Msg exposing (Msg(..))
 import Pages.Header.Model exposing (Model)
 import Route
@@ -12,7 +12,7 @@ init =
     }
 
 
-update : Msg -> Model -> Env -> ( Model, Cmd Msg )
+update : Msg -> Model -> Session -> ( Model, Cmd Msg )
 update msg model { pushUrl } =
     case msg of
         AddPlaylistOverlayShown ->

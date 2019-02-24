@@ -1,6 +1,6 @@
 module Pages.Home exposing (init, title, update, view)
 
-import Env exposing (Env)
+import Session exposing (Session)
 import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
@@ -14,9 +14,9 @@ view _ =
     View.view {}
 
 
-update : Msg -> AppModel -> Env -> ( Model, Cmd Msg )
-update msg model env =
-    Update.update msg model.home env
+update : Msg -> AppModel -> Session -> ( Model, Cmd Msg )
+update msg model session =
+    Update.update msg model.home session
 
 
 init : Model

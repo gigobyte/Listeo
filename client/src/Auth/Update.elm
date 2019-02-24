@@ -8,13 +8,13 @@ port module Auth.Update exposing
 
 import Auth.Api as Api exposing (User)
 import Auth.Model exposing (Model)
-import Env exposing (Env)
 import Http
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Pages.Login.Api exposing (LoginResponse(..))
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
+import Session exposing (Session)
 
 
 port removeJwt : () -> Cmd msg
@@ -55,13 +55,13 @@ pushAuthUrl pushUrl route user =
                 pushUrl route
 
 
-update : Msg -> AppModel -> Env -> ( Model, Cmd Msg )
-update msg model env =
-    updateAuth msg model.auth env
+update : Msg -> AppModel -> Session -> ( Model, Cmd Msg )
+update msg model session =
+    updateAuth msg model.auth session
 
 
-updateAuth : Msg -> Model -> Env -> ( Model, Cmd Msg )
-updateAuth msg model { pushUrl, route } =
+updateAuth : Msg -> Model -> Session -> ( Model, Cmd Msg )
+updateAuth msg model { pushUrl, route, apiRoot } =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Just jwt }, Cmd.none )
@@ -70,7 +70,7 @@ updateAuth msg model { pushUrl, route } =
             ( init Nothing
             , Cmd.batch
                 [ removeJwt ()
-                , Api.fetchUser "" env.apiRoot |> Cmd.map FetchUser
+                , Api.fetchUser "" apiRoot |> Cmd.map FetchUser
                 ]
             )
 

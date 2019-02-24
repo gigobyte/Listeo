@@ -1,13 +1,13 @@
 port module Pages.Login.Update exposing (init, update)
 
 import Auth.Api as Api
-import Env exposing (Env)
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api exposing (LoginResponse(..))
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
 import Route
+import Session exposing (Session)
 
 
 init : Model
@@ -22,8 +22,8 @@ init =
 port storeJwt : String -> Cmd msg
 
 
-update : Msg -> Model -> Env -> ( Model, Cmd Msg )
-update msg model { pushUrl, route } =
+update : Msg -> Model -> Session -> ( Model, Cmd Msg )
+update msg model { pushUrl, route, apiRoot } =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -34,7 +34,7 @@ update msg model { pushUrl, route } =
         LoginAttempted ->
             case Validation.makeLoginRequestModel model of
                 Just request ->
-                    ( model, Api.login env.apiRoot request |> Cmd.map Login )
+                    ( model, Api.login apiRoot request |> Cmd.map Login )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
@@ -42,7 +42,7 @@ update msg model { pushUrl, route } =
         Login ((Success (SuccessResponse { jwt })) as response) ->
             ( { model | loginResponse = response }
             , Cmd.batch
-                [ Api.fetchUser jwt |> Cmd.map FetchUser
+                [ Api.fetchUser apiRoot jwt |> Cmd.map FetchUser
                 , pushUrl Route.Home
                 , storeJwt jwt
                 ]

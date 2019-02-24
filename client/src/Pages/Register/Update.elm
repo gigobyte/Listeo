@@ -1,6 +1,5 @@
 module Pages.Register.Update exposing (init, update)
 
-import Env exposing (Env)
 import Msg exposing (Msg(..))
 import Pages.Login.Api as Api
 import Pages.Register.Api as Api
@@ -8,6 +7,7 @@ import Pages.Register.Model exposing (Model)
 import Pages.Register.Validation exposing (makeRegisterRequestModel)
 import RemoteData exposing (RemoteData(..))
 import Route
+import Session exposing (Session)
 
 
 init : Model
@@ -19,8 +19,8 @@ init =
     }
 
 
-update : Msg -> Model -> Env -> ( Model, Cmd Msg )
-update msg model { pushUrl, route } =
+update : Msg -> Model -> Session -> ( Model, Cmd Msg )
+update msg model { pushUrl, route, apiRoot } =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -31,7 +31,7 @@ update msg model { pushUrl, route } =
         RegisterAttempted ->
             case makeRegisterRequestModel model of
                 Just request ->
-                    ( model, Api.register request |> Cmd.map Register )
+                    ( model, Api.register apiRoot request |> Cmd.map Register )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
@@ -49,6 +49,7 @@ update msg model { pushUrl, route } =
                     ( newModel
                     , Cmd.batch
                         [ Api.login
+                            apiRoot
                             { username = model.username
                             , password = model.password
                             }
