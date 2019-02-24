@@ -7,7 +7,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (attribute, title)
 import Html.Styled.Events exposing (..)
 import Msg exposing (Msg(..))
-import Route exposing (Route)
+import Route
 import UI.Colors exposing (blue200, crimson100, white)
 import UI.Icon as Icon
 import UI.Link as Link
@@ -93,7 +93,7 @@ viewPrivateNavItems user showAddPlaylistButton =
 
 type alias Props =
     { user : Maybe User
-    , route : Route
+    , showAddPlaylistButton : Bool
     }
 
 
@@ -104,7 +104,7 @@ view props =
         , nav []
             (case props.user of
                 Just user ->
-                    viewPrivateNavItems user (props.route /= Route.CreatePlaylist)
+                    viewPrivateNavItems user props.showAddPlaylistButton
 
                 Nothing ->
                     viewPublicNavItems

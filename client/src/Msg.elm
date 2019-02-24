@@ -2,7 +2,7 @@ module Msg exposing (Msg(..))
 
 import Auth.Api exposing (User)
 import Browser exposing (UrlRequest)
-import Pages.CreatePlaylist.Model exposing (PlaylistStyle, PlaylistPrivacy)
+import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle)
 import Pages.Login.Api exposing (LoginResponse)
 import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
