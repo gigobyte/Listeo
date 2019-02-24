@@ -19,4 +19,5 @@ type alias AppModel =
     , home : Home.Model
     , createPlaylist : CreatePlaylist.Model
     , header : Header.Model
+    , apiRoot : String
     }

@@ -3,7 +3,8 @@ const { Elm } = require('./Main.elm')
 const app = Elm.Main.init({
   node: document.querySelector('main'),
   flags: {
-    jwt: localStorage.getItem('jwt-token')
+    jwt: localStorage.getItem('jwt-token'),
+    apiRoot: 'http://localhost:8081'
   }
 })
 

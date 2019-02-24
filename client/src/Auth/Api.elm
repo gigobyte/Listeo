@@ -4,7 +4,6 @@ import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (RemoteData(..), WebData)
-import Utils.Api exposing (endpoint)
 import Utils.Fetch as Fetch
 
 
@@ -14,10 +13,10 @@ type alias User =
     }
 
 
-fetchUser : String -> Cmd (WebData User)
-fetchUser token =
+fetchUser : String -> String -> Cmd (WebData User)
+fetchUser apiRoot token =
     Fetch.getWithAuth
-        { url = endpoint "/me"
+        { url = apiRoot ++ "/me"
         , token = token
         , expect = expectJson RemoteData.fromResult userDecoder
         }

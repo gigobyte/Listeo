@@ -10,7 +10,6 @@ import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
-import Utils.Api exposing (endpoint)
 import Utils.Fetch as Fetch
 
 
@@ -31,10 +30,10 @@ type LoginResponse
     | SuccessResponse { jwt : String }
 
 
-login : LoginRequest -> Cmd (WebData LoginResponse)
-login model =
+login : String -> LoginRequest -> Cmd (WebData LoginResponse)
+login apiRoot model =
     Fetch.post
-        { url = endpoint "/login"
+        { url = apiRoot ++ "/login"
         , expect = expectJson RemoteData.fromResult loginResponseDecoder
         , body = model |> loginRequestEncoder |> Http.jsonBody
         }

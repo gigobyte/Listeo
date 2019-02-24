@@ -34,7 +34,7 @@ update msg model { pushUrl, route } =
         LoginAttempted ->
             case Validation.makeLoginRequestModel model of
                 Just request ->
-                    ( model, Api.login request |> Cmd.map Login )
+                    ( model, Api.login env.apiRoot request |> Cmd.map Login )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )

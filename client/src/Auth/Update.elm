@@ -70,7 +70,7 @@ updateAuth msg model { pushUrl, route } =
             ( init Nothing
             , Cmd.batch
                 [ removeJwt ()
-                , Api.fetchUser "" |> Cmd.map FetchUser
+                , Api.fetchUser "" env.apiRoot |> Cmd.map FetchUser
                 ]
             )
 

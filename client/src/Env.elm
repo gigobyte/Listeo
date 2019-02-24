@@ -7,4 +7,5 @@ import Route exposing (Route)
 type alias Env =
     { pushUrl : Route -> Cmd Msg
     , route : Route
+    , apiRoot : String
     }

@@ -23,6 +23,7 @@ import Url
 
 type alias Flags =
     { jwt : Maybe String
+    , apiRoot : String
     }
 
 
@@ -30,6 +31,7 @@ init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
 init flags url key =
     ( { key = key
       , route = Route.parseUrl url
+      , apiRoot = flags.apiRoot
       , login = Login.init
       , register = Register.init
       , auth = Auth.init flags.jwt
@@ -73,6 +75,7 @@ update msg model =
         env =
             { route = model.route
             , pushUrl = \route -> Route.pushUrl model.key route
+            , apiRoot = model.apiRoot
             }
 
         ( newMainModel, mainMsg ) =
