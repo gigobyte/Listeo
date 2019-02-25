@@ -10,7 +10,7 @@ import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
-import Utils.Fetch as Fetch
+import Utils.Fetch as Fetch exposing (ApiRoot)
 
 
 type alias LoginRequest =
@@ -30,11 +30,17 @@ type LoginResponse
     | SuccessResponse { jwt : String }
 
 
-login : String -> LoginRequest -> Cmd (WebData LoginResponse)
+login : ApiRoot -> LoginRequest -> Cmd (WebData LoginResponse)
 login apiRoot model =
     Fetch.post
-        { url = apiRoot ++ "/login"
-        , expect = expectJson RemoteData.fromResult loginResponseDecoder
+        { url = Fetch.login apiRoot
+        , expect =
+            expectJson RemoteData.fromResult
+                (Decode.oneOf
+                    [ errorResponseDecoder
+                    , successResponseDecoder
+                    ]
+                )
         , body = model |> loginRequestEncoder |> Http.jsonBody
         }
 
@@ -44,14 +50,6 @@ loginRequestEncoder req =
     Encode.object
         [ ( "username", Encode.string req.username )
         , ( "password", Encode.string req.password )
-        ]
-
-
-loginResponseDecoder : Decoder LoginResponse
-loginResponseDecoder =
-    Decode.oneOf
-        [ errorResponseDecoder
-        , successResponseDecoder
         ]
 
 

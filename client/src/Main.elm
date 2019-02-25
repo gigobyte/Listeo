@@ -2,7 +2,6 @@ module Main exposing (main)
 
 import Auth.Api as Api
 import Auth.Selectors as Selectors
-import Auth.Token exposing (Token(..))
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
@@ -19,9 +18,16 @@ import Pages.Login as Login
 import Pages.Register as Register
 import Route
 import Url
+import Utils.Fetch exposing (ApiRoot(..), Token(..))
 
 
 type alias Flags =
+    { jwt : Token
+    , apiRoot : ApiRoot
+    }
+
+
+type alias RawFlags =
     { jwt : Maybe String
     , apiRoot : String
     }
@@ -39,7 +45,7 @@ init flags url key =
       , createPlaylist = CreatePlaylist.init
       , header = Header.init
       }
-    , Api.fetchUser flags.apiRoot (Token flags.jwt) |> Cmd.map FetchUser
+    , Api.fetchUser flags.apiRoot flags.jwt |> Cmd.map FetchUser
     )
 
 
@@ -170,10 +176,15 @@ subscriptions =
     always Sub.none
 
 
-main : Program Flags AppModel Msg
+main : Program RawFlags AppModel Msg
 main =
     Browser.application
-        { init = init
+        { init =
+            \val ->
+                init
+                    { jwt = Token val.jwt
+                    , apiRoot = ApiRoot val.apiRoot
+                    }
         , subscriptions = subscriptions
         , update = update
         , view = view

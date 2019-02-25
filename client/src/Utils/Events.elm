@@ -2,18 +2,18 @@ module Utils.Events exposing (onEnter)
 
 import Html.Styled exposing (Attribute)
 import Html.Styled.Events exposing (..)
-import Json.Decode as Json
+import Json.Decode as Decode
 
 
 onEnter : msg -> Attribute msg
 onEnter onEnterAction =
     on "keyup" <|
-        Json.andThen
+        Decode.andThen
             (\keyCode ->
                 if keyCode == 13 then
-                    Json.succeed onEnterAction
+                    Decode.succeed onEnterAction
 
                 else
-                    Json.fail (String.fromInt keyCode)
+                    Decode.fail (String.fromInt keyCode)
             )
             keyCode

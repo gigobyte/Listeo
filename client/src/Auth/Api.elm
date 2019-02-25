@@ -1,11 +1,10 @@
 module Auth.Api exposing (User, fetchUser)
 
-import Auth.Token exposing (Token)
 import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (RemoteData(..), WebData)
-import Utils.Fetch as Fetch
+import Utils.Fetch as Fetch exposing (ApiRoot, Token)
 
 
 type alias User =
@@ -14,10 +13,10 @@ type alias User =
     }
 
 
-fetchUser : String -> Token -> Cmd (WebData User)
+fetchUser : ApiRoot -> Token -> Cmd (WebData User)
 fetchUser apiRoot token =
     Fetch.getWithAuth
-        { url = apiRoot ++ "/me"
+        { url = Fetch.currentUser apiRoot
         , token = token
         , expect = expectJson RemoteData.fromResult userDecoder
         }

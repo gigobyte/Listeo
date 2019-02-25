@@ -1,8 +1,8 @@
 module Auth.Model exposing (Model)
 
 import Auth.Api exposing (User)
-import Auth.Token exposing (Token)
 import RemoteData exposing (WebData)
+import Utils.Fetch exposing (Token)
 
 
 type alias Model =

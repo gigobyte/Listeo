@@ -10,7 +10,7 @@ import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (optional)
 import Json.Encode as Encode
 import RemoteData as RemoteData exposing (WebData)
-import Utils.Fetch as Fetch
+import Utils.Fetch as Fetch exposing (ApiRoot)
 
 
 type alias RegisterRequest =
@@ -30,10 +30,10 @@ type alias RegisterResponse =
     }
 
 
-register : String -> RegisterRequest -> Cmd (WebData RegisterResponse)
+register : ApiRoot -> RegisterRequest -> Cmd (WebData RegisterResponse)
 register apiRoot model =
     Fetch.post
-        { url = apiRoot ++ "/register"
+        { url = Fetch.register apiRoot
         , body = model |> registerRequestEncoder |> Http.jsonBody
         , expect = expectJson RemoteData.fromResult registerResponseDecoder
         }

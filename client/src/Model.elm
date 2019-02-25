@@ -8,6 +8,7 @@ import Pages.Home.Model as Home
 import Pages.Login.Model as Login
 import Pages.Register.Model as Register
 import Route exposing (Route)
+import Utils.Fetch exposing (ApiRoot)
 
 
 type alias AppModel =
@@ -19,5 +20,5 @@ type alias AppModel =
     , home : Home.Model
     , createPlaylist : CreatePlaylist.Model
     , header : Header.Model
-    , apiRoot : String
+    , apiRoot : ApiRoot
     }
