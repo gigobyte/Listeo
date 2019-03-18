@@ -2,7 +2,7 @@ module Feature.Playlist.Playlist where
 
 import Protolude
 import Infrastructure.Utils.Id (Id)
-import Database.MongoDB (Document, lookup)
+import Database.MongoDB (Document, lookup, timestamp)
 import Data.Aeson (FromJSON)
 import Data.Time.Clock (UTCTime)
 
@@ -33,4 +33,4 @@ fromBson doc =
     <*> lookup "name" doc
     <*> (toEnum <$> lookup "style" doc)
     <*> (toEnum <$> lookup "privacy" doc)
-    <*> lookup "createdOn" doc
+    <*> (timestamp <$> lookup "_id" doc)

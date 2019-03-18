@@ -11,13 +11,10 @@ import Feature.User.User (User)
 import qualified Feature.User.User as User
 import qualified Feature.User.UserDTO as UserDTO
 import Infrastructure.DB (MonadDB, runQuery, withConn)
-import Infrastructure.MonadTime
 
-insertUser :: (MonadDB m, MonadTime m) => UserDTO -> m ()
-insertUser user = do
-  dateNow <- getCurrentTime
-  withConn
-    $ \conn -> runQuery conn (insert_ "user" (UserDTO.toBson user dateNow))
+insertUser :: (MonadDB m) => UserDTO -> m ()
+insertUser user =
+  withConn $ \conn -> runQuery conn (insert_ "user" (UserDTO.toBson user))
 
 findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do
