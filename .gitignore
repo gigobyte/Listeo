@@ -1,6 +1,7 @@
 elm-stuff
 node_modules
 dist
+.idea
 .cache
 .stack-work
 server/src/Infrastructure/Secrets.hs

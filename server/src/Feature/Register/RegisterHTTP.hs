@@ -7,14 +7,13 @@ import Protolude
 import Infrastructure.AppError
 import Web.Scotty.Trans (post, ScottyT, ActionT)
 import Feature.Register.RegisterError (RegisterError)
-import Feature.Register.RegisterResponse (RegisterResponse(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import qualified Web.Scotty.Trans as ScottyT
 
-toHttpResult
+mkRegisterHttpResult
   :: Monad m => Either (AppError RegisterError) () -> ActionT LText m ()
-toHttpResult (Left err) = ScottyT.json $ RegisterResponse (Just err)
-toHttpResult _          = ScottyT.json $ RegisterResponse Nothing
+mkRegisterHttpResult (Left err) = ScottyT.json $ ErrorResponse (Just err)
+mkRegisterHttpResult _          = ScottyT.json emptyErrorResponse
 
 routes :: (RegisterService m, MonadIO m) => ScottyT LText m ()
 routes = do
@@ -22,4 +21,4 @@ routes = do
     body   <- ScottyT.body
     result <- lift $ register body
 
-    toHttpResult result
+    mkRegisterHttpResult result

@@ -1,11 +1,12 @@
 module Feature.User.User where
 
 import Protolude
-import Database.MongoDB (ObjectId, Document, lookup)
+import Infrastructure.Utils.Id (Id)
+import Database.MongoDB (Document, lookup)
 import Data.Time.Clock (UTCTime)
 
 data User = User
-  { id        :: ObjectId
+  { id        :: Id User
   , username  :: Text
   , password  :: Text
   , createdOn :: UTCTime

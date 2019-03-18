@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 93e275895ad80112862d484a23423e3fce6ffbc0fa1460e08ec35977ae84499b
+-- hash: 97345b1e62a66d5d9bcaa8aca05492454d130c15d68d8d4b87fafa21751686e7
 
 name:           listeo
 version:        0.1.0.0
@@ -30,10 +30,21 @@ executable listeo-exe
       Feature.Login.LoginResponse
       Feature.Login.LoginService
       Feature.Login.LoginServiceClass
+      Feature.Playlist.CreatePlaylist.CreatePlaylistBody
+      Feature.Playlist.CreatePlaylist.CreatePlaylistService
+      Feature.Playlist.Playlist
+      Feature.Playlist.PlaylistDTO
+      Feature.Playlist.PlaylistHTTP
+      Feature.Playlist.PlaylistRepo
+      Feature.Playlist.PlaylistRepoClass
+      Feature.Playlist.PlaylistServiceClass
+      Feature.PlaylistTag.PlaylistTag
+      Feature.PlaylistTag.PlaylistTagDTO
+      Feature.PlaylistTag.PlaylistTagRepo
+      Feature.PlaylistTag.PlaylistTagRepoClass
       Feature.Register.RegisterBody
       Feature.Register.RegisterError
       Feature.Register.RegisterHTTP
-      Feature.Register.RegisterResponse
       Feature.Register.RegisterService
       Feature.Register.RegisterServiceClass
       Feature.User.PublicUser
@@ -49,6 +60,7 @@ executable listeo-exe
       Infrastructure.MonadTime
       Infrastructure.Secrets
       Infrastructure.Utils.Crypto
+      Infrastructure.Utils.Id
       Infrastructure.Utils.Maybe
       Paths_listeo
   hs-source-dirs:

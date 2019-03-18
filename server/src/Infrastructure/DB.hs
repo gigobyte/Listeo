@@ -3,12 +3,11 @@ module Infrastructure.DB
   , withConn
   , MonadDB
   , Env
-  , Bson(..)
   )
 where
 
 import Protolude
-import Database.MongoDB (Action, Document, Pipe, access, master)
+import Database.MongoDB (Action, Pipe, access, master)
 
 type Connection = Pipe
 type Env = Connection
@@ -22,7 +21,3 @@ withConn action = do
 
 runQuery :: Connection -> Action IO a -> IO a
 runQuery pipe = access pipe master "listeodb"
-
-class Bson a where
-  toBson :: a -> Document
-  fromBson :: Document -> Maybe a
