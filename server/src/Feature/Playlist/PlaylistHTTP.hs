@@ -10,7 +10,7 @@ import Web.Scotty.Trans (post, ScottyT, ActionT)
 import qualified Web.Scotty.Trans as ScottyT
 
 mkCreatePlaylistHttpResult
-  :: Monad m => Either (AppError ()) () -> ActionT LText m ()
+  :: Monad m => Either GeneralAppError () -> ActionT LText m ()
 mkCreatePlaylistHttpResult (Left err) = ScottyT.json $ ErrorResponse (Just err)
 mkCreatePlaylistHttpResult _          = ScottyT.json emptyErrorResponse
 

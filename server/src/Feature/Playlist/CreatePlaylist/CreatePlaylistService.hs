@@ -15,7 +15,7 @@ import qualified Data.Text as T
 createPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m)
   => LByteString
-  -> m (Either (AppError ()) ())
+  -> m (Either (GeneralAppError) ())
 createPlaylist rawBody = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
   playlist           <- liftEither $ mkPlaylistDTO body
@@ -25,10 +25,10 @@ createPlaylist rawBody = runExceptT $ do
 
   lift $ forM_ tags (insertPlaylistTag insertedPlaylistId)
 
-parseBody :: LByteString -> Either (AppError ()) CreatePlaylistBody
+parseBody :: LByteString -> Either GeneralAppError CreatePlaylistBody
 parseBody body = maybeToRight InvalidRequest (decode body)
 
-mkPlaylistDTO :: CreatePlaylistBody -> Either (AppError ()) PlaylistDTO
+mkPlaylistDTO :: CreatePlaylistBody -> Either GeneralAppError PlaylistDTO
 mkPlaylistDTO req =
   maybeToRight ValidationFailed
     $   PlaylistDTO
@@ -36,7 +36,7 @@ mkPlaylistDTO req =
     <*> pure (CreatePlaylistBody.style req)
     <*> pure (CreatePlaylistBody.privacy req)
 
-mkPlaylistTagDTO :: Text -> Either (AppError ()) PlaylistTagDTO
+mkPlaylistTagDTO :: Text -> Either GeneralAppError PlaylistTagDTO
 mkPlaylistTagDTO tagName =
   maybeToRight ValidationFailed
     $   PlaylistTagDTO

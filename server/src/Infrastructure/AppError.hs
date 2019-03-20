@@ -10,6 +10,8 @@ data AppError a
     | DomainError a
     deriving Generic
 
+type GeneralAppError = AppError ()
+
 instance ToJSON a => ToJSON (AppError a) where
     toJSON (DomainError err) = toJSON err
     toJSON err = genericToJSON defaultOptions err
