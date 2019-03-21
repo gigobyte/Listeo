@@ -4,15 +4,19 @@ module Feature.Playlist.PlaylistHTTP
 where
 
 import Protolude
-import Infrastructure.AppError
+import Infrastructure.AppError (GeneralAppError)
+import Infrastructure.Utils.Id (Id(..))
+import Feature.Playlist.Playlist (Playlist)
+import Feature.Playlist.CreatePlaylist.CreatePlaylistResponse
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Web.Scotty.Trans (post, ScottyT, ActionT)
 import qualified Web.Scotty.Trans as ScottyT
 
 mkCreatePlaylistHttpResult
-  :: Monad m => Either GeneralAppError () -> ActionT LText m ()
-mkCreatePlaylistHttpResult (Left err) = ScottyT.json $ ErrorResponse (Just err)
-mkCreatePlaylistHttpResult _          = ScottyT.json emptyErrorResponse
+  :: Monad m => Either GeneralAppError (Id Playlist) -> ActionT LText m ()
+mkCreatePlaylistHttpResult (Left err) = ScottyT.json $ ErrorResponse err
+mkCreatePlaylistHttpResult (Right id) =
+  ScottyT.json $ SuccessResponse (show $ unId id)
 
 routes :: (PlaylistService m, MonadIO m) => ScottyT LText m ()
 routes = do

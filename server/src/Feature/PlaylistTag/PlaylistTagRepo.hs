@@ -16,6 +16,8 @@ playlistTagRelation playlistId tagId =
 
 insertPlaylistTag :: (MonadDB m) => Id Playlist -> PlaylistTagDTO -> m ()
 insertPlaylistTag playlistId tag = withConn $ \conn -> do
-  tagIdVal <- runQuery conn (insert "tag" (PlaylistTagDTO.toBson tag))
+  tagIdVal <- runQuery conn (insert "playlistTag" (PlaylistTagDTO.toBson tag))
   let tagId = fromJust $ cast' tagIdVal
-  runQuery conn (insert_ "playlist-tag" $ playlistTagRelation playlistId tagId)
+  runQuery
+    conn
+    (insert_ "playlist_playlistTag" $ playlistTagRelation playlistId tagId)

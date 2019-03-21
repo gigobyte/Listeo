@@ -1,4 +1,7 @@
-module Infrastructure.Utils.Id where
+module Infrastructure.Utils.Id
+  ( Id(..)
+  )
+where
 
 import Protolude
 import Database.MongoDB (ObjectId, Val)

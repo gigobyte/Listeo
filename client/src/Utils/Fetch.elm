@@ -2,6 +2,7 @@ module Utils.Fetch exposing
     ( ApiRoot(..)
     , Endpoint
     , Token(..)
+    , createPlaylist
     , currentUser
     , emptyToken
     , get
@@ -120,3 +121,8 @@ register apiRoot =
 currentUser : ApiRoot -> Endpoint
 currentUser apiRoot =
     Endpoint apiRoot "/me"
+
+
+createPlaylist : ApiRoot -> Endpoint
+createPlaylist apiRoot =
+    Endpoint apiRoot "/playlist"

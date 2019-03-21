@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 97345b1e62a66d5d9bcaa8aca05492454d130c15d68d8d4b87fafa21751686e7
+-- hash: 62afc0db182678687eeef61ab646f852a09cdc7b6f522754126079e0850b442e
 
 name:           listeo
 version:        0.1.0.0
@@ -31,6 +31,7 @@ executable listeo-exe
       Feature.Login.LoginService
       Feature.Login.LoginServiceClass
       Feature.Playlist.CreatePlaylist.CreatePlaylistBody
+      Feature.Playlist.CreatePlaylist.CreatePlaylistResponse
       Feature.Playlist.CreatePlaylist.CreatePlaylistService
       Feature.Playlist.Playlist
       Feature.Playlist.PlaylistDTO

@@ -1,9 +1,11 @@
 module Pages.CreatePlaylist.Update exposing (init, update)
 
-import Session exposing (Session)
 import List.Extra as List
 import Msg exposing (Msg(..))
+import Pages.CreatePlaylist.Api as Api
 import Pages.CreatePlaylist.Model exposing (Model, PlaylistPrivacy(..), PlaylistStyle(..))
+import Pages.CreatePlaylist.Validation exposing (makeCreatePlaylistRequestModel)
+import Session exposing (Session)
 import UI.TagInput exposing (tagValue)
 
 
@@ -19,7 +21,7 @@ init =
 
 
 update : Msg -> Model -> Session -> ( Model, Cmd Msg )
-update msg model _ =
+update msg model { apiRoot, token } =
     case msg of
         PlaylistNameUpdated value ->
             ( { model | playlistName = value }, Cmd.none )
@@ -49,9 +51,9 @@ update msg model _ =
             ( { model | playlistStyle = option }, Cmd.none )
 
         CreatePlaylistAttempted ->
-            case Nothing of
-                Just _ ->
-                    ( model, Cmd.none )
+            case makeCreatePlaylistRequestModel model of
+                Just request ->
+                    ( model, Api.createPlaylist apiRoot token request |> Cmd.map CreatePlaylist )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )

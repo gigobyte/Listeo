@@ -82,6 +82,7 @@ update msg model =
             { route = model.route
             , pushUrl = \route -> Route.pushUrl model.key route
             , apiRoot = model.apiRoot
+            , token = model.auth.jwt
             }
 
         ( newMainModel, mainMsg ) =

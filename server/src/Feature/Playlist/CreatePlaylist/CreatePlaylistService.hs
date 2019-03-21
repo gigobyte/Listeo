@@ -4,8 +4,10 @@ import Protolude
 import Data.Aeson (decode)
 import Control.Monad.Except (liftEither)
 import Infrastructure.AppError
+import Infrastructure.Utils.Id (Id)
 import Feature.Playlist.CreatePlaylist.CreatePlaylistBody (CreatePlaylistBody)
 import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistBody as CreatePlaylistBody
+import Feature.Playlist.Playlist (Playlist)
 import Feature.Playlist.PlaylistDTO (PlaylistDTO(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
@@ -15,7 +17,7 @@ import qualified Data.Text as T
 createPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m)
   => LByteString
-  -> m (Either (GeneralAppError) ())
+  -> m (Either GeneralAppError (Id Playlist))
 createPlaylist rawBody = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
   playlist           <- liftEither $ mkPlaylistDTO body
@@ -24,6 +26,8 @@ createPlaylist rawBody = runExceptT $ do
     liftEither $ sequence $ mkPlaylistTagDTO <$> (CreatePlaylistBody.tags body)
 
   lift $ forM_ tags (insertPlaylistTag insertedPlaylistId)
+
+  return insertedPlaylistId
 
 parseBody :: LByteString -> Either GeneralAppError CreatePlaylistBody
 parseBody body = maybeToRight InvalidRequest (decode body)
