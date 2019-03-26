@@ -1,3 +1,5 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+
 module Infrastructure.MonadCrypto where
 
 import Protolude

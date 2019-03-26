@@ -9,7 +9,7 @@ module Pages.Login.Selectors exposing
     )
 
 import Model exposing (AppModel)
-import Pages.Login.Api as Api exposing (LoginResponse(..))
+import Pages.Login.Api as Api exposing (LoginResponse(..), LoginResponseError(..))
 import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..), loginValidator)
 import RemoteData exposing (RemoteData(..), isLoading)
 import Result.Extra as Result
@@ -48,7 +48,7 @@ getLoginRequestErrorText model =
         Success res ->
             case res of
                 ErrorResponse { errorDescription } ->
-                    Api.loginErrorToString errorDescription
+                    loginErrorToString errorDescription
 
                 _ ->
                     ""
