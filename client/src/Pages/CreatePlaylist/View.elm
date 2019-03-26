@@ -15,15 +15,15 @@ import UI.Textarea as Textarea
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
-    styled (Container.centered div)
+viewContainer : StyledElement msg
+viewContainer =
+    styled (Container.viewCentered div)
         [ height <| pct 66
         ]
 
 
-title : StyledElement msg
-title =
+viewTitle : StyledElement msg
+viewTitle =
     styled h1
         [ fontSize <| rem 2
         ]
@@ -41,8 +41,8 @@ type alias Props =
 
 view : Props -> Html Msg
 view props =
-    container []
-        [ title [] [ text "Create a new playlist" ]
+    viewContainer []
+        [ viewTitle [] [ text "Create a new playlist" ]
         , Input.view
             { validationError = props.playlistNameError
             , inputAttributes =

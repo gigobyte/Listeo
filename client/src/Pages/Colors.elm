@@ -9,16 +9,16 @@ import UI.Container as Container
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
+viewContainer : StyledElement msg
+viewContainer =
     styled div
         [ displayFlex
         , justifyContent spaceAround
         ]
 
 
-colorContainer : StyledElement msg
-colorContainer =
+viewColorContainer : StyledElement msg
+viewColorContainer =
     styled div
         [ displayFlex
         , flexDirection column
@@ -42,42 +42,42 @@ viewColor color =
 
 view : Html msg
 view =
-    Container.centered div
+    Container.viewCentered div
         []
-        [ container []
-            [ colorContainer []
+        [ viewContainer []
+            [ viewColorContainer []
                 [ text "white", viewColor white ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "black", viewColor black ]
             ]
-        , container []
-            [ colorContainer []
+        , viewContainer []
+            [ viewColorContainer []
                 [ text "gray100", viewColor gray100 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "gray200", viewColor gray200 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "gray300", viewColor gray300 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "gray400", viewColor gray400 ]
             ]
-        , container []
-            [ colorContainer []
+        , viewContainer []
+            [ viewColorContainer []
                 [ text "blue100", viewColor blue100 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "blue200", viewColor blue200 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "blue300", viewColor blue300 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "blue400", viewColor blue400 ]
             ]
-        , container []
-            [ colorContainer []
+        , viewContainer []
+            [ viewColorContainer []
                 [ text "crimson100", viewColor crimson100 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "crimson200", viewColor crimson200 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "crimson300", viewColor crimson300 ]
-            , colorContainer []
+            , viewColorContainer []
                 [ text "crimson400", viewColor crimson400 ]
             ]
         ]

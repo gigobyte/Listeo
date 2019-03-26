@@ -1,4 +1,4 @@
-module UI.Error exposing (text)
+module UI.Error exposing (viewText)
 
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
@@ -11,8 +11,8 @@ type alias ErrorTextProps =
     { error : String }
 
 
-text : ErrorTextProps -> StyledElement msg
-text props attrs children =
+viewText : ErrorTextProps -> StyledElement msg
+viewText props attrs children =
     let
         baseStyle =
             [ color crimson100

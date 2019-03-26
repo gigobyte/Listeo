@@ -8,8 +8,8 @@ import UI.Link as Link
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
+viewContainer : StyledElement msg
+viewContainer =
     styled span
         [ fontFamilies [ "Candara Regular" ]
         , color blue200
@@ -22,7 +22,7 @@ view : Html msg
 view =
     Link.view { to = Route.Home }
         []
-        [ container []
+        [ viewContainer []
             [ text "Listeo"
             ]
         ]

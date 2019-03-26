@@ -12,8 +12,8 @@ import UI.Colors exposing (gray200)
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
+viewContainer : StyledElement msg
+viewContainer =
     styled main_
         [ height <| pct 100
         , flexDirection column
@@ -42,7 +42,7 @@ view page model =
             text ""
 
         _ ->
-            container []
+            viewContainer []
                 [ global globalStyle
                 , Header.view model
                 , page

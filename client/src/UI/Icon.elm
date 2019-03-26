@@ -1,6 +1,5 @@
 module UI.Icon exposing
     ( cloudDownload
-    , cloudUpload
     , folderPlus
     , plusCircle
     , times
@@ -28,11 +27,6 @@ plusCircle =
 folderPlus : StyledElement msg
 folderPlus =
     icon "fas fa-folder-plus"
-
-
-cloudUpload : StyledElement msg
-cloudUpload =
-    icon "fas fa-cloud-upload-alt"
 
 
 cloudDownload : StyledElement msg

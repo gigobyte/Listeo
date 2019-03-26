@@ -14,22 +14,22 @@ import UI.Link as Link
 import Utils.Styles exposing (StyledElement)
 
 
-registerForm : StyledElement msg
-registerForm =
-    styled (Container.centered form)
+viewRegisterForm : StyledElement msg
+viewRegisterForm =
+    styled (Container.viewCentered form)
         [ height <| pct 66
         ]
 
 
-title : StyledElement msg
-title =
+viewTitle : StyledElement msg
+viewTitle =
     styled h1
         [ fontSize <| rem 3
         ]
 
 
-submitButton : StyledElement msg
-submitButton =
+viewSubmitButton : StyledElement msg
+viewSubmitButton =
     styled Button.view
         [ marginTop <| px 10
         , marginBottom <| px 15
@@ -48,8 +48,8 @@ type alias Props =
 
 view : Props -> Html Msg
 view props =
-    registerForm [ onSubmit RegisterAttempted ]
-        [ title [] [ text "Register" ]
+    viewRegisterForm [ onSubmit RegisterAttempted ]
+        [ viewTitle [] [ text "Register" ]
         , Input.view
             { validationError = props.usernameError
             , inputAttributes =
@@ -71,11 +71,11 @@ view props =
             }
             []
             []
-        , submitButton
+        , viewSubmitButton
             [ type_ "submit"
             , disabled props.isSubmitButtonDisabled
             ]
             [ text "Beam me up!" ]
-        , Error.text { error = props.registerRequestErrorText } [] []
+        , Error.viewText { error = props.registerRequestErrorText } [] []
         , Link.view { to = Route.Login } [] [ text "Already have an account?" ]
         ]

@@ -15,16 +15,16 @@ import UI.Modal as Modal
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
-    styled (Container.fullHeight div)
+viewContainer : StyledElement msg
+viewContainer =
+    styled (Container.viewFullHeight div)
         [ displayFlex
         , flexDirection column
         ]
 
 
-optionsContainer : StyledElement msg
-optionsContainer =
+viewOptionsContainer : StyledElement msg
+viewOptionsContainer =
     styled div
         [ displayFlex
         , paddingTop <| pct 5
@@ -33,30 +33,30 @@ optionsContainer =
         ]
 
 
-header : StyledElement msg
-header =
+viewHeader : StyledElement msg
+viewHeader =
     styled div
         [ textAlign center
         ]
 
 
-title : StyledElement msg
-title =
+viewTitle : StyledElement msg
+viewTitle =
     styled span
         [ textTransform uppercase
         , fontSize <| rem 0.8
         ]
 
 
-subtitle : StyledElement msg
-subtitle =
+viewSubtitle : StyledElement msg
+viewSubtitle =
     styled span
         [ fontSize <| rem 1.4
         ]
 
 
-optionCard : StyledElement msg
-optionCard =
+viewOptionCard : StyledElement msg
+viewOptionCard =
     styled div
         [ flexBasis <| pct 25
         , displayFlex
@@ -83,8 +83,8 @@ optionIcon icon =
         ]
 
 
-optionDescription : StyledElement msg
-optionDescription =
+viewOptionDescription : StyledElement msg
+viewOptionDescription =
     styled div
         [ marginTop <| px 20
         , marginBottom <| px 25
@@ -96,23 +96,23 @@ view : Html Msg
 view =
     Modal.view { onClose = AddPlaylistModalClosed }
         []
-        [ container
+        [ viewContainer
             []
-            [ header []
-                [ div [] [ title [] [ text "New playlist" ] ]
-                , div [] [ subtitle [] [ text "Choose a starting point" ] ]
+            [ viewHeader []
+                [ div [] [ viewTitle [] [ text "New playlist" ] ]
+                , div [] [ viewSubtitle [] [ text "Choose a starting point" ] ]
                 ]
-            , optionsContainer []
-                [ optionCard []
+            , viewOptionsContainer []
+                [ viewOptionCard []
                     [ optionIcon Icon.folderPlus [] []
-                    , optionDescription []
+                    , viewOptionDescription []
                         [ text "Start with an empty playlist. "
                         ]
                     , Button.view [ onClick CreateNewPlaylistSelected ] [ text "Create new" ]
                     ]
-                , optionCard []
+                , viewOptionCard []
                     [ optionIcon Icon.cloudDownload [] []
-                    , optionDescription []
+                    , viewOptionDescription []
                         [ text "Import your existing playlist."
                         ]
                     , Button.view [ Attributes.disabled True ] [ text "Import" ]

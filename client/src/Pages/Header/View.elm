@@ -15,8 +15,8 @@ import UI.Logo as Logo
 import Utils.Styles exposing (StyledElement)
 
 
-container : StyledElement msg
-container =
+viewContainer : StyledElement msg
+viewContainer =
     styled div
         [ displayFlex
         , justifyContent spaceBetween
@@ -24,8 +24,8 @@ container =
         ]
 
 
-nav : StyledElement msg
-nav =
+viewNav : StyledElement msg
+viewNav =
     styled div
         [ textTransform uppercase
         , displayFlex
@@ -36,8 +36,8 @@ nav =
         ]
 
 
-navItem : Link.LinkProps -> StyledElement msg
-navItem props =
+viewNavItem : Link.LinkProps -> StyledElement msg
+viewNavItem props =
     styled (Link.view props)
         [ padding2 zero (px 10)
         , transition [ Transitions.color 500 ]
@@ -47,16 +47,16 @@ navItem props =
         ]
 
 
-logo : StyledElement msg
-logo =
+viewLogo : StyledElement msg
+viewLogo =
     styled div
         [ padding2 (px 10) (px 20)
         , paddingLeft <| pct 4
         ]
 
 
-addButton : StyledElement msg
-addButton =
+viewAddButton : StyledElement msg
+viewAddButton =
     styled Icon.plusCircle
         [ fontSize <| px 25
         , paddingRight <| px 10
@@ -67,9 +67,9 @@ addButton =
 
 viewPublicNavItems : List (Html msg)
 viewPublicNavItems =
-    [ navItem { to = Route.Login } [] [ text "Sign In" ]
-    , navItem { to = Route.Register } [] [ text "Register" ]
-    , navItem { to = Route.About } [] [ text "About" ]
+    [ viewNavItem { to = Route.Login } [] [ text "Sign In" ]
+    , viewNavItem { to = Route.Register } [] [ text "Register" ]
+    , viewNavItem { to = Route.About } [] [ text "About" ]
     ]
 
 
@@ -77,7 +77,7 @@ viewPrivateNavItems : User -> Bool -> List (Html Msg)
 viewPrivateNavItems user showAddPlaylistButton =
     [ case showAddPlaylistButton of
         True ->
-            addButton
+            viewAddButton
                 [ title "Add new playlist"
                 , attribute "role" "button"
                 , onClick AddPlaylistOverlayShown
@@ -86,8 +86,8 @@ viewPrivateNavItems user showAddPlaylistButton =
 
         False ->
             text ""
-    , navItem { to = Route.Home } [] [ text user.username ]
-    , navItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
+    , viewNavItem { to = Route.Home } [] [ text user.username ]
+    , viewNavItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
     ]
 
 
@@ -99,9 +99,9 @@ type alias Props =
 
 view : Props -> Html Msg
 view props =
-    container []
-        [ logo [] [ Logo.view ]
-        , nav []
+    viewContainer []
+        [ viewLogo [] [ Logo.view ]
+        , viewNav []
             (case props.user of
                 Just user ->
                     viewPrivateNavItems user props.showAddPlaylistButton

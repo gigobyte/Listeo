@@ -22,8 +22,8 @@ fadeIn =
         ]
 
 
-overlay : StyledElement msg
-overlay =
+viewOverlay : StyledElement msg
+viewOverlay =
     styled div
         [ position fixed
         , top zero
@@ -35,8 +35,8 @@ overlay =
         ]
 
 
-container : StyledElement msg
-container =
+viewContainer : StyledElement msg
+viewContainer =
     styled div
         [ position relative
         , width <| pct 50
@@ -50,8 +50,8 @@ container =
         ]
 
 
-backdrop : StyledElement msg
-backdrop =
+viewBackdrop : StyledElement msg
+viewBackdrop =
     styled div
         [ position fixed
         , top zero
@@ -78,8 +78,8 @@ closeIcon =
 view : ModalProps msg -> StyledElement msg
 view props attrs children =
     div []
-        [ overlay attrs
-            [ container [] (closeIcon [ onClick props.onClose ] [] :: children)
+        [ viewOverlay attrs
+            [ viewContainer [] (closeIcon [ onClick props.onClose ] [] :: children)
             ]
-        , backdrop [] []
+        , viewBackdrop [] []
         ]

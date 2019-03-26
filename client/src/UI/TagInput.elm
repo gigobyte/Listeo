@@ -29,8 +29,8 @@ type alias TagInputProps msg =
     }
 
 
-tagContent : StyledElement msg
-tagContent =
+viewTagContent : StyledElement msg
+viewTagContent =
     styled div
         [ display inlineBlock
         , color white
@@ -40,23 +40,23 @@ tagContent =
         ]
 
 
-tagsContainer : StyledElement msg
-tagsContainer =
+viewTagsContainer : StyledElement msg
+viewTagsContainer =
     styled div
         [ displayFlex
         , paddingBottom <| px 10
         ]
 
 
-tagContainer : StyledElement msg
-tagContainer =
+viewTagContainer : StyledElement msg
+viewTagContainer =
     styled div
         [ displayFlex
         ]
 
 
-tagRemoveButton : StyledElement msg
-tagRemoveButton =
+viewTagRemoveButton : StyledElement msg
+viewTagRemoveButton =
     styled button
         [ backgroundColor blue300
         , border zero
@@ -73,11 +73,11 @@ tagRemoveButton =
 
 viewTag : (Tag -> msg) -> Tag -> Html msg
 viewTag onRemoveTag tag =
-    tagContainer []
-        [ tagContent []
+    viewTagContainer []
+        [ viewTagContent []
             [ text (tagValue tag)
             ]
-        , tagRemoveButton [ onClick (onRemoveTag tag) ] [ Icon.times [] [] ]
+        , viewTagRemoveButton [ onClick (onRemoveTag tag) ] [ Icon.times [] [] ]
         ]
 
 
@@ -109,7 +109,7 @@ view props attrs children =
                     }
                     inputProps
                     []
-              , tagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
+              , viewTagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
               ]
             , children
             ]
