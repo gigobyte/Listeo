@@ -8,16 +8,15 @@ import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
 import qualified Feature.PlaylistTag.PlaylistTagDTO as PlaylistTagDTO
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 import Infrastructure.Utils.Id (Id)
-import Database.MongoDB (Document, insert, insert_, cast', (=:))
-
-playlistTagRelation :: Id Playlist -> Id PlaylistTag -> Document
-playlistTagRelation playlistId tagId =
-  ["playlistId" =: playlistId, "tagId" =: tagId]
+import Database.MongoDB (insert, insert_, cast', (=:))
 
 insertPlaylistTag :: (MonadDB m) => Id Playlist -> PlaylistTagDTO -> m ()
 insertPlaylistTag playlistId tag = withConn $ \conn -> do
-  tagIdVal <- runQuery conn (insert "playlistTag" (PlaylistTagDTO.toBson tag))
-  let tagId = fromJust $ cast' tagIdVal
+  tagIdVal <- runQuery conn $ insert "playlistTag" (PlaylistTagDTO.toBson tag)
+  let tagId = fromJust $ cast' tagIdVal :: Id PlaylistTag
   runQuery
     conn
-    (insert_ "playlist_playlistTag" $ playlistTagRelation playlistId tagId)
+    (insert_
+      "playlist_playlistTag"
+      ["playlistId" =: playlistId, "tagId" =: tagId]
+    )
