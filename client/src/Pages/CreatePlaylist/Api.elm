@@ -15,6 +15,7 @@ import Utils.Fetch as Fetch exposing (ApiRoot, Token)
 
 type alias CreatePlaylistRequest =
     { name : String
+    , description : String
     , tags : List String
     , privacy : PlaylistPrivacy
     , style : PlaylistStyle
@@ -48,6 +49,7 @@ createPlaylistRequestEncoder : CreatePlaylistRequest -> Encode.Value
 createPlaylistRequestEncoder req =
     Encode.object
         [ ( "name", Encode.string req.name )
+        , ( "description", Encode.string req.description )
         , ( "tags", Encode.list Encode.string req.tags )
         , ( "privacy", Encode.string <| playlistPrivacyToString req.privacy )
         , ( "style", Encode.string <| playlistStyleToString req.style )

@@ -41,6 +41,7 @@ playlistStyleToString style =
 
 type alias Model =
     { playlistName : String
+    , playlistDescription : String
     , playlistTagInput : String
     , playlistTags : List Tag
     , playlistPrivacy : PlaylistPrivacy

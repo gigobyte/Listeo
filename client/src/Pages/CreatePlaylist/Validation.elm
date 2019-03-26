@@ -31,6 +31,7 @@ makeCreatePlaylistRequestModel model =
         |> Result.map
             (\validatedModel ->
                 { name = validatedModel.playlistName
+                , description = validatedModel.playlistDescription
                 , tags = List.map tagValue validatedModel.playlistTags
                 , privacy = validatedModel.playlistPrivacy
                 , style = validatedModel.playlistStyle

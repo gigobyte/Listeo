@@ -9,12 +9,25 @@ module Pages.Register.Selectors exposing
     )
 
 import Model exposing (AppModel)
-import Pages.Register.Api as Api
+import Pages.Register.Api as Api exposing (RegisterResponseError(..))
 import Pages.Register.Validation as Validation exposing (RegisterField(..), RegisterValidationError(..), registerValidator)
 import RemoteData exposing (RemoteData(..), isLoading)
 import Result.Extra as Result
 import Utils.Validation exposing (getErrorForField)
 import Validate exposing (validate)
+
+
+registerErrorToString : RegisterResponseError -> String
+registerErrorToString err =
+    case err of
+        UserAlreadyExists ->
+            "User already exists"
+
+        ServerError ->
+            "Something went wrong"
+
+        ValidationFailed ->
+            ""
 
 
 getValidationErrors : AppModel -> List ( RegisterField, RegisterValidationError )
@@ -34,7 +47,7 @@ getRegisterRequestErrorText model =
     case model.register.registerResponse of
         Success { errorDescription } ->
             errorDescription
-                |> Maybe.map Api.registerErrorToString
+                |> Maybe.map registerErrorToString
                 |> Maybe.withDefault ""
 
         _ ->

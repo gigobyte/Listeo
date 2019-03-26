@@ -17,6 +17,19 @@ import Utils.Validation exposing (getErrorForField)
 import Validate exposing (validate)
 
 
+loginErrorToString : LoginResponseError -> String
+loginErrorToString err =
+    case err of
+        UserNotFound ->
+            "User not found"
+
+        ServerError ->
+            "Something went wrong"
+
+        ValidationFailed ->
+            ""
+
+
 getValidationErrors : AppModel -> List ( LoginField, LoginValidationError )
 getValidationErrors model =
     case model.login.showErrors of

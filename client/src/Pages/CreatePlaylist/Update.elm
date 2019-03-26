@@ -12,6 +12,7 @@ import UI.TagInput exposing (tagValue)
 init : Model
 init =
     { playlistName = ""
+    , playlistDescription = ""
     , playlistTagInput = ""
     , playlistTags = []
     , playlistPrivacy = Public
