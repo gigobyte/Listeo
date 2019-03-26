@@ -8,6 +8,7 @@ import Infrastructure.MonadCrypto
 import Infrastructure.Utils.Id
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
+import Feature.Auth.AuthServiceClass (AuthService(..))
 import Feature.User.UserRepoClass (UserRepo(..))
 import Feature.User.User (User(..))
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
@@ -32,6 +33,9 @@ instance MonadCrypto AppMockT where
 instance UserRepo AppMockT where
     insertUser = \_ -> pure ()
     findUser = \_ -> pure $ Just mockUser
+
+instance AuthService AppMockT where
+    requireUser = pure mockUser
 
 instance RegisterService AppMockT where
     register = \_ -> pure $ Right ()

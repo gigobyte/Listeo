@@ -6,11 +6,13 @@ import Infrastructure.MonadCrypto
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import Feature.User.UserRepoClass (UserRepo(..))
+import Feature.Auth.AuthServiceClass (AuthService(..))
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
 import qualified Feature.Login.LoginService as LoginService
 import qualified Feature.Register.RegisterService as RegisterService
+import qualified Feature.Auth.AuthService as AuthService
 import qualified Feature.User.UserRepo as UserRepo
 import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistService as PlaylistService
 import qualified Feature.Playlist.PlaylistRepo as PlaylistRepo
@@ -35,6 +37,9 @@ instance UserRepo AppT where
     insertUser = UserRepo.insertUser
     findUser = UserRepo.findUser
 
+instance AuthService AppT where
+    requireUser = AuthService.requireUser
+
 instance RegisterService AppT where
     register = RegisterService.register
 
@@ -49,4 +54,3 @@ instance PlaylistRepo AppT where
 
 instance PlaylistTagRepo AppT where
     insertPlaylistTag = PlaylistTagRepo.insertPlaylistTag
-

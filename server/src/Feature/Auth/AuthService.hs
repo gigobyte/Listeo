@@ -1,4 +1,4 @@
-module Feature.Auth
+module Feature.Auth.AuthService
   ( requireUser
   )
 where

@@ -7,7 +7,7 @@ import System.Environment (lookupEnv)
 import Web.Scotty.Trans
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
-import Feature.User.UserRepoClass (UserRepo(..))
+import Feature.Auth.AuthServiceClass (AuthService(..))
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import qualified Database.MongoDB as DB
 import qualified Feature.Login.LoginHTTP as Login
@@ -16,7 +16,13 @@ import qualified Feature.User.UserHTTP as User
 import qualified Feature.Playlist.PlaylistHTTP as Playlist
 import qualified Infrastructure.Middleware.Cors as Middleware
 
-type App m = (MonadIO m, LoginService m, RegisterService m, PlaylistService m, UserRepo m)
+type App m =
+  ( MonadIO m
+  , LoginService m
+  , RegisterService m
+  , PlaylistService m
+  , AuthService m
+  )
 
 routes :: App m => ScottyT LText m ()
 routes = do
