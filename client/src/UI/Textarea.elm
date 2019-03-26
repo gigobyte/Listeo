@@ -5,7 +5,7 @@ import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Maybe.Extra as Maybe
 import UI.Colors exposing (crimson100, gray100, gray300)
-import Utils.Styles exposing (StyledElement, stylesIfJust, stylesIfTrue)
+import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type alias TextareaProps msg =
@@ -31,7 +31,10 @@ viewError errorText =
             ]
 
         style =
-            baseStyle ++ stylesIfJust errorText errorStyle
+            List.concat
+                [ baseStyle
+                , addIfNeeded (Maybe.isJust errorText) errorStyle
+                ]
     in
     styled div style [] [ text (errorText |> Maybe.withDefault "") ]
 
@@ -39,42 +42,53 @@ viewError errorText =
 viewInput : Bool -> StyledElement msg
 viewInput hasError =
     let
+        baseStyle =
+            [ borderRadius <| px 2
+            , padding <| px 7
+            , width <| px 200
+            , paddingLeft <| px 15
+            , fontSize <| px 16
+            , marginBottom <| px 10
+            , height <| px 75
+            , border zero
+            , transition [ Transitions.borderColor 1000 ]
+            , fontFamilies [ "Museo-Sans" ]
+            , backgroundColor gray100
+            , boxShadow5 (px 1) (px 2) (px 3) zero gray300
+            , focus
+                [ outline zero
+                , boxShadow5 (px 1) (px 2) (px 3) (px 1) gray300
+                ]
+            ]
+
         errorStyle =
-            stylesIfTrue hasError
-                [ marginBottom <| px 5
-                , borderColor crimson100
+            [ marginBottom <| px 5
+            , borderColor crimson100
+            ]
+
+        style =
+            List.concat
+                [ baseStyle
+                , addIfNeeded hasError errorStyle
                 ]
     in
-    styled textarea
-        ([ borderRadius <| px 2
-         , padding <| px 7
-         , width <| px 200
-         , paddingLeft <| px 15
-         , fontSize <| px 16
-         , marginBottom <| px 10
-         , height <| px 75
-         , border zero
-         , transition [ Transitions.borderColor 1000 ]
-         , fontFamilies [ "Museo-Sans" ]
-         , backgroundColor gray100
-         , boxShadow5 (px 1) (px 2) (px 3) zero gray300
-         , focus
-            [ outline zero
-            , boxShadow5 (px 1) (px 2) (px 3) (px 1) gray300
-            ]
-         ]
-            ++ errorStyle
-        )
+    styled textarea style
+
+
+viewContainer : StyledElement msg
+viewContainer =
+    styled div
+        [ textAlign center
+        ]
 
 
 view : TextareaProps msg -> StyledElement msg
 view props attrs children =
-    styled div
-        [ textAlign center
-        ]
-        attrs
-        ([ viewInput (Maybe.isJust props.validationError) props.textareaAttributes []
-         , viewError props.validationError
-         ]
-            ++ children
+    viewContainer attrs
+        (List.concat
+            [ [ viewInput (Maybe.isJust props.validationError) props.textareaAttributes []
+              , viewError props.validationError
+              ]
+            , children
+            ]
         )

@@ -4,7 +4,7 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import UI.Colors exposing (crimson100)
-import Utils.Styles exposing (StyledElement, stylesIfNotEmpty)
+import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type alias ErrorTextProps =
@@ -28,6 +28,9 @@ text props attrs children =
             ]
 
         style =
-            baseStyle ++ stylesIfNotEmpty props.error errorStyle
+            List.concat
+                [ baseStyle
+                , addIfNeeded (props.error /= "") errorStyle
+                ]
     in
     styled span style attrs (Html.Styled.text props.error :: children)

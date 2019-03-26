@@ -81,6 +81,11 @@ viewTag onRemoveTag tag =
         ]
 
 
+viewContainer : StyledElement msg
+viewContainer =
+    styled div []
+
+
 view : TagInputProps msg -> StyledElement msg
 view props attrs children =
     let
@@ -95,16 +100,17 @@ view props attrs children =
                 _ ->
                     [ onEnter (props.onAddTag tagToBeAdded) ]
     in
-    styled div
-        []
+    viewContainer
         attrs
-        ([ Input.view
-            { inputAttributes = props.inputAttributes ++ [ value props.value ]
-            , validationError = Nothing
-            }
-            inputProps
-            []
-         , tagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
-         ]
-            ++ children
+        (List.concat
+            [ [ Input.view
+                    { inputAttributes = props.inputAttributes ++ [ value props.value ]
+                    , validationError = Nothing
+                    }
+                    inputProps
+                    []
+              , tagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
+              ]
+            , children
+            ]
         )
