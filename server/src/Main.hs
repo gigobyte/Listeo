@@ -48,9 +48,9 @@ main = do
   pipe   <- DB.connect $ DB.host "127.0.0.1"
 
   if isMock
-    then scottyT 8081 (\app -> runReaderT (App.unAppT app) (pipe)) $ do
+    then scottyT 8081 (\app -> runReaderT (AppMock.unAppMockT app) (pipe)) $ do
       Middleware.cors
       routes
-    else scottyT 8081 (\app -> runReaderT (AppMock.unAppMockT app) (pipe)) $ do
+    else scottyT 8081 (\app -> runReaderT (App.unAppT app) (pipe)) $ do
       Middleware.cors
       routes

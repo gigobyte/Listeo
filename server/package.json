@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"mongod\" \"stack build && stack exec listeo-exe\"",
-    "start-mock": "set MOCK=true && concurrently \"mongod\" \"stack build && stack exec listeo-exe\"",
+    "start": "set \"MOCK=false\" && concurrently \"mongod\" \"stack build && stack exec listeo-exe\"",
+    "start-mock": "set \"MOCK=true\" && concurrently \"mongod\" \"stack build && stack exec listeo-exe\"",
     "build": "stack build"
   },
   "dependencies": {
