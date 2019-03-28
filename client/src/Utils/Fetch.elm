@@ -68,11 +68,11 @@ postWithAuth options =
 
 
 type Endpoint
-    = Endpoint ApiRoot String
+    = Endpoint String ApiRoot
 
 
 unwrapEndpoint : Endpoint -> String
-unwrapEndpoint (Endpoint apiRoot url) =
+unwrapEndpoint (Endpoint url apiRoot) =
     unwrapApiRoot apiRoot ++ url
 
 
@@ -109,20 +109,20 @@ emptyToken =
 
 
 login : ApiRoot -> Endpoint
-login apiRoot =
-    Endpoint apiRoot "/login"
+login =
+    Endpoint "/login"
 
 
 register : ApiRoot -> Endpoint
-register apiRoot =
-    Endpoint apiRoot "/register"
+register =
+    Endpoint "/register"
 
 
 currentUser : ApiRoot -> Endpoint
-currentUser apiRoot =
-    Endpoint apiRoot "/me"
+currentUser =
+    Endpoint "/me"
 
 
 createPlaylist : ApiRoot -> Endpoint
-createPlaylist apiRoot =
-    Endpoint apiRoot "/playlist"
+createPlaylist =
+    Endpoint "/playlist"
