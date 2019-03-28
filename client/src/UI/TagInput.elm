@@ -8,7 +8,7 @@ import UI.Colors exposing (..)
 import UI.Icon as Icon
 import UI.Input as Input
 import Utils.Events exposing (onEnter)
-import Utils.Styles exposing (StyledElement)
+import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type Tag
@@ -93,12 +93,9 @@ view props attrs children =
             Tag { value = props.value, id = List.length props.tags }
 
         inputProps =
-            case props.value of
-                "" ->
-                    []
-
-                _ ->
-                    [ onEnter (props.onAddTag tagToBeAdded) ]
+            List.concat
+                [ addIfNeeded (props.value /= "") [ onEnter (props.onAddTag tagToBeAdded) ]
+                ]
     in
     viewContainer
         attrs
@@ -109,7 +106,11 @@ view props attrs children =
                     }
                     inputProps
                     []
-              , viewTagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
+              , if List.length props.tags > 0 then
+                    viewTagsContainer [] (List.map (viewTag props.onRemoveTag) props.tags)
+
+                else
+                    text ""
               ]
             , children
             ]

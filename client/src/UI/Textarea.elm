@@ -50,9 +50,12 @@ viewInput hasError =
             , fontSize <| px 16
             , marginBottom <| px 10
             , height <| px 75
+            , minHeight <| px 75
+            , maxHeight <| px 150
             , border zero
             , transition [ Transitions.borderColor 1000 ]
             , fontFamilies [ "Museo-Sans" ]
+            , resize vertical
             , backgroundColor gray100
             , boxShadow5 (px 1) (px 2) (px 3) zero gray300
             , focus

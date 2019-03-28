@@ -180,12 +180,7 @@ subscriptions =
 main : Program RawFlags AppModel Msg
 main =
     Browser.application
-        { init =
-            \val ->
-                init
-                    { jwt = Token val.jwt
-                    , apiRoot = ApiRoot val.apiRoot
-                    }
+        { init = \val -> init { jwt = Token val.jwt, apiRoot = ApiRoot val.apiRoot }
         , subscriptions = subscriptions
         , update = update
         , view = view
