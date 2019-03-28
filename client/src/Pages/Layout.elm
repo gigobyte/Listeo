@@ -9,7 +9,7 @@ import Pages.Header as Header
 import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import RemoteData exposing (RemoteData(..))
 import UI.Colors exposing (gray200)
-import Utils.Styles exposing (StyledElement)
+import Utils.Styles exposing (StyledDocument, StyledElement)
 
 
 viewContainer : StyledElement msg
@@ -32,24 +32,36 @@ globalStyle =
     ]
 
 
-view : Html Msg -> AppModel -> Html Msg
+viewNothing : StyledDocument Msg
+viewNothing =
+    { title = "", body = [ text "" ] }
+
+
+view : StyledDocument Msg -> AppModel -> StyledDocument Msg
 view page model =
     case model.auth.user of
         NotAsked ->
-            text ""
+            viewNothing
 
         Loading ->
-            text ""
+            viewNothing
 
         _ ->
-            viewContainer []
-                [ global globalStyle
-                , Header.view model
-                , page
-                , case model.header.isOverlayShown of
-                    True ->
-                        AddPlaylistModal.view
+            { title = page.title
+            , body =
+                [ viewContainer []
+                    (List.concat
+                        [ [ global globalStyle
+                          , Header.view model
+                          , case model.header.isOverlayShown of
+                                True ->
+                                    AddPlaylistModal.view
 
-                    False ->
-                        text ""
+                                False ->
+                                    text ""
+                          ]
+                        , page.body
+                        ]
+                    )
                 ]
+            }

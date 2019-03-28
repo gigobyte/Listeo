@@ -19,6 +19,7 @@ import Pages.Register as Register
 import Route
 import Url
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
+import Utils.Styles exposing (toUnstyledDocument)
 
 
 type alias Flags =
@@ -124,52 +125,27 @@ update msg model =
 
 view : AppModel -> Browser.Document Msg
 view model =
-    { title =
-        case model.route of
-            Route.Login ->
-                Login.title model
+    case model.route of
+        Route.Login ->
+            Layout.view (Login.view model) model |> toUnstyledDocument
 
-            Route.Register ->
-                Register.title model
+        Route.Register ->
+            Layout.view (Register.view model) model |> toUnstyledDocument
 
-            Route.About ->
-                "NotImplementedException"
+        Route.About ->
+            { title = "", body = [ text "NotImplementedException" ] }
 
-            Route.Home ->
-                Home.title model
+        Route.Home ->
+            Layout.view (Home.view model) model |> toUnstyledDocument
 
-            Route.CreatePlaylist ->
-                CreatePlaylist.title model
+        Route.CreatePlaylist ->
+            Layout.view (CreatePlaylist.view model) model |> toUnstyledDocument
 
-            Route.NotFound404 ->
-                "404 - Listeo"
+        Route.NotFound404 ->
+            { title = "404 - Listeo", body = [ text "Not Found" ] }
 
-            Route.DebugColors ->
-                "Colors page - DEBUG ONLY"
-    , body =
-        [ case model.route of
-            Route.Login ->
-                Layout.view (Login.view model) model |> toUnstyled
-
-            Route.Register ->
-                Layout.view (Register.view model) model |> toUnstyled
-
-            Route.About ->
-                text "NotImplementedException"
-
-            Route.Home ->
-                Layout.view (Home.view model) model |> toUnstyled
-
-            Route.CreatePlaylist ->
-                Layout.view (CreatePlaylist.view model) model |> toUnstyled
-
-            Route.NotFound404 ->
-                text "Not Found"
-
-            Route.DebugColors ->
-                Layout.view Colors.view model |> toUnstyled
-        ]
-    }
+        Route.DebugColors ->
+            Layout.view Colors.view model |> toUnstyledDocument
 
 
 subscriptions : AppModel -> Sub Msg

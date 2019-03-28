@@ -1,17 +1,19 @@
-module Pages.Home exposing (init, title, update, view)
+module Pages.Home exposing (init, update, view)
 
-import Session exposing (Session)
-import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
 import Pages.Home.Model exposing (Model)
 import Pages.Home.Update as Update
 import Pages.Home.View as View
+import Session exposing (Session)
+import Utils.Styles exposing (StyledDocument)
 
 
-view : AppModel -> Html Msg
+view : AppModel -> StyledDocument Msg
 view _ =
-    View.view {}
+    { title = "Home - Listeo"
+    , body = [ View.view {} ]
+    }
 
 
 update : Msg -> AppModel -> Session -> ( Model, Cmd Msg )
@@ -22,8 +24,3 @@ update msg model session =
 init : Model
 init =
     Update.init
-
-
-title : AppModel -> String
-title _ =
-    "Home - Listeo"
