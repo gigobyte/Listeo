@@ -12,7 +12,7 @@ import Utils.Styles exposing (StyledElement)
 type alias Props msg =
     { isChecked : Bool
     , label : String
-    , onToggle : msg
+    , onCheck : msg
     }
 
 
@@ -72,6 +72,6 @@ view : Props msg -> StyledElement msg
 view props _ _ =
     viewLabel []
         [ text props.label
-        , viewInput [ type_ "radio", checked props.isChecked, onClick props.onToggle ] []
+        , viewInput [ type_ "radio", checked props.isChecked, onClick props.onCheck ] []
         , viewCircle [] []
         ]

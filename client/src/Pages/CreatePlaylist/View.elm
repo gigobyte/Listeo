@@ -115,7 +115,7 @@ view props =
                 [ RadioButton.view
                     { isChecked = props.playlistPrivacy == Public
                     , label = "Public"
-                    , onToggle = PlaylistPrivacySelected Public
+                    , onCheck = PlaylistPrivacySelected Public
                     }
                     []
                     []
@@ -123,7 +123,7 @@ view props =
                 , RadioButton.view
                     { isChecked = props.playlistStyle == Ranked
                     , label = "Ranked"
-                    , onToggle = PlaylistStyleSelected Ranked
+                    , onCheck = PlaylistStyleSelected Ranked
                     }
                     []
                     []
@@ -132,7 +132,7 @@ view props =
                 [ RadioButton.view
                     { isChecked = props.playlistPrivacy == Private
                     , label = "Private"
-                    , onToggle = PlaylistPrivacySelected Private
+                    , onCheck = PlaylistPrivacySelected Private
                     }
                     []
                     []
@@ -140,7 +140,7 @@ view props =
                 , RadioButton.view
                     { isChecked = props.playlistStyle == Unordered
                     , label = "Unordered"
-                    , onToggle = PlaylistStyleSelected Unordered
+                    , onCheck = PlaylistStyleSelected Unordered
                     }
                     []
                     []
