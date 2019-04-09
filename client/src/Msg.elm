@@ -7,7 +7,6 @@ import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle)
 import Pages.Login.Api exposing (LoginResponse)
 import Pages.Register.Api exposing (RegisterResponse)
 import RemoteData exposing (WebData)
-import UI.TagInput exposing (Tag)
 import Url exposing (Url)
 
 
@@ -34,8 +33,8 @@ type Msg
       -- Create playlist
     | PlaylistNameUpdated String
     | PlaylistTagInputUpdated String
-    | PlaylistTagAdded Tag
-    | PlaylistTagRemoved Tag
+    | PlaylistTagAdded String
+    | PlaylistTagRemoved String
     | PlaylistPrivacySelected PlaylistPrivacy
     | PlaylistStyleSelected PlaylistStyle
     | CreatePlaylistAttempted

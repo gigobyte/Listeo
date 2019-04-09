@@ -32,14 +32,13 @@ registerErrorToString err =
 
 getValidationErrors : AppModel -> List ( RegisterField, RegisterValidationError )
 getValidationErrors model =
-    case model.register.showErrors of
-        True ->
-            validate registerValidator model.register
-                |> Result.map (always [])
-                |> Result.merge
+    if model.register.showErrors then
+        validate registerValidator model.register
+            |> Result.map (always [])
+            |> Result.merge
 
-        False ->
-            []
+    else
+        []
 
 
 getRegisterRequestErrorText : AppModel -> String

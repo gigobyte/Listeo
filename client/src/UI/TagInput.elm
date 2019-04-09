@@ -1,4 +1,4 @@
-module UI.TagInput exposing (Tag, tagValue, view)
+module UI.TagInput exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
@@ -11,21 +11,12 @@ import Utils.Events exposing (onEnter)
 import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
-type Tag
-    = Tag { value : String, id : Int }
-
-
-tagValue : Tag -> String
-tagValue (Tag { value }) =
-    value
-
-
 type alias TagInputProps msg =
     { value : String
-    , onAddTag : Tag -> msg
-    , onRemoveTag : Tag -> msg
+    , onAddTag : String -> msg
+    , onRemoveTag : String -> msg
     , inputAttributes : List (Attribute msg)
-    , tags : List Tag
+    , tags : List String
     }
 
 
@@ -71,11 +62,11 @@ viewTagRemoveButton =
         ]
 
 
-viewTag : (Tag -> msg) -> Tag -> Html msg
+viewTag : (String -> msg) -> String -> Html msg
 viewTag onRemoveTag tag =
     viewTagContainer []
         [ viewTagContent []
-            [ text (tagValue tag)
+            [ text tag
             ]
         , viewTagRemoveButton [ onClick (onRemoveTag tag) ] [ Icon.times [] [] ]
         ]
@@ -89,12 +80,9 @@ viewContainer =
 view : TagInputProps msg -> StyledElement msg
 view props attrs children =
     let
-        tagToBeAdded =
-            Tag { value = props.value, id = List.length props.tags }
-
         inputProps =
             List.concat
-                [ addIfNeeded (props.value /= "") [ onEnter (props.onAddTag tagToBeAdded) ]
+                [ addIfNeeded (props.value /= "") [ onEnter (props.onAddTag props.value) ]
                 ]
     in
     viewContainer

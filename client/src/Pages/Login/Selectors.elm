@@ -32,14 +32,13 @@ loginErrorToString err =
 
 getValidationErrors : AppModel -> List ( LoginField, LoginValidationError )
 getValidationErrors model =
-    case model.login.showErrors of
-        True ->
-            validate loginValidator model.login
-                |> Result.map (always [])
-                |> Result.merge
+    if model.login.showErrors then
+        validate loginValidator model.login
+            |> Result.map (always [])
+            |> Result.merge
 
-        False ->
-            []
+    else
+        []
 
 
 getLoginRequestErrorText : AppModel -> String

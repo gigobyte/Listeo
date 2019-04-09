@@ -6,7 +6,6 @@ import Pages.CreatePlaylist.Api as Api
 import Pages.CreatePlaylist.Model exposing (Model, PlaylistPrivacy(..), PlaylistStyle(..))
 import Pages.CreatePlaylist.Validation exposing (makeCreatePlaylistRequestModel)
 import Session exposing (Session)
-import UI.TagInput exposing (tagValue)
 
 
 init : Model
@@ -22,17 +21,21 @@ init =
 
 
 update : Msg -> Model -> Session -> ( Model, Cmd Msg )
-update msg model { apiRoot, token } =
+update msg model session =
     case msg of
         PlaylistNameUpdated value ->
             ( { model | playlistName = value }, Cmd.none )
 
         PlaylistTagInputUpdated value ->
-            ( { model | playlistTagInput = String.trim value }, Cmd.none )
+            if String.endsWith "," value then
+                ( { model | playlistTagInput = String.trim value }, Cmd.none )
+
+            else
+                update (PlaylistTagAdded <| String.dropRight 1 value) model session
 
         PlaylistTagAdded tag ->
             ( { model
-                | playlistTags = List.uniqueBy tagValue (model.playlistTags ++ [ tag ])
+                | playlistTags = List.unique (model.playlistTags ++ [ tag ])
                 , playlistTagInput = ""
               }
             , Cmd.none
@@ -54,7 +57,7 @@ update msg model { apiRoot, token } =
         CreatePlaylistAttempted ->
             case makeCreatePlaylistRequestModel model of
                 Just request ->
-                    ( model, Api.createPlaylist apiRoot token request |> Cmd.map CreatePlaylist )
+                    ( model, Api.createPlaylist session.apiRoot session.token request |> Cmd.map CreatePlaylist )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )

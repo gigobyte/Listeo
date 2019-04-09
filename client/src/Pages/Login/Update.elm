@@ -24,7 +24,7 @@ port storeJwt : String -> Cmd msg
 
 
 update : Msg -> Model -> Session -> ( Model, Cmd Msg )
-update msg model { pushUrl, route, apiRoot } =
+update msg model session =
     case msg of
         LoginUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -35,7 +35,7 @@ update msg model { pushUrl, route, apiRoot } =
         LoginAttempted ->
             case Validation.makeLoginRequestModel model of
                 Just request ->
-                    ( model, Api.login apiRoot request |> Cmd.map Login )
+                    ( model, Api.login session.apiRoot request |> Cmd.map Login )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
@@ -43,8 +43,8 @@ update msg model { pushUrl, route, apiRoot } =
         Login ((Success (SuccessResponse { jwt })) as response) ->
             ( { model | loginResponse = response }
             , Cmd.batch
-                [ Api.fetchUser apiRoot (Token (Just jwt)) |> Cmd.map FetchUser
-                , pushUrl Route.Home
+                [ Api.fetchUser session.apiRoot (Token (Just jwt)) |> Cmd.map FetchUser
+                , session.pushUrl Route.Home
                 , storeJwt jwt
                 ]
             )
@@ -53,12 +53,11 @@ update msg model { pushUrl, route, apiRoot } =
             ( { model | loginResponse = response }, Cmd.none )
 
         UrlChanged _ ->
-            ( case route == Route.Login of
-                True ->
-                    init
+            ( if session.route == Route.Login then
+                init
 
-                False ->
-                    model
+              else
+                model
             , Cmd.none
             )
 

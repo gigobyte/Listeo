@@ -20,7 +20,7 @@ init =
 
 
 update : Msg -> Model -> Session -> ( Model, Cmd Msg )
-update msg model { pushUrl, route, apiRoot } =
+update msg model session =
     case msg of
         RegisterUsernameUpdated value ->
             ( { model | username = String.trim value }, Cmd.none )
@@ -31,7 +31,7 @@ update msg model { pushUrl, route, apiRoot } =
         RegisterAttempted ->
             case makeRegisterRequestModel model of
                 Just request ->
-                    ( model, Api.register apiRoot request |> Cmd.map Register )
+                    ( model, Api.register session.apiRoot request |> Cmd.map Register )
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
@@ -49,17 +49,17 @@ update msg model { pushUrl, route, apiRoot } =
                     ( newModel
                     , Cmd.batch
                         [ Api.login
-                            apiRoot
+                            session.apiRoot
                             { username = model.username
                             , password = model.password
                             }
                             |> Cmd.map Login
-                        , pushUrl Route.Home
+                        , session.pushUrl Route.Home
                         ]
                     )
 
         UrlChanged _ ->
-            ( if route == Route.Login then
+            ( if session.route == Route.Login then
                 init
 
               else

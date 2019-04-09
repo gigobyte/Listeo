@@ -1,11 +1,11 @@
 module UI.RadioButton exposing (view)
 
--- import UI.Colors exposing (gray300, white)
-
 import Css exposing (..)
+import Css.Global exposing (adjacentSiblings, children, typeSelector)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (checked, type_)
 import Html.Styled.Events exposing (onClick)
+import UI.Colors exposing (blue100)
 import Utils.Styles exposing (StyledElement)
 
 
@@ -16,36 +16,62 @@ type alias Props msg =
     }
 
 
+viewInput : StyledElement msg
+viewInput =
+    styled input
+        [ display none
+        ]
 
--- styledInput : StyledElement msg
--- styledInput =
---     styled input
---         [ position absolute
---         , left <| px -9999
---         ]
--- styledLabel : StyledElement msg
--- styledLabel =
---     styled label
---         [ displayFlex
---         , position relative
---         , paddingLeft <| px 28
---         , before
---             [ property "content" "''"
---             , position absolute
---             , left zero
---             , top zero
---             , width <| px 18
---             , height <| px 18
---             , borderRadius <| pct 100
---             , backgroundColor white
---             , border3 (px 1) solid gray300
---             ]
---         ]
+
+viewLabel : StyledElement msg
+viewLabel =
+    styled label
+        [ position relative
+        , display inlineBlock
+        , paddingLeft <| px 25
+        , height <| px 22
+        , children
+            [ typeSelector "input"
+                [ Css.checked
+                    [ adjacentSiblings
+                        [ typeSelector "span"
+                            [ after
+                                [ property "content" "''"
+                                , height <| px 10
+                                , width <| px 10
+                                , backgroundColor blue100
+                                , position absolute
+                                , borderRadius <| pct 50
+                                , left <| pct 50
+                                , top <| pct 50
+                                , transform <| translate2 (pct -50) (pct -50)
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+
+viewCircle : StyledElement msg
+viewCircle =
+    styled span
+        [ display inlineBlock
+        , width <| px 18
+        , height <| px 18
+        , position absolute
+        , left zero
+        , top <| px -3
+        , borderRadius <| pct 50
+        , border3 (px 2) solid blue100
+        ]
 
 
 view : Props msg -> StyledElement msg
 view props _ _ =
-    label []
-        [ input [ type_ "radio", checked props.isChecked, onClick props.onToggle ] []
-        , text props.label
+    viewLabel []
+        [ text props.label
+        , viewInput [ type_ "radio", checked props.isChecked, onClick props.onToggle ] []
+        , viewCircle [] []
         ]

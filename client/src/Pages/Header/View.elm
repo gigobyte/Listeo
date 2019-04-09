@@ -12,7 +12,7 @@ import UI.Colors exposing (blue200, crimson100, white)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
-import Utils.Styles exposing (StyledElement)
+import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 viewContainer : StyledElement msg
@@ -75,20 +75,18 @@ viewPublicNavItems =
 
 viewPrivateNavItems : User -> Bool -> List (Html Msg)
 viewPrivateNavItems user showAddPlaylistButton =
-    [ case showAddPlaylistButton of
-        True ->
-            viewAddButton
+    List.concat
+        [ addIfNeeded showAddPlaylistButton
+            [ viewAddButton
                 [ title "Add new playlist"
                 , attribute "role" "button"
                 , onClick AddPlaylistOverlayShown
                 ]
                 []
-
-        False ->
-            text ""
-    , viewNavItem { to = Route.Home } [] [ text user.username ]
-    , viewNavItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ]
-    ]
+            ]
+        , [ viewNavItem { to = Route.Home } [] [ text user.username ] ]
+        , [ viewNavItem { to = Route.Home } [ onClick Logout ] [ text "Logout" ] ]
+        ]
 
 
 type alias Props =

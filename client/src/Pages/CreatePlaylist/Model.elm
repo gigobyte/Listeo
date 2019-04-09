@@ -6,8 +6,6 @@ module Pages.CreatePlaylist.Model exposing
     , playlistStyleToString
     )
 
-import UI.TagInput exposing (Tag)
-
 
 type PlaylistPrivacy
     = Public
@@ -43,7 +41,7 @@ type alias Model =
     { playlistName : String
     , playlistDescription : String
     , playlistTagInput : String
-    , playlistTags : List Tag
+    , playlistTags : List String
     , playlistPrivacy : PlaylistPrivacy
     , playlistStyle : PlaylistStyle
     , showErrors : Bool

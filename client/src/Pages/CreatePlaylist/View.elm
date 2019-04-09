@@ -72,7 +72,7 @@ view props =
             []
             []
         , div []
-            [ text "Privacy"
+            [ span [] [text "Privacy"]
             , RadioButton.view
                 { isChecked = props.playlistPrivacy == Public
                 , label = "Public"
@@ -89,7 +89,7 @@ view props =
                 []
             ]
         , div []
-            [ text "Style"
+            [ span [] [text "Style"]
             , RadioButton.view
                 { isChecked = props.playlistStyle == Unordered
                 , label = "Unordered"

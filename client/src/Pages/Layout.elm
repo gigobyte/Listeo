@@ -9,7 +9,7 @@ import Pages.Header as Header
 import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import RemoteData exposing (RemoteData(..))
 import UI.Colors exposing (gray200)
-import Utils.Styles exposing (StyledDocument, StyledElement)
+import Utils.Styles exposing (StyledDocument, StyledElement, addIfNeeded)
 
 
 viewContainer : StyledElement msg
@@ -53,13 +53,8 @@ view page model =
                     (List.concat
                         [ [ global globalStyle
                           , Header.view model
-                          , case model.header.isOverlayShown of
-                                True ->
-                                    AddPlaylistModal.view
-
-                                False ->
-                                    text ""
                           ]
+                        , addIfNeeded model.header.isOverlayShown [ AddPlaylistModal.view ]
                         , page.body
                         ]
                     )

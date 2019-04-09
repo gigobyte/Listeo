@@ -62,7 +62,7 @@ update msg model session =
 
 
 updateAuth : Msg -> Model -> Session -> ( Model, Cmd Msg )
-updateAuth msg model { pushUrl, route, apiRoot } =
+updateAuth msg model session =
     case msg of
         Login (Success (SuccessResponse { jwt })) ->
             ( { model | jwt = Token (Just jwt) }, Cmd.none )
@@ -71,17 +71,17 @@ updateAuth msg model { pushUrl, route, apiRoot } =
             ( init emptyToken
             , Cmd.batch
                 [ removeJwt ()
-                , Api.fetchUser apiRoot emptyToken |> Cmd.map FetchUser
+                , Api.fetchUser session.apiRoot emptyToken |> Cmd.map FetchUser
                 ]
             )
 
         FetchUser ((Success user) as response) ->
-            ( { model | user = response }, pushAuthUrl pushUrl route (Just user) )
+            ( { model | user = response }, pushAuthUrl session.pushUrl session.route (Just user) )
 
         FetchUser ((Failure (Http.BadStatus status)) as response) ->
             ( { model | user = response }
             , if status == 401 then
-                pushAuthUrl pushUrl route Nothing
+                pushAuthUrl session.pushUrl session.route Nothing
 
               else
                 Cmd.none

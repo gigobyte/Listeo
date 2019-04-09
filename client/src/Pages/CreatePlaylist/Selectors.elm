@@ -7,8 +7,7 @@ module Pages.CreatePlaylist.Selectors exposing
     )
 
 import Model exposing (AppModel)
-import Pages.CreatePlaylist.Model exposing (PlaylistStyle, PlaylistPrivacy)
-import UI.TagInput exposing (Tag)
+import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle)
 
 
 getPlaylistName : AppModel -> String
@@ -21,7 +20,7 @@ getPlaylistTagInputValue model =
     model.createPlaylist.playlistTagInput
 
 
-getPlaylistTags : AppModel -> List Tag
+getPlaylistTags : AppModel -> List String
 getPlaylistTags model =
     model.createPlaylist.playlistTags
 
