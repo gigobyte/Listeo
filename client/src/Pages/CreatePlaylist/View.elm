@@ -29,11 +29,45 @@ viewTitle =
         ]
 
 
+viewSettingsColumn : StyledElement msg
+viewSettingsColumn =
+    styled div
+        [ displayFlex
+        , flexDirection column
+        , paddingRight <| px 15
+        , lastChild
+            [ paddingRight zero
+            ]
+        ]
+
+
+viewSettingLabel : StyledElement msg
+viewSettingLabel =
+    styled span
+        [ fontWeight bold
+        ]
+
+
+viewSettings : StyledElement msg
+viewSettings =
+    styled div
+        [ displayFlex
+        , padding2 (px 10) zero
+        ]
+
+
+viewSeparator : StyledElement msg
+viewSeparator =
+    styled div
+        [ height <| px 5
+        ]
+
+
 type alias Props =
     { playlistNameValue : String
     , playlistNameError : Maybe String
     , playlistTagInput : String
-    , playlistTags : List TagInput.Tag
+    , playlistTags : List String
     , playlistPrivacy : PlaylistPrivacy
     , playlistStyle : PlaylistStyle
     }
@@ -71,39 +105,46 @@ view props =
             }
             []
             []
-        , div []
-            [ span [] [text "Privacy"]
-            , RadioButton.view
-                { isChecked = props.playlistPrivacy == Public
-                , label = "Public"
-                , onToggle = PlaylistPrivacySelected Public
-                }
-                []
-                []
-            , RadioButton.view
-                { isChecked = props.playlistPrivacy == Private
-                , label = "Private"
-                , onToggle = PlaylistPrivacySelected Private
-                }
-                []
-                []
-            ]
-        , div []
-            [ span [] [text "Style"]
-            , RadioButton.view
-                { isChecked = props.playlistStyle == Unordered
-                , label = "Unordered"
-                , onToggle = PlaylistStyleSelected Unordered
-                }
-                []
-                []
-            , RadioButton.view
-                { isChecked = props.playlistStyle == Ranked
-                , label = "Ranked"
-                , onToggle = PlaylistStyleSelected Ranked
-                }
-                []
-                []
+        , viewSettings []
+            [ viewSettingsColumn []
+                [ viewSettingLabel [] [ text "Privacy" ]
+                , viewSeparator [] []
+                , viewSettingLabel [] [ text "Style" ]
+                ]
+            , viewSettingsColumn []
+                [ RadioButton.view
+                    { isChecked = props.playlistPrivacy == Public
+                    , label = "Public"
+                    , onToggle = PlaylistPrivacySelected Public
+                    }
+                    []
+                    []
+                , viewSeparator [] []
+                , RadioButton.view
+                    { isChecked = props.playlistStyle == Ranked
+                    , label = "Ranked"
+                    , onToggle = PlaylistStyleSelected Ranked
+                    }
+                    []
+                    []
+                ]
+            , viewSettingsColumn []
+                [ RadioButton.view
+                    { isChecked = props.playlistPrivacy == Private
+                    , label = "Private"
+                    , onToggle = PlaylistPrivacySelected Private
+                    }
+                    []
+                    []
+                , viewSeparator [] []
+                , RadioButton.view
+                    { isChecked = props.playlistStyle == Unordered
+                    , label = "Unordered"
+                    , onToggle = PlaylistStyleSelected Unordered
+                    }
+                    []
+                    []
+                ]
             ]
         , Button.view [ onClick CreatePlaylistAttempted ] [ text "Create" ]
         ]

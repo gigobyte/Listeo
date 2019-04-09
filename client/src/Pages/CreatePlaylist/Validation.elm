@@ -5,7 +5,6 @@ module Pages.CreatePlaylist.Validation exposing
 
 import Pages.CreatePlaylist.Api exposing (CreatePlaylistRequest)
 import Pages.CreatePlaylist.Model exposing (Model)
-import UI.TagInput exposing (tagValue)
 import Validate exposing (Validator, fromValid, ifBlank, validate)
 
 
@@ -32,7 +31,7 @@ makeCreatePlaylistRequestModel model =
             (\validatedModel ->
                 { name = validatedModel.playlistName
                 , description = validatedModel.playlistDescription
-                , tags = List.map tagValue validatedModel.playlistTags
+                , tags = validatedModel.playlistTags
                 , privacy = validatedModel.playlistPrivacy
                 , style = validatedModel.playlistStyle
                 }
