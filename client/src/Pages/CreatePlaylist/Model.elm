@@ -2,9 +2,11 @@ module Pages.CreatePlaylist.Model exposing
     ( Model
     , PlaylistPrivacy(..)
     , PlaylistStyle(..)
-    , playlistPrivacyToString
-    , playlistStyleToString
+    , playlistPrivacyEnum
+    , playlistStyleEnum
     )
+
+import Enum exposing (Enum)
 
 
 type PlaylistPrivacy
@@ -12,14 +14,12 @@ type PlaylistPrivacy
     | Private
 
 
-playlistPrivacyToString : PlaylistPrivacy -> String
-playlistPrivacyToString privacy =
-    case privacy of
-        Public ->
-            "Public"
-
-        Private ->
-            "Private"
+playlistPrivacyEnum : Enum PlaylistPrivacy
+playlistPrivacyEnum =
+    Enum.create
+        [ ( "Public", Public )
+        , ( "Private", Private )
+        ]
 
 
 type PlaylistStyle
@@ -27,14 +27,12 @@ type PlaylistStyle
     | Ranked
 
 
-playlistStyleToString : PlaylistStyle -> String
-playlistStyleToString style =
-    case style of
-        Unordered ->
-            "Unordered"
-
-        Ranked ->
-            "Ranked"
+playlistStyleEnum : Enum PlaylistStyle
+playlistStyleEnum =
+    Enum.create
+        [ ( "Unordered", Unordered )
+        , ( "Ranked", Ranked )
+        ]
 
 
 type alias Model =

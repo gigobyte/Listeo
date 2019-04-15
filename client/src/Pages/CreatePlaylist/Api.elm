@@ -8,7 +8,7 @@ import Http exposing (expectJson)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
-import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle, playlistPrivacyToString, playlistStyleToString)
+import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle, playlistPrivacyEnum, playlistStyleEnum)
 import RemoteData exposing (WebData)
 import Utils.Fetch as Fetch exposing (ApiRoot, Token)
 
@@ -51,8 +51,8 @@ createPlaylistRequestEncoder req =
         [ ( "name", Encode.string req.name )
         , ( "description", Encode.string req.description )
         , ( "tags", Encode.list Encode.string req.tags )
-        , ( "privacy", Encode.string <| playlistPrivacyToString req.privacy )
-        , ( "style", Encode.string <| playlistStyleToString req.style )
+        , ( "privacy", playlistPrivacyEnum.encode req.privacy )
+        , ( "style", playlistStyleEnum.encode req.style )
         ]
 
 
