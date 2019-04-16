@@ -3,31 +3,27 @@ module Feature.Auth.AuthService
   )
 where
 
-import Protolude hiding (drop)
-import Data.Text.Lazy (drop)
+import Protolude
 import Web.Scotty.Trans (ActionT)
-import Web.Scotty.Trans as ScottyT
+import Web.Scotty.Trans (header, status, finish)
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status
 import Feature.User.UserRepoClass (UserRepo, findUser)
 import Feature.User.User (User)
 import Infrastructure.Utils.Maybe (liftMaybe)
-import qualified Web.JWT as JWT
+import qualified Infrastructure.Utils.JWT as JWT
 
 requireUser :: (UserRepo m) => ActionT LText m User
 requireUser = do
-  maybeAuthHeader <- ScottyT.header "Authorization"
+  maybeAuthHeader <- header "Authorization"
 
   maybeUser       <- lift $ runMaybeT $ do
-    authHeader    <- liftMaybe maybeAuthHeader
-    unverifiedJwt <- liftMaybe $ JWT.decode $ toStrict $ drop 7 $ authHeader
-    subject       <- liftMaybe $ JWT.sub $ JWT.claims unverifiedJwt
-    user          <- MaybeT $ findUser $ JWT.stringOrURIToText subject
-
-    return user
+    authHeader <- liftMaybe maybeAuthHeader
+    subject    <- liftMaybe $ JWT.subjectFromHeader authHeader
+    MaybeT $ findUser subject
 
   case maybeUser of
     Just u  -> pure u
     Nothing -> do
-      ScottyT.status status401
-      ScottyT.finish
+      status status401
+      finish

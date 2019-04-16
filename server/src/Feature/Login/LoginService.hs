@@ -21,11 +21,9 @@ import qualified Web.JWT as JWT
 
 login :: UserRepo m => LByteString -> m (Either (AppError LoginError) Text)
 login rawBody = runExceptT $ do
-  body     <- liftEither $ parseBody rawBody
-  user     <- ExceptT $ findUserByCredentials body
-  jwtToken <- return $ generateJwtToken user
-
-  return jwtToken
+  body <- liftEither $ parseBody rawBody
+  user <- ExceptT $ findUserByCredentials body
+  return $ generateJwtToken user
 
 parseBody :: LByteString -> Either (AppError LoginError) LoginBody
 parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
@@ -33,25 +31,21 @@ parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
 findUserByCredentials
   :: UserRepo m => LoginBody -> m (Either (AppError LoginError) User)
 findUserByCredentials req = do
-  userInDb <- findUser (LoginBody.username req)
+  userInDb <- mfilter isPasswordValid <$> findUser (LoginBody.username req)
 
-  return
-    $ maybeToRight (DomainError UserNotFound)
-    $ mfilter isPasswordValid
-    $ userInDb
+  return $ maybeToRight (DomainError UserNotFound) $ userInDb
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =
     Crypto.validate (User.password user) (LoginBody.password req)
 
 generateJwtToken :: User -> Text
-generateJwtToken user =
-  let
-    cs = JWT.def
-      { JWT.iss                = JWT.stringOrURI "listeo"
-      , JWT.sub                = JWT.stringOrURI (User.username user)
-      , JWT.unregisteredClaims = Map.fromList
-        [("http://localhost:1234", (Aeson.Bool True))]
-      }
-    key = JWT.secret Secrets.jwtSecret
-  in JWT.encodeSigned JWT.HS256 key cs
+generateJwtToken user = JWT.encodeSigned JWT.HS256 key cs
+ where
+  cs = JWT.def
+    { JWT.iss                = JWT.stringOrURI "listeo"
+    , JWT.sub                = JWT.stringOrURI (User.username user)
+    , JWT.unregisteredClaims = Map.fromList
+      [("http://localhost:1234", (Aeson.Bool True))]
+    }
+  key = JWT.secret Secrets.jwtSecret
