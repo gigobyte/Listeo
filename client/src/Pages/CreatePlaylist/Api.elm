@@ -1,15 +1,17 @@
 module Pages.CreatePlaylist.Api exposing
     ( CreatePlaylistRequest
     , CreatePlaylistResponse
+    , CreatePlaylistResponseError(..)
     , createPlaylist
     )
 
-import Http exposing (expectJson)
+import Enum exposing (Enum)
+import Http
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle, playlistPrivacyEnum, playlistStyleEnum)
-import RemoteData exposing (WebData)
+import Utils.ErrorResponse exposing (ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot, Token)
 
 
@@ -22,26 +24,31 @@ type alias CreatePlaylistRequest =
     }
 
 
+type alias CreatePlaylistResponse =
+    { playlistId : String }
+
+
 type CreatePlaylistResponseError
-    = ServerError
+    = InvalidRequest
+    | ValidationFailed
 
 
-type CreatePlaylistResponse
-    = ErrorResponse { errorDescription : CreatePlaylistResponseError }
-    | SuccessResponse { playlistId : String }
+createPlaylistResponseErrorEnum : Enum CreatePlaylistResponseError
+createPlaylistResponseErrorEnum =
+    Enum.create
+        [ ( "InvalidRequest", InvalidRequest )
+        , ( "ValidationFailed", ValidationFailed )
+        ]
 
 
-createPlaylist : ApiRoot -> Token -> CreatePlaylistRequest -> Cmd (WebData CreatePlaylistResponse)
+createPlaylist : ApiRoot -> Token -> CreatePlaylistRequest -> Cmd (ResponseData CreatePlaylistResponseError CreatePlaylistResponse)
 createPlaylist apiRoot token req =
     Fetch.postWithAuth
         { url = Fetch.createPlaylist apiRoot
         , token = token
         , body = req |> createPlaylistRequestEncoder |> Http.jsonBody
         , expect =
-            expectJson RemoteData.fromResult
-                (Decode.oneOf
-                    [ successResponseDecoder, errorResponseDecoder ]
-                )
+            expectJsonWithError createPlaylistResponseErrorEnum.decoder createPlaylistResponseDecoder
         }
 
 
@@ -56,26 +63,7 @@ createPlaylistRequestEncoder req =
         ]
 
 
-successResponseDecoder : Decoder CreatePlaylistResponse
-successResponseDecoder =
+createPlaylistResponseDecoder : Decoder CreatePlaylistResponse
+createPlaylistResponseDecoder =
     Decode.succeed (\x -> { playlistId = x })
         |> required "playlistId" string
-        |> Decode.andThen (Decode.succeed << SuccessResponse)
-
-
-errorResponseDecoder : Decoder CreatePlaylistResponse
-errorResponseDecoder =
-    Decode.succeed (\x -> { errorDescription = x })
-        |> required "errorDescription" createPlaylistErrorDecoder
-        |> Decode.andThen (Decode.succeed << ErrorResponse)
-
-
-createPlaylistErrorDecoder : Decoder CreatePlaylistResponseError
-createPlaylistErrorDecoder =
-    Decode.string
-        |> Decode.andThen
-            (\str ->
-                case str of
-                    _ ->
-                        Decode.succeed ServerError
-            )

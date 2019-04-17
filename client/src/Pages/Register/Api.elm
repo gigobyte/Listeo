@@ -1,24 +1,23 @@
 module Pages.Register.Api exposing
     ( RegisterRequest
-    , RegisterResponse
     , RegisterResponseError(..)
     , register
     )
 
-import Http exposing (expectJson)
-import Json.Decode as Decode exposing (Decoder, string)
-import Json.Decode.Pipeline exposing (optional)
+import Enum exposing (Enum)
+import Http
+import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import RemoteData as RemoteData exposing (WebData)
+import Utils.ErrorResponse exposing (ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot)
 
 
-register : ApiRoot -> RegisterRequest -> Cmd (WebData RegisterResponse)
+register : ApiRoot -> RegisterRequest -> Cmd (ResponseData RegisterResponseError ())
 register apiRoot model =
     Fetch.post
         { url = Fetch.register apiRoot
         , body = model |> registerRequestEncoder |> Http.jsonBody
-        , expect = expectJson RemoteData.fromResult registerResponseDecoder
+        , expect = expectJsonWithError registerResponseErrorEnum.decoder (Decode.succeed ())
         }
 
 
@@ -37,35 +36,17 @@ registerRequestEncoder req =
 
 
 type RegisterResponseError
-    = ValidationFailed
-    | UserAlreadyExists
-    | ServerError
+    = UserAlreadyExists
+    | InvalidRequest
+    | PasswordHashingFailed
+    | ValidationFailed
 
 
-type alias RegisterResponse =
-    { errorDescription : Maybe RegisterResponseError
-    }
-
-
-registerResponseDecoder : Decoder RegisterResponse
-registerResponseDecoder =
-    Decode.succeed RegisterResponse
-        |> optional "errorDescription"
-            (Decode.string
-                |> Decode.andThen
-                    (\str ->
-                        case str of
-                            "ValidationFailed" ->
-                                Decode.succeed <| Just ValidationFailed
-
-                            "UserAlreadyExists" ->
-                                Decode.succeed <| Just UserAlreadyExists
-
-                            "ServerError" ->
-                                Decode.succeed <| Just ServerError
-
-                            _ ->
-                                Decode.succeed Nothing
-                    )
-            )
-            Nothing
+registerResponseErrorEnum : Enum RegisterResponseError
+registerResponseErrorEnum =
+    Enum.create
+        [ ( "UserAlreadyExists", UserAlreadyExists )
+        , ( "InvalidRequest", InvalidRequest )
+        , ( "PasswordHashingFailed", PasswordHashingFailed )
+        , ( "ValidationFailed", ValidationFailed )
+        ]

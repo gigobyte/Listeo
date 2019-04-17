@@ -6,6 +6,7 @@ where
 import Protolude
 import Infrastructure.Utils.Id (Id(..))
 import Infrastructure.AppError
+import Network.HTTP.Types.Status (badRequest400)
 import Feature.Playlist.Playlist (Playlist)
 import Feature.Playlist.CreatePlaylist.CreatePlaylistResponse
 import Feature.Playlist.CreatePlaylist.CreatePlaylistError (CreatePlaylistError)
@@ -15,7 +16,9 @@ import qualified Web.Scotty.Trans as ScottyT
 
 mkCreatePlaylistHttpResult
   :: Monad m => Either CreatePlaylistError (Id Playlist) -> ActionT LText m ()
-mkCreatePlaylistHttpResult (Left err) = ScottyT.json $ ErrorResponse err
+mkCreatePlaylistHttpResult (Left err) = do
+  ScottyT.status badRequest400
+  ScottyT.json $ ErrorResponse err
 mkCreatePlaylistHttpResult (Right id) =
   ScottyT.json $ CreatePlaylistResponse (show $ unId id)
 

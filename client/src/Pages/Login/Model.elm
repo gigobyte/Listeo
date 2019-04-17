@@ -1,12 +1,12 @@
 module Pages.Login.Model exposing (Model)
 
-import Pages.Login.Api exposing (LoginResponse)
-import RemoteData exposing (WebData)
+import Pages.Login.Api exposing (LoginResponse, LoginResponseError)
+import Utils.ErrorResponse exposing (ResponseData)
 
 
 type alias Model =
     { username : String
     , password : String
     , showErrors : Bool
-    , loginResponse : WebData LoginResponse
+    , loginResponse : ResponseData LoginResponseError LoginResponse
     }

@@ -7,7 +7,7 @@ import Protolude
 import Web.Scotty.Trans (ActionT)
 import Web.Scotty.Trans (header, status, finish)
 import Control.Monad.Trans.Maybe
-import Network.HTTP.Types.Status
+import Network.HTTP.Types.Status (status401)
 import Feature.User.UserRepoClass (UserRepo, findUser)
 import Feature.User.User (User)
 import Infrastructure.Utils.Maybe (liftMaybe)

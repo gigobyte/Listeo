@@ -1,24 +1,25 @@
 module Pages.Login.Api exposing
     ( LoginRequest
-    , LoginResponse(..)
+    , LoginResponse
     , LoginResponseError(..)
     , login
     )
 
-import Http exposing (expectJson)
-import Json.Decode as Decode exposing (Decoder, string)
+import Enum exposing (Enum)
+import Http
+import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
-import RemoteData as RemoteData exposing (WebData)
+import Utils.ErrorResponse as ErrorResponse exposing (HttpError, ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot)
 
 
-login : ApiRoot -> LoginRequest -> Cmd (WebData LoginResponse)
+login : ApiRoot -> LoginRequest -> Cmd (ResponseData LoginResponseError LoginResponse)
 login apiRoot model =
     Fetch.post
         { url = Fetch.login apiRoot
         , expect =
-            expectJson RemoteData.fromResult loginResponseDecoder
+            expectJsonWithError loginResponseErrorEnum.decoder loginResponseDecoder
         , body = model |> loginRequestEncoder |> Http.jsonBody
         }
 
@@ -38,43 +39,25 @@ loginRequestEncoder req =
 
 
 type LoginResponseError
-    = ValidationFailed
-    | UserNotFound
+    = UserNotFound
+    | InvalidRequest
     | ServerError
 
 
-type LoginResponse
-    = ErrorResponse { errorDescription : LoginResponseError }
-    | SuccessResponse { jwt : String }
+loginResponseErrorEnum : Enum LoginResponseError
+loginResponseErrorEnum =
+    Enum.create
+        [ ( "UserNotFound", UserNotFound )
+        , ( "InvalidRequest", InvalidRequest )
+        , ( "ServerError", ServerError )
+        ]
+
+
+type alias LoginResponse =
+    { jwt : String }
 
 
 loginResponseDecoder : Decoder LoginResponse
 loginResponseDecoder =
-    Decode.oneOf
-        [ -- Success
-          Decode.succeed (\x -> { jwt = x })
-            |> required "jwt" Decode.string
-            |> Decode.andThen (Decode.succeed << SuccessResponse)
-
-        -- Error
-        , Decode.succeed (\x -> { errorDescription = x })
-            |> required "errorDescription"
-                (Decode.string
-                    |> Decode.andThen
-                        (\str ->
-                            case str of
-                                "ValidationFailed" ->
-                                    Decode.succeed ValidationFailed
-
-                                "UserNotFound" ->
-                                    Decode.succeed UserNotFound
-
-                                "ServerError" ->
-                                    Decode.succeed ServerError
-
-                                _ ->
-                                    Decode.succeed ServerError
-                        )
-                )
-            |> Decode.andThen (Decode.succeed << ErrorResponse)
-        ]
+    Decode.succeed (\x -> { jwt = x })
+        |> required "jwt" Decode.string

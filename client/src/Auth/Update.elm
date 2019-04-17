@@ -8,13 +8,12 @@ port module Auth.Update exposing
 
 import Auth.Api as Api exposing (User)
 import Auth.Model exposing (Model)
-import Http
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
-import Pages.Login.Api exposing (LoginResponse(..))
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import Session exposing (Session)
+import Utils.ErrorResponse exposing (HttpError(..))
 import Utils.Fetch exposing (Token(..), emptyToken)
 
 
@@ -64,7 +63,7 @@ update msg model session =
 updateAuth : Msg -> Model -> Session -> ( Model, Cmd Msg )
 updateAuth msg model session =
     case msg of
-        Login (Success (SuccessResponse { jwt })) ->
+        Login (Success { jwt }) ->
             ( { model | jwt = Token (Just jwt) }, Cmd.none )
 
         Logout ->
@@ -78,13 +77,9 @@ updateAuth msg model session =
         FetchUser ((Success user) as response) ->
             ( { model | user = response }, pushAuthUrl session.pushUrl session.route (Just user) )
 
-        FetchUser ((Failure (Http.BadStatus status)) as response) ->
+        FetchUser ((Failure Unauthorized) as response) ->
             ( { model | user = response }
-            , if status == 401 then
-                pushAuthUrl session.pushUrl session.route Nothing
-
-              else
-                Cmd.none
+            , pushAuthUrl session.pushUrl session.route Nothing
             )
 
         FetchUser response ->

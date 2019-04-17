@@ -2,7 +2,7 @@ port module Pages.Login.Update exposing (init, update)
 
 import Auth.Api as Api
 import Msg exposing (Msg(..))
-import Pages.Login.Api as Api exposing (LoginResponse(..))
+import Pages.Login.Api as Api exposing (LoginResponse)
 import Pages.Login.Model exposing (Model)
 import Pages.Login.Validation as Validation
 import RemoteData exposing (RemoteData(..))
@@ -40,7 +40,7 @@ update msg model session =
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
 
-        Login ((Success (SuccessResponse { jwt })) as response) ->
+        Login ((Success { jwt }) as response) ->
             ( { model | loginResponse = response }
             , Cmd.batch
                 [ Api.fetchUser session.apiRoot (Token (Just jwt)) |> Cmd.map FetchUser

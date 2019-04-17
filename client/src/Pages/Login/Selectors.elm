@@ -8,11 +8,12 @@ module Pages.Login.Selectors exposing
     , isSubmitButtonDisabled
     )
 
-import Pages.Login.Api as Api exposing (LoginResponse(..), LoginResponseError(..))
-import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..), loginValidator)
+import Pages.Login.Api as Api exposing (LoginResponse, LoginResponseError(..))
 import Pages.Login.Model as Login
+import Pages.Login.Validation as Validation exposing (LoginField(..), LoginValidationError(..), loginValidator)
 import RemoteData exposing (RemoteData(..), isLoading)
 import Result.Extra as Result
+import Utils.ErrorResponse exposing (HttpError(..))
 import Utils.Validation exposing (getErrorForField)
 import Validate exposing (validate)
 
@@ -23,11 +24,8 @@ loginErrorToString err =
         UserNotFound ->
             "User not found"
 
-        ServerError ->
+        _ ->
             "Something went wrong"
-
-        ValidationFailed ->
-            ""
 
 
 getValidationErrors : Login.Model -> List ( LoginField, LoginValidationError )
@@ -44,13 +42,8 @@ getValidationErrors model =
 getLoginRequestErrorText : Login.Model -> String
 getLoginRequestErrorText model =
     case model.loginResponse of
-        Success res ->
-            case res of
-                ErrorResponse { errorDescription } ->
-                    loginErrorToString errorDescription
-
-                _ ->
-                    ""
+        Failure (BadResponse error) ->
+            loginErrorToString error
 
         _ ->
             ""

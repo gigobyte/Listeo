@@ -36,27 +36,21 @@ update msg model session =
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
 
-        Register ((Success { errorDescription }) as response) ->
-            let
-                newModel =
-                    { model | registerResponse = response }
-            in
-            case errorDescription of
-                Just _ ->
-                    ( newModel, Cmd.none )
+        Register ((Success ()) as response) ->
+            ( { model | registerResponse = response }
+            , Cmd.batch
+                [ Api.login
+                    session.apiRoot
+                    { username = model.username
+                    , password = model.password
+                    }
+                    |> Cmd.map Login
+                , session.pushUrl Route.Home
+                ]
+            )
 
-                Nothing ->
-                    ( newModel
-                    , Cmd.batch
-                        [ Api.login
-                            session.apiRoot
-                            { username = model.username
-                            , password = model.password
-                            }
-                            |> Cmd.map Login
-                        , session.pushUrl Route.Home
-                        ]
-                    )
+        Register response ->
+            ( { model | registerResponse = response }, Cmd.none )
 
         UrlChanged _ ->
             ( if session.route == Route.Login then

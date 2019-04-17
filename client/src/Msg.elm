@@ -2,30 +2,30 @@ module Msg exposing (Msg(..))
 
 import Auth.Api exposing (User)
 import Browser exposing (UrlRequest)
-import Pages.CreatePlaylist.Api exposing (CreatePlaylistResponse)
+import Pages.CreatePlaylist.Api exposing (CreatePlaylistResponse, CreatePlaylistResponseError)
 import Pages.CreatePlaylist.Model exposing (PlaylistPrivacy, PlaylistStyle)
-import Pages.Login.Api exposing (LoginResponse)
-import Pages.Register.Api exposing (RegisterResponse)
-import RemoteData exposing (WebData)
+import Pages.Login.Api exposing (LoginResponse, LoginResponseError)
+import Pages.Register.Api exposing (RegisterResponseError)
 import Url exposing (Url)
+import Utils.ErrorResponse exposing (HttpError, ResponseData)
 
 
 type Msg
     = LinkClicked UrlRequest
     | UrlChanged Url
       -- General
-    | FetchUser (WebData User)
+    | FetchUser (ResponseData () User)
     | Logout
       -- Login
     | LoginUsernameUpdated String
     | LoginPasswordUpdated String
     | LoginAttempted
-    | Login (WebData LoginResponse)
+    | Login (ResponseData LoginResponseError LoginResponse)
       -- Register
     | RegisterUsernameUpdated String
     | RegisterPasswordUpdated String
     | RegisterAttempted
-    | Register (WebData RegisterResponse)
+    | Register (ResponseData RegisterResponseError ())
       -- Add playlist
     | AddPlaylistOverlayShown
     | CreateNewPlaylistSelected
@@ -38,4 +38,4 @@ type Msg
     | PlaylistPrivacySelected PlaylistPrivacy
     | PlaylistStyleSelected PlaylistStyle
     | CreatePlaylistAttempted
-    | CreatePlaylist (WebData CreatePlaylistResponse)
+    | CreatePlaylist (ResponseData CreatePlaylistResponseError CreatePlaylistResponse)
