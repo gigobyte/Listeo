@@ -15,7 +15,7 @@ view : AppModel -> Html Msg
 view model =
     View.view
         { showAddPlaylistButton = Selectors.shouldShowAddPlaylistButton model
-        , user = Selectors.getUser model
+        , user = Selectors.getUser model.auth
         }
 
 

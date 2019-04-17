@@ -15,12 +15,12 @@ view model =
     { title = "Create playlist - Listeo"
     , body =
         [ View.view
-            { playlistNameValue = Selectors.getPlaylistName model
+            { playlistNameValue = Selectors.getPlaylistName model.createPlaylist
             , playlistNameError = Nothing
-            , playlistTagInput = Selectors.getPlaylistTagInputValue model
-            , playlistTags = Selectors.getPlaylistTags model
-            , playlistPrivacy = Selectors.getPrivacyOption model
-            , playlistStyle = Selectors.getPlaylistStyle model
+            , playlistTagInput = Selectors.getPlaylistTagInputValue model.createPlaylist
+            , playlistTags = Selectors.getPlaylistTags model.createPlaylist
+            , playlistPrivacy = Selectors.getPrivacyOption model.createPlaylist
+            , playlistStyle = Selectors.getPlaylistStyle model.createPlaylist
             }
         ]
     }

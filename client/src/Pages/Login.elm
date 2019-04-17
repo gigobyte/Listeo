@@ -15,12 +15,12 @@ view model =
     { title = "Login - Listeo"
     , body =
         [ View.view
-            { passwordError = Selectors.getPasswordError model
-            , passwordValue = Selectors.getPasswordValue model
-            , usernameError = Selectors.getUsernameError model
-            , usernameValue = Selectors.getUsernameValue model
-            , loginRequestErrorText = Selectors.getLoginRequestErrorText model
-            , isSubmitButtonDisabled = Selectors.isSubmitButtonDisabled model
+            { passwordError = Selectors.getPasswordError model.login
+            , passwordValue = Selectors.getPasswordValue model.login
+            , usernameError = Selectors.getUsernameError model.login
+            , usernameValue = Selectors.getUsernameValue model.login
+            , loginRequestErrorText = Selectors.getLoginRequestErrorText model.login
+            , isSubmitButtonDisabled = Selectors.isSubmitButtonDisabled model.login
             }
         ]
     }

@@ -1,6 +1,5 @@
 module Pages.Register exposing (init, update, view)
 
-import Html.Styled exposing (Html)
 import Model exposing (AppModel)
 import Msg exposing (Msg)
 import Pages.Register.Model exposing (Model)
@@ -16,12 +15,12 @@ view model =
     { title = "Register - Listeo"
     , body =
         [ View.view
-            { passwordError = Selectors.getPasswordError model
-            , passwordValue = Selectors.getPasswordValue model
-            , usernameError = Selectors.getUsernameError model
-            , usernameValue = Selectors.getUsernameValue model
-            , registerRequestErrorText = Selectors.getRegisterRequestErrorText model
-            , isSubmitButtonDisabled = Selectors.isSubmitButtonDisabled model
+            { passwordError = Selectors.getPasswordError model.register
+            , passwordValue = Selectors.getPasswordValue model.register
+            , usernameError = Selectors.getUsernameError model.register
+            , usernameValue = Selectors.getUsernameValue model.register
+            , registerRequestErrorText = Selectors.getRegisterRequestErrorText model.register
+            , isSubmitButtonDisabled = Selectors.isSubmitButtonDisabled model.register
             }
         ]
     }

@@ -60,7 +60,7 @@ mainUpdate msg model =
                     , Auth.pushAuthUrl
                         (\route -> Route.pushUrl model.key route)
                         (Route.parseUrl url)
-                        (Selectors.getUser model)
+                        (Selectors.getUser model.auth)
                     )
 
                 Browser.External href ->
