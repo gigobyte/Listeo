@@ -8,7 +8,6 @@ import Feature.User.UserDTO (UserDTO(..))
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import Infrastructure.MonadCrypto
-import Infrastructure.AppError
 import Feature.Register.RegisterError (RegisterError(..))
 import Feature.Register.RegisterBody (RegisterBody)
 import qualified Feature.Register.RegisterBody as RegisterBody
@@ -18,27 +17,23 @@ import qualified Data.Text as T
 import Data.Aeson (decode)
 
 register
-  :: (UserRepo m, MonadCrypto m)
-  => LByteString
-  -> m (Either (AppError RegisterError) ())
+  :: (UserRepo m, MonadCrypto m) => LByteString -> m (Either RegisterError ())
 register rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
   user <- liftEither $ mkUserDTO body
   ExceptT $ tryToInsertUser user
 
-parseBody :: LByteString -> Either (AppError RegisterError) RegisterBody
+parseBody :: LByteString -> Either RegisterError RegisterBody
 parseBody body = maybeToRight InvalidRequest (decode body)
 
 tryToInsertUser
-  :: (UserRepo m, MonadCrypto m)
-  => UserDTO
-  -> m (Either (AppError RegisterError) ())
+  :: (UserRepo m, MonadCrypto m) => UserDTO -> m (Either RegisterError ())
 tryToInsertUser user = runExceptT $ do
   userExists <- lift $ doesUserAlreadyExist (UserDTO.username user)
 
-  when userExists $ throwE (DomainError UserAlreadyExists)
+  when userExists $ throwE UserAlreadyExists
 
-  maybeToExceptT ServerError $ do
+  maybeToExceptT PasswordHashingFailed $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
     lift $ insertUser updatedUser
 
@@ -47,7 +42,7 @@ doesUserAlreadyExist username = do
   userInDB <- findUser username
   return $ isJust userInDB
 
-mkUserDTO :: RegisterBody -> Either (AppError RegisterError) UserDTO
+mkUserDTO :: RegisterBody -> Either RegisterError UserDTO
 mkUserDTO req =
   maybeToRight ValidationFailed
     $   UserDTO

@@ -1,12 +1,11 @@
 module Main exposing (main)
 
 import Auth.Api as Api
-import Auth.Selectors as Selectors
+import Auth.Selectors as Selector
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
-import Html.Styled exposing (toUnstyled)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Pages.Colors as Colors
@@ -60,7 +59,7 @@ mainUpdate msg model =
                     , Auth.pushAuthUrl
                         (\route -> Route.pushUrl model.key route)
                         (Route.parseUrl url)
-                        (Selectors.getUser model.auth)
+                        (Selector.getUser model.auth)
                     )
 
                 Browser.External href ->

@@ -3,9 +3,9 @@ module Feature.Playlist.CreatePlaylist.CreatePlaylistService where
 import Protolude
 import Data.Aeson (decode)
 import Control.Monad.Except (liftEither)
-import Infrastructure.AppError
 import Infrastructure.Utils.Id (Id)
 import Feature.Playlist.CreatePlaylist.CreatePlaylistBody (CreatePlaylistBody)
+import Feature.Playlist.CreatePlaylist.CreatePlaylistError
 import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistBody as CreatePlaylistBody
 import Feature.Playlist.Playlist (Playlist)
 import Feature.Playlist.PlaylistDTO (PlaylistDTO(..))
@@ -17,7 +17,7 @@ import qualified Data.Text as T
 createPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m)
   => LByteString
-  -> m (Either GeneralAppError (Id Playlist))
+  -> m (Either CreatePlaylistError (Id Playlist))
 createPlaylist rawBody = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
   playlist           <- liftEither $ mkPlaylistDTO body
@@ -29,10 +29,10 @@ createPlaylist rawBody = runExceptT $ do
 
   return insertedPlaylistId
 
-parseBody :: LByteString -> Either GeneralAppError CreatePlaylistBody
+parseBody :: LByteString -> Either CreatePlaylistError CreatePlaylistBody
 parseBody body = maybeToRight InvalidRequest (decode body)
 
-mkPlaylistDTO :: CreatePlaylistBody -> Either GeneralAppError PlaylistDTO
+mkPlaylistDTO :: CreatePlaylistBody -> Either CreatePlaylistError PlaylistDTO
 mkPlaylistDTO req =
   maybeToRight ValidationFailed
     $   PlaylistDTO
@@ -40,7 +40,7 @@ mkPlaylistDTO req =
     <*> pure (CreatePlaylistBody.style req)
     <*> pure (CreatePlaylistBody.privacy req)
 
-mkPlaylistTagDTO :: Text -> Either GeneralAppError PlaylistTagDTO
+mkPlaylistTagDTO :: Text -> Either CreatePlaylistError PlaylistTagDTO
 mkPlaylistTagDTO tagName =
   maybeToRight ValidationFailed
     $   PlaylistTagDTO

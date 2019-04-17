@@ -8,5 +8,8 @@ instance ToJSON RegisterError where
     toJSON = genericToJSON (defaultOptions { tagSingleConstructors = True })
 data RegisterError
     = UserAlreadyExists
+    | InvalidRequest
+    | PasswordHashingFailed
+    | ValidationFailed
     deriving Generic
 

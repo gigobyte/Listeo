@@ -1,11 +1,10 @@
 module Feature.Login.LoginError where
 
 import Protolude
-import Data.Aeson
-  (ToJSON, toJSON, genericToJSON, defaultOptions, tagSingleConstructors)
+import Data.Aeson (ToJSON)
 
-instance ToJSON LoginError where
-    toJSON = genericToJSON (defaultOptions { tagSingleConstructors = True })
+instance ToJSON LoginError
 data LoginError
     = UserNotFound
+    | InvalidRequest
     deriving Generic

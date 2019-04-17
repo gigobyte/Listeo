@@ -4,16 +4,15 @@ module Feature.Login.LoginHTTP
 where
 
 import Protolude
-import Infrastructure.AppError (AppError)
+import Infrastructure.AppError (ErrorResponse(..))
 import Feature.Login.LoginError (LoginError)
 import Feature.Login.LoginResponse (LoginResponse(..))
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Web.Scotty.Trans (post, body, json, ScottyT, ActionT)
 
-toHttpResult
-  :: Monad m => Either (AppError LoginError) Text -> ActionT LText m ()
+toHttpResult :: Monad m => Either LoginError Text -> ActionT LText m ()
 toHttpResult (Left  error   ) = json $ ErrorResponse error
-toHttpResult (Right jwtToken) = json $ SuccessResponse jwtToken
+toHttpResult (Right jwtToken) = json $ LoginResponse jwtToken
 
 routes :: (LoginService m, MonadIO m) => ScottyT LText m ()
 routes = do
