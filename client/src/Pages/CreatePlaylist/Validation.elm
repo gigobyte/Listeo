@@ -1,5 +1,8 @@
 module Pages.CreatePlaylist.Validation exposing
-    ( createPlaylistValidator
+    ( CreatePlaylistField(..)
+    , CreatePlaylistValidationError(..)
+    , createPlaylistValidator
+    , errToString
     , makeCreatePlaylistRequestModel
     )
 
@@ -14,6 +17,13 @@ type CreatePlaylistValidationError
 
 type CreatePlaylistField
     = PlaylistName
+
+
+errToString : CreatePlaylistValidationError -> String
+errToString error =
+    case error of
+        PlaylistNameMissing ->
+            "Please enter the name of the playlist"
 
 
 createPlaylistValidator : Validator ( CreatePlaylistField, CreatePlaylistValidationError ) Model

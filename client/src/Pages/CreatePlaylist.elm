@@ -16,7 +16,7 @@ view model =
     , body =
         [ CreatePlaylist.view
             { playlistNameValue = Selector.getPlaylistName model.createPlaylist
-            , playlistNameError = Nothing
+            , playlistNameError = Selector.getPlaylistNameError model.createPlaylist
             , playlistTagInput = Selector.getPlaylistTagInputValue model.createPlaylist
             , playlistTags = Selector.getPlaylistTags model.createPlaylist
             , playlistPrivacy = Selector.getPrivacyOption model.createPlaylist
