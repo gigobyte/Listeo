@@ -7,3 +7,4 @@ import Infrastructure.Utils.Id (Id)
 
 class Monad m => PlaylistRepo m where
     insertPlaylist :: PlaylistDTO -> m (Id Playlist)
+    findPlaylist :: Text -> m (Maybe Playlist)

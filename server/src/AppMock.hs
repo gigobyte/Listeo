@@ -45,9 +45,11 @@ instance LoginService AppMockT where
 
 instance PlaylistService AppMockT where
     createPlaylist = \_ -> pure $ Right mockId
+    getPlaylist = undefined
 
 instance PlaylistRepo AppMockT where
     insertPlaylist = \_ -> pure mockId
+    findPlaylist = undefined
 
 instance PlaylistTagRepo AppMockT where
     insertPlaylistTag = \_ _ -> pure ()

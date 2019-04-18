@@ -3,15 +3,17 @@ module Feature.Playlist.Playlist where
 import Protolude
 import Infrastructure.Utils.Id (Id)
 import Database.MongoDB (Document, lookup, timestamp)
-import Data.Aeson (FromJSON)
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Time.Clock (UTCTime)
 
+instance ToJSON PlaylistPrivacy
 instance FromJSON PlaylistPrivacy
 data PlaylistPrivacy
     = Public
     | Private
     deriving (Generic, Enum)
 
+instance ToJSON PlaylistStyle
 instance FromJSON PlaylistStyle
 data PlaylistStyle
     = Unordered

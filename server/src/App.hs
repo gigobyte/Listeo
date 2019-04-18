@@ -15,6 +15,7 @@ import qualified Feature.Register.RegisterService as RegisterService
 import qualified Feature.Auth.AuthService as AuthService
 import qualified Feature.User.UserRepo as UserRepo
 import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistService as PlaylistService
+import qualified Feature.Playlist.GetPlaylist.GetPlaylistService as PlaylistService
 import qualified Feature.Playlist.PlaylistRepo as PlaylistRepo
 import qualified Feature.PlaylistTag.PlaylistTagRepo as PlaylistTagRepo
 import qualified Infrastructure.DB as DB
@@ -48,9 +49,12 @@ instance LoginService AppT where
 
 instance PlaylistService AppT where
     createPlaylist = PlaylistService.createPlaylist
+    getPlaylist = PlaylistService.getPlaylist
 
 instance PlaylistRepo AppT where
     insertPlaylist = PlaylistRepo.insertPlaylist
+    findPlaylist = PlaylistRepo.findPlaylist
 
 instance PlaylistTagRepo AppT where
     insertPlaylistTag = PlaylistTagRepo.insertPlaylistTag
+    findPlaylistTagsByPlaylist = PlaylistTagRepo.findPlaylistTagsByPlaylist

@@ -1,6 +1,6 @@
 module Feature.PlaylistTag.PlaylistTagRepo where
 
-import Protolude
+import Protolude hiding (find)
 import Data.Maybe (fromJust)
 import Feature.Playlist.Playlist (Playlist)
 import Feature.PlaylistTag.PlaylistTag (PlaylistTag)
@@ -8,7 +8,7 @@ import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
 import qualified Feature.PlaylistTag.PlaylistTagDTO as PlaylistTagDTO
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 import Infrastructure.Utils.Id (Id)
-import Database.MongoDB (insert, insert_, cast', (=:))
+import Database.MongoDB (insert, insert_, cast', find, select, rest, (=:))
 
 insertPlaylistTag :: (MonadDB m) => Id Playlist -> PlaylistTagDTO -> m ()
 insertPlaylistTag playlistId tag = withConn $ \conn -> do
@@ -20,3 +20,12 @@ insertPlaylistTag playlistId tag = withConn $ \conn -> do
       "playlist_playlistTag"
       ["playlistId" =: playlistId, "tagId" =: tagId]
     )
+
+findPlaylistTagsByPlaylist :: (MonadDB m) => Text -> m [PlaylistTag]
+findPlaylistTagsByPlaylist playlistId = withConn $ \conn -> do
+  tagsCursor <- runQuery conn
+    $ find (select ["playlistId" =: playlistId] "playlist_playlistTag")
+
+  tags <- runQuery conn $ rest tagsCursor
+
+  return undefined -- TODO
