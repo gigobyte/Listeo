@@ -5,7 +5,7 @@ import Auth.Selectors as Selector
 import Auth.Update as Auth
 import Browser
 import Browser.Navigation as Nav
-import Html exposing (..)
+import Html.Styled exposing (text)
 import Model exposing (AppModel)
 import Msg exposing (Msg(..))
 import Pages.Colors as Colors
@@ -16,6 +16,7 @@ import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
 import Route
+import Session
 import Url
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
 import Utils.Styles exposing (toUnstyledDocument)
@@ -79,11 +80,7 @@ update msg model =
             Debug.log "Msg: " msg
 
         session =
-            { route = model.route
-            , pushUrl = \route -> Route.pushUrl model.key route
-            , apiRoot = model.apiRoot
-            , token = model.auth.jwt
-            }
+            Session.fromModel model
 
         ( newMainModel, mainMsg ) =
             mainUpdate msg model
@@ -124,27 +121,28 @@ update msg model =
 
 view : AppModel -> Browser.Document Msg
 view model =
-    case model.route of
-        Route.Login ->
-            Layout.view (Login.view model) model |> toUnstyledDocument
+    toUnstyledDocument <|
+        case model.route of
+            Route.Login ->
+                Layout.view (Login.view model) model
 
-        Route.Register ->
-            Layout.view (Register.view model) model |> toUnstyledDocument
+            Route.Register ->
+                Layout.view (Register.view model) model
 
-        Route.About ->
-            { title = "", body = [ text "NotImplementedException" ] }
+            Route.About ->
+                { title = "", body = [ text "NotImplementedException" ] }
 
-        Route.Home ->
-            Layout.view (Home.view model) model |> toUnstyledDocument
+            Route.Home ->
+                Layout.view (Home.view model) model
 
-        Route.CreatePlaylist ->
-            Layout.view (CreatePlaylist.view model) model |> toUnstyledDocument
+            Route.CreatePlaylist ->
+                Layout.view (CreatePlaylist.view model) model
 
-        Route.NotFound404 ->
-            { title = "404 - Listeo", body = [ text "Not Found" ] }
+            Route.NotFound404 ->
+                { title = "404 - Listeo", body = [ text "Not Found" ] }
 
-        Route.DebugColors ->
-            Layout.view Colors.view model |> toUnstyledDocument
+            Route.DebugColors ->
+                Layout.view Colors.view model
 
 
 subscriptions : AppModel -> Sub Msg
