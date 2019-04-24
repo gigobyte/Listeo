@@ -16,7 +16,7 @@ import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
 import Route
-import Session
+import Session exposing (Session)
 import Url
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
 import Utils.Styles exposing (toUnstyledDocument)
@@ -50,15 +50,15 @@ init flags url key =
     )
 
 
-mainUpdate : Msg -> AppModel -> ( AppModel, Cmd Msg )
-mainUpdate msg model =
+mainUpdate : Msg -> AppModel -> Session -> ( AppModel, Cmd Msg )
+mainUpdate msg model session =
     case msg of
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
                     ( model
                     , Auth.pushAuthUrl
-                        (\route -> Route.pushUrl model.key route)
+                        session.pushUrl
                         (Route.parseUrl url)
                         (Selector.getUser model.auth)
                     )
@@ -83,7 +83,7 @@ update msg model =
             Session.fromModel model
 
         ( newMainModel, mainMsg ) =
-            mainUpdate msg model
+            mainUpdate msg model session
 
         ( newLoginModel, loginMsg ) =
             Login.update msg model session
@@ -137,6 +137,9 @@ view model =
 
             Route.CreatePlaylist ->
                 Layout.view (CreatePlaylist.view model) model
+
+            Route.ViewPlaylist _ ->
+                { title = "", body = [ text "NotImplementedException" ] }
 
             Route.NotFound404 ->
                 { title = "404 - Listeo", body = [ text "Not Found" ] }

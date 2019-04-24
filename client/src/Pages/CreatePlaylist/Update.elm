@@ -5,6 +5,8 @@ import Msg exposing (Msg(..))
 import Pages.CreatePlaylist.Api as Api
 import Pages.CreatePlaylist.Model exposing (Model, PlaylistPrivacy(..), PlaylistStyle(..))
 import Pages.CreatePlaylist.Validation exposing (makeCreatePlaylistRequestModel)
+import RemoteData exposing (RemoteData(..))
+import Route
 import Session exposing (Session)
 
 
@@ -28,10 +30,10 @@ update msg model session =
 
         PlaylistTagInputUpdated value ->
             if String.endsWith "," value then
-                ( { model | playlistTagInput = String.trim value }, Cmd.none )
+                update (PlaylistTagAdded <| String.dropRight 1 value) model session
 
             else
-                update (PlaylistTagAdded <| String.dropRight 1 value) model session
+                ( { model | playlistTagInput = String.trim value }, Cmd.none )
 
         PlaylistTagAdded tag ->
             ( { model
@@ -61,6 +63,9 @@ update msg model session =
 
                 Nothing ->
                     ( { model | showErrors = True }, Cmd.none )
+
+        CreatePlaylist (Success { playlistId }) ->
+            ( model, session.pushUrl (Route.ViewPlaylist playlistId) )
 
         _ ->
             ( model, Cmd.none )

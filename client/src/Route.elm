@@ -4,7 +4,7 @@ import Browser.Navigation as Nav
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attributes
 import Url
-import Url.Parser as Parser exposing (Parser, oneOf, parse, s)
+import Url.Parser as Parser exposing ((</>), Parser, oneOf, parse, s, string)
 
 
 type Route
@@ -13,6 +13,7 @@ type Route
     | Register
     | About
     | CreatePlaylist
+    | ViewPlaylist String
     | NotFound404
     | DebugColors
 
@@ -24,22 +25,25 @@ toString route =
             "/"
 
         Login ->
-            "login"
+            "/login"
 
         Register ->
-            "register"
+            "/register"
 
         About ->
-            "about"
+            "/about"
 
         CreatePlaylist ->
-            "create-playlist"
+            "/create-playlist"
+
+        ViewPlaylist playlistId ->
+            "/playlist/" ++ playlistId
 
         NotFound404 ->
-            "404"
+            "/404"
 
         DebugColors ->
-            "colors"
+            "/colors"
 
 
 pushUrl : Nav.Key -> Route -> Cmd msg
@@ -60,6 +64,7 @@ parser =
         , Parser.map Register (s "register")
         , Parser.map About (s "about")
         , Parser.map CreatePlaylist (s "create-playlist")
+        , Parser.map ViewPlaylist (s "playlist" </> string)
         , Parser.map NotFound404 (s "404")
         , Parser.map DebugColors (s "colors")
         ]

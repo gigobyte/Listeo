@@ -11,12 +11,17 @@ import Feature.Register.RegisterServiceClass (RegisterService(..))
 import Feature.Auth.AuthServiceClass (AuthService(..))
 import Feature.User.UserRepoClass (UserRepo(..))
 import Feature.User.User (User(..))
+import Feature.Playlist.Playlist
+  (Playlist(..), PlaylistStyle(..), PlaylistPrivacy(..))
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
+import Feature.Playlist.GetPlaylist.GetPlaylistResponse
+import Feature.PlaylistTag.PlaylistTag
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
+import qualified Feature.Playlist.Playlist as Playlist
 
 type Env = (DB.Env)
 
@@ -45,14 +50,15 @@ instance LoginService AppMockT where
 
 instance PlaylistService AppMockT where
     createPlaylist = \_ -> pure $ Right mockId
-    getPlaylist = undefined
+    getPlaylist = \_ -> pure $ Right mockGetPlaylistResponse
 
 instance PlaylistRepo AppMockT where
     insertPlaylist = \_ -> pure mockId
-    findPlaylist = undefined
+    findPlaylist = \_ -> pure $ Just mockPlaylist
 
 instance PlaylistTagRepo AppMockT where
     insertPlaylistTag = \_ _ -> pure ()
+    findPlaylistTagsByPlaylist = \_ -> pure [mockPlaylistTag]
 
 mockId :: Id a
 mockId = Id $ unsafePerformIO genObjectId
@@ -63,4 +69,30 @@ mockUser = User
   , username  = "mockUser"
   , password  = "mockUser"
   , createdOn = unsafePerformIO $ Time.getCurrentTime
+  }
+
+mockPlaylist :: Playlist
+mockPlaylist = Playlist
+  { id        = mockId
+  , name      = "My mock playlist"
+  , style     = Unordered
+  , privacy   = Public
+  , createdOn = unsafePerformIO $ Time.getCurrentTime
+  }
+
+mockPlaylistTag :: PlaylistTag
+mockPlaylistTag = PlaylistTag
+  { id        = mockId
+  , name      = "Test"
+  , createdOn = unsafePerformIO $ Time.getCurrentTime
+  }
+
+mockGetPlaylistResponse :: GetPlaylistResponse
+mockGetPlaylistResponse = GetPlaylistResponse
+  { id        = Playlist.id mockPlaylist
+  , name      = Playlist.name mockPlaylist
+  , style     = Playlist.style mockPlaylist
+  , privacy   = Playlist.privacy mockPlaylist
+  , createdOn = Playlist.createdOn mockPlaylist
+  , tags      = [mockPlaylistTag]
   }

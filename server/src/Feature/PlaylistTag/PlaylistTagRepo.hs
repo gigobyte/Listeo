@@ -6,6 +6,7 @@ import Feature.Playlist.Playlist (Playlist)
 import Feature.PlaylistTag.PlaylistTag (PlaylistTag)
 import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
 import qualified Feature.PlaylistTag.PlaylistTagDTO as PlaylistTagDTO
+import qualified Feature.PlaylistTag.PlaylistTag as PlaylistTag
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 import Infrastructure.Utils.Id (Id)
 import Database.MongoDB (insert, insert_, cast', find, select, rest, (=:))
@@ -26,6 +27,6 @@ findPlaylistTagsByPlaylist playlistId = withConn $ \conn -> do
   tagsCursor <- runQuery conn
     $ find (select ["playlistId" =: playlistId] "playlist_playlistTag")
 
-  tags <- runQuery conn $ rest tagsCursor
+  tagDocuments <- runQuery conn $ rest tagsCursor
 
-  return undefined -- TODO
+  return $ catMaybes $ PlaylistTag.fromBson <$> tagDocuments
