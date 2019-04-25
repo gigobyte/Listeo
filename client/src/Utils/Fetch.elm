@@ -11,6 +11,7 @@ module Utils.Fetch exposing
     , post
     , postWithAuth
     , register
+    , unwrapToken
     )
 
 import Http exposing (emptyBody, header)

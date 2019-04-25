@@ -1,25 +1,43 @@
 module Main exposing (main)
 
-import Auth.Api as Api
-import Auth.Selectors as Selector
-import Auth.Update as Auth
-import Browser
+import Browser exposing (UrlRequest)
 import Browser.Navigation as Nav
-import Html.Styled exposing (text)
-import Model exposing (AppModel)
-import Msg exposing (Msg(..))
+import Css exposing (..)
+import Css.Global exposing (Snippet, global, typeSelector)
+import Html.Styled as Html exposing (main_, styled, text)
 import Pages.Colors as Colors
-import Pages.CreatePlaylist as CreatePlaylist
 import Pages.Header as Header
+import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import Pages.Home as Home
-import Pages.Layout as Layout
 import Pages.Login as Login
 import Pages.Register as Register
-import Route
-import Session exposing (Session)
-import Url
+import RemoteData exposing (RemoteData(..))
+import Route exposing (Route)
+import Session exposing (Msg(..), Session, fetchUser)
+import UI.Colors exposing (gray200)
+import Url exposing (Url)
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
-import Utils.Styles exposing (toUnstyledDocument)
+import Utils.Styles exposing (StyledDocument, StyledElement, addIfNeeded, toUnstyledDocument)
+
+
+type Msg
+    = NoOp
+    | LinkClicked UrlRequest
+    | UrlChanged Url
+    | GotLoginMsg Login.Msg
+    | GotHomeMsg Home.Msg
+    | GotRegisterMsg Register.Msg
+    | GotSessionMsg Session.Msg
+
+
+type Model
+    = Redirect Session
+    | Login Login.Model
+    | Register Register.Model
+    | Home Home.Model
+    | NotFound Session
+    | DebugColors Session
+    | About Session
 
 
 type alias Flags =
@@ -34,126 +52,262 @@ type alias RawFlags =
     }
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( AppModel, Cmd Msg )
+init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( { key = key
-      , route = Route.parseUrl url
-      , apiRoot = flags.apiRoot
-      , login = Login.init
-      , register = Register.init
-      , auth = Auth.init flags.jwt
-      , home = Home.init
-      , createPlaylist = CreatePlaylist.init
-      , header = Header.init
-      }
-    , Api.fetchUser flags.apiRoot flags.jwt |> Cmd.map FetchUser
+    let
+        route =
+            Route.parseUrl url
+
+        ( model, cmd ) =
+            changeRouteTo route
+                (Redirect
+                    (Session.init
+                        { navKey = key
+                        , route = route
+                        , apiRoot = flags.apiRoot
+                        , token = flags.jwt
+                        }
+                    )
+                )
+    in
+    ( model
+    , Cmd.batch
+        [ cmd
+        , fetchUser flags.apiRoot flags.jwt |> Cmd.map (GotSessionMsg << FetchUser)
+        ]
     )
 
 
-mainUpdate : Msg -> AppModel -> Session -> ( AppModel, Cmd Msg )
-mainUpdate msg model session =
-    case msg of
-        LinkClicked urlRequest ->
-            case urlRequest of
-                Browser.Internal url ->
-                    ( model
-                    , Auth.pushAuthUrl
-                        session.pushUrl
-                        (Route.parseUrl url)
-                        (Selector.getUser model.auth)
-                    )
-
-                Browser.External href ->
-                    ( model, Nav.load href )
-
-        UrlChanged url ->
-            ( { model | route = Route.parseUrl url }, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
-
-
-update : Msg -> AppModel -> ( AppModel, Cmd Msg )
-update msg model =
+changeRouteTo : Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo route model =
     let
-        _ =
-            Debug.log "Msg: " msg
-
         session =
-            Session.fromModel model
-
-        ( newMainModel, mainMsg ) =
-            mainUpdate msg model session
-
-        ( newLoginModel, loginMsg ) =
-            Login.update msg model session
-
-        ( newRegisterModel, registerMsg ) =
-            Register.update msg model session
-
-        ( newAuthModel, authMsg ) =
-            Auth.update msg model session
-
-        ( newCreatePlaylistModel, createPlaylistMsg ) =
-            CreatePlaylist.update msg model session
-
-        ( newHeaderModel, headerMsg ) =
-            Header.update msg model session
+            toSession model
     in
+    case route of
+        Route.NotFound404 ->
+            ( NotFound session, Cmd.none )
+
+        Route.DebugColors ->
+            ( DebugColors session, Cmd.none )
+
+        Route.About ->
+            ( About session, Cmd.none )
+
+        Route.Login ->
+            Login.init session
+                |> updateWith Login GotLoginMsg
+
+        Route.Register ->
+            Register.init session
+                |> updateWith Register GotRegisterMsg
+
+        Route.Home ->
+            Home.init session
+                |> updateWith Home GotHomeMsg
+
+
+toSession : Model -> Session
+toSession page =
+    case page of
+        Redirect session ->
+            session
+
+        NotFound session ->
+            session
+
+        DebugColors session ->
+            session
+
+        About session ->
+            session
+
+        Login login ->
+            Login.toSession login
+
+        Register register ->
+            Register.toSession register
+
+        Home home ->
+            Home.toSession home
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    --    let
+    --        _ =
+    --            Debug.log "Msg: " msg
+    --    in
     Debug.log ""
-        ( { newMainModel
-            | login = newLoginModel
-            , register = newRegisterModel
-            , auth = newAuthModel
-            , createPlaylist = newCreatePlaylistModel
-            , header = newHeaderModel
-          }
-        , Cmd.batch
-            [ mainMsg
-            , loginMsg
-            , registerMsg
-            , authMsg
-            , createPlaylistMsg
-            , headerMsg
-            ]
+        (case ( msg, model ) of
+            ( NoOp, _ ) ->
+                ( model, Cmd.none )
+
+            ( LinkClicked urlRequest, _ ) ->
+                case urlRequest of
+                    Browser.Internal url ->
+                        ( model
+                        , Session.pushAuthUrl
+                            (toSession model).navKey
+                            (Route.parseUrl url)
+                            (Session.getUser (toSession model))
+                        )
+
+                    Browser.External href ->
+                        ( model, Nav.load href )
+
+            ( UrlChanged url, _ ) ->
+                changeRouteTo (Route.parseUrl url) model
+
+            ( GotSessionMsg subMsg, _ ) ->
+                updateSession subMsg model
+
+            ( GotLoginMsg subMsg, Login login ) ->
+                Login.update subMsg login
+                    |> updateWith Login GotLoginMsg
+
+            ( GotRegisterMsg subMsg, Register register ) ->
+                Register.update subMsg register
+                    |> updateWith Register GotRegisterMsg
+
+            ( GotHomeMsg subMsg, Home home ) ->
+                Home.update subMsg home
+                    |> updateWith Home GotHomeMsg
+
+            ( _, _ ) ->
+                ( model, Cmd.none )
         )
 
 
-view : AppModel -> Browser.Document Msg
+updateWith : (subModel -> Model) -> (subMsg -> Msg) -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
+updateWith toModel toMsg ( subModel, subCmd ) =
+    ( toModel subModel
+    , Cmd.map toMsg subCmd
+    )
+
+
+updateSession : Session.Msg -> Model -> ( Model, Cmd Msg )
+updateSession subMsg page =
+    let
+        ( newSession, sessionMsg ) =
+            Session.update subMsg (toSession page)
+
+        newModel =
+            case page of
+                Redirect _ ->
+                    Redirect newSession
+
+                NotFound _ ->
+                    NotFound newSession
+
+                About _ ->
+                    About newSession
+
+                DebugColors _ ->
+                    DebugColors newSession
+
+                Login login ->
+                    Login (Login.updateSession newSession login)
+
+                Register register ->
+                    Register (Register.updateSession newSession register)
+
+                Home home ->
+                    Home (Home.updateSession newSession home)
+    in
+    ( newModel, Cmd.map GotSessionMsg sessionMsg )
+
+
+viewContainer : StyledElement msg
+viewContainer =
+    styled main_
+        [ height <| pct 100
+        , flexDirection column
+        , displayFlex
+        ]
+
+
+globalStyle : List Snippet
+globalStyle =
+    [ typeSelector "html, body"
+        [ height <| pct 100
+        , margin zero
+        , fontFamilies [ "Museo-Sans" ]
+        , backgroundColor gray200
+        ]
+    ]
+
+
+viewNothing : StyledDocument msg
+viewNothing =
+    { title = "", body = [ text "" ] }
+
+
+viewLayout : StyledDocument Msg -> Model -> StyledDocument Msg
+viewLayout page model =
+    let
+        session =
+            toSession model
+    in
+    case session.user of
+        NotAsked ->
+            viewNothing
+
+        Loading ->
+            viewNothing
+
+        _ ->
+            { title = page.title
+            , body =
+                [ viewContainer []
+                    (List.concat
+                        [ [ global globalStyle
+                          , Header.view session |> Html.map GotSessionMsg
+                          ]
+                        , addIfNeeded session.header.isOverlayShown [ AddPlaylistModal.view |> Html.map GotSessionMsg ]
+                        , page.body
+                        ]
+                    )
+                ]
+            }
+
+
+view : Model -> Browser.Document Msg
 view model =
+    let
+        viewPage { title, body } toMsg =
+            viewLayout { title = title, body = List.map (Html.map toMsg) body } model
+    in
     toUnstyledDocument <|
-        case model.route of
-            Route.Login ->
-                Layout.view (Login.view model) model
+        case model of
+            Login login ->
+                viewPage (Login.view login) GotLoginMsg
 
-            Route.Register ->
-                Layout.view (Register.view model) model
+            Register register ->
+                viewPage (Register.view register) GotRegisterMsg
 
-            Route.About ->
-                { title = "", body = [ text "NotImplementedException" ] }
-
-            Route.Home ->
-                Layout.view (Home.view model) model
-
-            Route.CreatePlaylist ->
-                Layout.view (CreatePlaylist.view model) model
-
-            Route.ViewPlaylist _ ->
-                { title = "", body = [ text "NotImplementedException" ] }
-
-            Route.NotFound404 ->
+            NotFound _ ->
                 { title = "404 - Listeo", body = [ text "Not Found" ] }
 
-            Route.DebugColors ->
-                Layout.view Colors.view model
+            Redirect _ ->
+                { title = "404 - Listeo", body = [] }
+
+            About _ ->
+                { title = "About - Listeo", body = [ text "About" ] }
+
+            DebugColors _ ->
+                viewPage Colors.view (always NoOp)
+
+            Home home ->
+                viewPage (Home.view home) GotHomeMsg
 
 
-subscriptions : AppModel -> Sub Msg
+subscriptions : Model -> Sub Msg
 subscriptions =
     always Sub.none
 
 
-main : Program RawFlags AppModel Msg
+main : Program RawFlags Model Msg
 main =
     Browser.application
         { init = \val -> init { jwt = Token val.jwt, apiRoot = ApiRoot val.apiRoot }

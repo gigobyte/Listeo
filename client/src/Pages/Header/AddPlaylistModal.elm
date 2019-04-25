@@ -6,7 +6,7 @@ import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attributes
 import Html.Styled.Events exposing (onClick)
-import Msg exposing (Msg(..))
+import Session exposing (Msg(..))
 import UI.Button as Button
 import UI.Colors exposing (blue200)
 import UI.Container as Container
@@ -92,7 +92,7 @@ viewOptionDescription =
         ]
 
 
-view : Html Msg
+view : Html Session.Msg
 view =
     Modal.view { onClose = AddPlaylistModalClosed }
         []

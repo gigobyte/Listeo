@@ -12,8 +12,8 @@ type Route
     | Login
     | Register
     | About
-    | CreatePlaylist
-    | ViewPlaylist String
+      --    | CreatePlaylist
+      --    | ViewPlaylist String
     | NotFound404
     | DebugColors
 
@@ -30,15 +30,16 @@ toString route =
         Register ->
             "/register"
 
+        --
         About ->
             "/about"
 
-        CreatePlaylist ->
-            "/create-playlist"
-
-        ViewPlaylist playlistId ->
-            "/playlist/" ++ playlistId
-
+        --
+        --        CreatePlaylist ->
+        --            "/create-playlist"
+        --
+        --        ViewPlaylist playlistId ->
+        --            "/playlist/" ++ playlistId
         NotFound404 ->
             "/404"
 
@@ -63,8 +64,9 @@ parser =
         , Parser.map Login (s "login")
         , Parser.map Register (s "register")
         , Parser.map About (s "about")
-        , Parser.map CreatePlaylist (s "create-playlist")
-        , Parser.map ViewPlaylist (s "playlist" </> string)
+
+        --        , Parser.map CreatePlaylist (s "create-playlist")
+        --        , Parser.map ViewPlaylist (s "playlist" </> string)
         , Parser.map NotFound404 (s "404")
         , Parser.map DebugColors (s "colors")
         ]

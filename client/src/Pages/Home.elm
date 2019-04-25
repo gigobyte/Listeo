@@ -1,26 +1,48 @@
-module Pages.Home exposing (init, update, view)
+module Pages.Home exposing (Model, Msg, init, toSession, update, updateSession, view)
 
-import Model exposing (AppModel)
-import Msg exposing (Msg)
-import Pages.Home.Model exposing (Model)
-import Pages.Home.Update as Home
-import Pages.Home.View as Home
+import Html.Styled exposing (div, text)
 import Session exposing (Session)
 import Utils.Styles exposing (StyledDocument)
 
 
-view : AppModel -> StyledDocument Msg
+type alias Model =
+    { session : Session }
+
+
+type Msg
+    = NoOp
+
+
+view : Model -> StyledDocument Msg
 view _ =
     { title = "Home - Listeo"
-    , body = [ Home.view {} ]
+    , body =
+        [ div []
+            [ text "Home page"
+            ]
+        ]
     }
 
 
-update : Msg -> AppModel -> Session -> ( Model, Cmd Msg )
-update msg model session =
-    Home.update msg model.home session
+init : Session -> ( Model, Cmd Msg )
+init session =
+    ( { session = session }, Cmd.none )
 
 
-init : Model
-init =
-    Home.init
+update : Msg -> Model -> ( Model, Cmd Msg )
+update _ model =
+    ( model, Cmd.none )
+
+
+
+-- EXPORTS
+
+
+toSession : Model -> Session
+toSession model =
+    model.session
+
+
+updateSession : Session -> Model -> Model
+updateSession newSession model =
+    { model | session = newSession }
