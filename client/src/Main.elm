@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser exposing (UrlRequest)
 import Browser.Navigation as Nav
@@ -302,9 +302,14 @@ view model =
                 viewPage (Home.view home) GotHomeMsg
 
 
+port jwtStored : msg -> Sub msg
+
+
 subscriptions : Model -> Sub Msg
-subscriptions =
-    always Sub.none
+subscriptions _ =
+    Sub.batch
+        [ jwtStored (GotSessionMsg JwtStored)
+        ]
 
 
 main : Program RawFlags Model Msg

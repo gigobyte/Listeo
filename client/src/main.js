@@ -10,6 +10,8 @@ const app = Elm.Main.init({
 
 app.ports.storeJwt.subscribe(jwt => {
   localStorage.setItem('jwt-token', jwt)
+
+  app.ports.jwtStored.send(jwt)
 })
 
 app.ports.removeJwt.subscribe(() => {

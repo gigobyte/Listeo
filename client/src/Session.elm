@@ -6,18 +6,15 @@ import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
-import Utils.Fetch as Fetch exposing (ApiRoot, Token, emptyToken, unwrapToken)
+import Utils.Fetch as Fetch exposing (ApiRoot, Token, emptyToken)
 
 
 port removeJwt : () -> Cmd msg
 
 
-port storeJwt : String -> Cmd msg
-
-
 type Msg
     = FetchUser (ResponseData () User)
-    | StoreToken Token
+    | JwtStored String
     | Logout
     | AddPlaylistOverlayShown
     | CreateNewPlaylistSelected
@@ -115,8 +112,8 @@ reset session =
 update : Msg -> Session -> ( Session, Cmd Msg )
 update msg session =
     case msg of
-        StoreToken token ->
-            ( { session | token = token }, storeJwt (unwrapToken token) )
+        JwtStored token ->
+            { session | token = Token (Just token), Cmd.none }
 
         Logout ->
             ( reset session

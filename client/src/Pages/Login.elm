@@ -157,6 +157,9 @@ type Msg
     | GotSessionMsg Session.Msg
 
 
+port storeJwt : String -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
