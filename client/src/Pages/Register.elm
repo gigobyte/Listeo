@@ -10,6 +10,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..), isLoading)
+import Result.Extra as Result
 import Route
 import Session exposing (Msg(..), Session, storeJwt)
 import UI.Button as Button
@@ -20,7 +21,7 @@ import UI.Link as Link
 import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot, Token(..))
 import Utils.Styles exposing (StyledDocument, StyledElement)
-import Utils.Validation exposing (getErrorForField)
+import Utils.Validation as Validation exposing (Problems(..), getErrorForField)
 import Validate exposing (Valid, Validator, fromValid, ifBlank, validate)
 
 
@@ -30,7 +31,7 @@ import Validate exposing (Valid, Validator, fromValid, ifBlank, validate)
 
 type alias Model =
     { session : Session
-    , problems : List ( ValidatedField, ValidationError )
+    , problems : Validation.Problems ValidatedField ValidationError
     , form : Form
     , registerResponse : ResponseData RegisterResponseError RegisterResponse
     }
@@ -56,7 +57,7 @@ type RegisterResponseError
 init : Session -> ( Model, Cmd msg )
 init session =
     ( { session = session
-      , problems = []
+      , problems = NotShown
       , form =
             { username = ""
             , password = ""
@@ -87,7 +88,7 @@ view model =
         [ viewLoginForm [ onSubmit RegisterAttempted ]
             [ viewTitle [] [ text "Register" ]
             , Input.view
-                { validationError = getErrorForField Username model.problems |> Maybe.map validationErrorToString
+                { validationError = Validation.getErrorForField Username model.problems |> Maybe.map validationErrorToString
                 , inputAttributes =
                     [ placeholder "Username"
                     , value model.form.username
@@ -97,7 +98,7 @@ view model =
                 []
                 []
             , Input.view
-                { validationError = getErrorForField Password model.problems |> Maybe.map validationErrorToString
+                { validationError = Validation.getErrorForField Password model.problems |> Maybe.map validationErrorToString
                 , inputAttributes =
                     [ placeholder "Password"
                     , type_ "password"
@@ -167,7 +168,7 @@ update msg model =
                     ( model, register model.session.apiRoot validForm |> Cmd.map CompletedRegistration )
 
                 Err problems ->
-                    ( { model | problems = problems }, Cmd.none )
+                    ( { model | problems = Shown problems }, Cmd.none )
 
         CompletedRegistration ((Success { jwt }) as response) ->
             ( { model | registerResponse = response }
@@ -180,7 +181,23 @@ update msg model =
 
 updateForm : (Form -> Form) -> Model -> ( Model, Cmd Msg )
 updateForm transform model =
-    ( { model | form = transform model.form }, Cmd.none )
+    let
+        newForm =
+            transform model.form
+    in
+    ( { model
+        | form = newForm
+        , problems =
+            Validation.mapProblems
+                (\_ ->
+                    validate validator newForm
+                        |> Result.map (always [])
+                        |> Result.merge
+                )
+                model.problems
+      }
+    , Cmd.none
+    )
 
 
 
@@ -227,7 +244,7 @@ registerErrorToString err =
 
 isSubmitButtonDisabled : Model -> Bool
 isSubmitButtonDisabled model =
-    isLoading model.registerResponse || (List.length model.problems > 0)
+    isLoading model.registerResponse || Validation.hasFailed model.problems
 
 
 
