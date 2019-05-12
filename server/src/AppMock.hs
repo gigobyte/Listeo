@@ -43,7 +43,7 @@ instance AuthService AppMockT where
     requireUser = pure mockUser
 
 instance RegisterService AppMockT where
-    register = \_ -> pure $ Right ()
+    register = \_ -> pure $ Right ""
 
 instance LoginService AppMockT where
     login = \_ -> pure $ Right "jwt token lol"

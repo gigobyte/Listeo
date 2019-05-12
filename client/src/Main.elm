@@ -13,7 +13,7 @@ import Pages.Login as Login
 import Pages.Register as Register
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
-import Session exposing (Msg(..), Session, fetchUser)
+import Session exposing (Msg(..), Session, fetchUser, jwtStored)
 import UI.Colors exposing (gray200)
 import Url exposing (Url)
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
@@ -134,10 +134,10 @@ toSession page =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    --    let
-    --        _ =
-    --            Debug.log "Msg: " msg
-    --    in
+    let
+        _ =
+            Debug.log "Msg: " msg
+    in
     Debug.log ""
         (case ( msg, model ) of
             ( NoOp, _ ) ->
@@ -175,7 +175,7 @@ update msg model =
                     |> updateWith Home GotHomeMsg
 
             ( _, _ ) ->
-                ( model, Cmd.none )
+                Debug.log ("Stray Message: " ++ Debug.toString msg) ( model, Cmd.none )
         )
 
 
@@ -302,13 +302,10 @@ view model =
                 viewPage (Home.view home) GotHomeMsg
 
 
-port jwtStored : msg -> Sub msg
-
-
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
-        [ jwtStored (GotSessionMsg JwtStored)
+        [ jwtStored (GotSessionMsg << JwtStored)
         ]
 
 

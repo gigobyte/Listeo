@@ -20,9 +20,9 @@ type alias StyledDocument msg =
 
 
 addIfNeeded : Bool -> List b -> List b
-addIfNeeded isNeeded attrs =
+addIfNeeded isNeeded elems =
     if isNeeded then
-        attrs
+        elems
 
     else
         []

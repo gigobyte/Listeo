@@ -16,7 +16,7 @@ toHttpResult :: Monad m => Either LoginError Text -> ActionT LText m ()
 toHttpResult (Left error) = do
   ScottyT.status badRequest400
   ScottyT.json $ ErrorResponse error
-toHttpResult (Right jwtToken) = ScottyT.json $ LoginResponse jwtToken
+toHttpResult (Right jwt) = ScottyT.json $ LoginResponse jwt
 
 routes :: (LoginService m, MonadIO m) => ScottyT LText m ()
 routes = do

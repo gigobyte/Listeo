@@ -11,13 +11,12 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..), isLoading)
 import Route
-import Session exposing (Msg(..), Session)
+import Session exposing (Msg(..), Session, storeJwt)
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
 import UI.Input as Input
 import UI.Link as Link
-import Utils.Cmd as Cmd
 import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot, Token(..))
 import Utils.Styles exposing (StyledDocument, StyledElement)
@@ -154,18 +153,10 @@ type Msg
     | EnteredPassword String
     | LoginAttempted
     | CompletedLogin (ResponseData LoginResponseError LoginResponse)
-    | GotSessionMsg Session.Msg
-
-
-port storeJwt : String -> Cmd msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        _ =
-            Debug.log "Msg: " msg
-    in
     case msg of
         EnteredUsername value ->
             updateForm (\form -> { form | username = String.trim value }) model
@@ -189,22 +180,11 @@ update msg model =
             ( { model
                 | loginResponse = response
               }
-            , Cmd.batch
-                [ Session.fetchUser model.session.apiRoot token |> Cmd.map (GotSessionMsg << FetchUser)
-                , Route.pushUrl model.session.navKey Route.Home
-                , Cmd.dispatch (GotSessionMsg (StoreToken token))
-                ]
+            , storeJwt jwt
             )
 
         CompletedLogin response ->
             ( { model | loginResponse = response }, Cmd.none )
-
-        GotSessionMsg subMsg ->
-            let
-                ( newSession, sessionMsg ) =
-                    Session.update subMsg model.session
-            in
-            ( { model | session = newSession }, Cmd.map GotSessionMsg sessionMsg )
 
 
 updateForm : (Form -> Form) -> Model -> ( Model, Cmd Msg )
@@ -274,7 +254,7 @@ loginResponseErrorEnum =
 
 loginResponseDecoder : Decoder LoginResponse
 loginResponseDecoder =
-    Decode.succeed (\x -> { jwt = x })
+    Decode.succeed LoginResponse
         |> required "jwt" Decode.string
 
 

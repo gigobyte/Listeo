@@ -1,5 +1,6 @@
 module Feature.Login.LoginService
   ( login
+  , generateJwtToken
   )
 where
 
@@ -22,7 +23,7 @@ login :: UserRepo m => LByteString -> m (Either LoginError Text)
 login rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
   user <- ExceptT $ findUserByCredentials body
-  return $ generateJwtToken user
+  return $ generateJwtToken (User.username user)
 
 parseBody :: LByteString -> Either LoginError LoginBody
 parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
@@ -37,12 +38,12 @@ findUserByCredentials req = do
   isPasswordValid user =
     Crypto.validate (User.password user) (LoginBody.password req)
 
-generateJwtToken :: User -> Text
-generateJwtToken user = JWT.encodeSigned JWT.HS256 key cs
+generateJwtToken :: Text -> Text
+generateJwtToken username = JWT.encodeSigned JWT.HS256 key cs
  where
   cs = JWT.def
     { JWT.iss                = JWT.stringOrURI "listeo"
-    , JWT.sub                = JWT.stringOrURI (User.username user)
+    , JWT.sub                = JWT.stringOrURI username
     , JWT.unregisteredClaims = Map.fromList
       [("http://localhost:1234", (Aeson.Bool True))]
     }

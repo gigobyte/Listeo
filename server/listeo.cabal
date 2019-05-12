@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e219387b1b1553b15ff7b75eded23ffee8477831a781e8edb46c5921cd8d1e67
+-- hash: dfb61c2a9afc1aff54d7aa6f778d4e0f7534aef00951d1c159af7424d018878b
 
 name:           listeo
 version:        0.1.0.0
@@ -53,6 +53,7 @@ executable listeo-exe
       Feature.Register.RegisterBody
       Feature.Register.RegisterError
       Feature.Register.RegisterHTTP
+      Feature.Register.RegisterResponse
       Feature.Register.RegisterService
       Feature.Register.RegisterServiceClass
       Feature.User.PublicUser

@@ -11,7 +11,7 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData exposing (RemoteData(..), isLoading)
 import Route
-import Session exposing (Msg(..), Session)
+import Session exposing (Msg(..), Session, storeJwt)
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
@@ -32,8 +32,12 @@ type alias Model =
     { session : Session
     , problems : List ( ValidatedField, ValidationError )
     , form : Form
-    , registerResponse : ResponseData RegisterResponseError ()
+    , registerResponse : ResponseData RegisterResponseError RegisterResponse
     }
+
+
+type alias RegisterResponse =
+    { jwt : String }
 
 
 type alias Form =
@@ -145,8 +149,7 @@ type Msg
     = EnteredUsername String
     | EnteredPassword String
     | RegisterAttempted
-    | CompletedRegistration (ResponseData RegisterResponseError ())
-    | GotSessionMsg Session.Msg
+    | CompletedRegistration (ResponseData RegisterResponseError RegisterResponse)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -166,28 +169,13 @@ update msg model =
                 Err problems ->
                     ( { model | problems = problems }, Cmd.none )
 
-        CompletedRegistration ((Success ()) as response) ->
+        CompletedRegistration ((Success { jwt }) as response) ->
             ( { model | registerResponse = response }
-            , Cmd.batch
-                --                [ Api.login
-                --                    session.apiRoot
-                --                    { username = model.username
-                --                    , password = model.password
-                --                    }
-                --                    |> Cmd.map Login
-                [ Route.pushUrl model.session.navKey Route.Home
-                ]
+            , storeJwt jwt
             )
 
         CompletedRegistration response ->
             ( { model | registerResponse = response }, Cmd.none )
-
-        GotSessionMsg subMsg ->
-            let
-                ( newSession, sessionMsg ) =
-                    Session.update subMsg model.session
-            in
-            ( { model | session = newSession }, Cmd.map GotSessionMsg sessionMsg )
 
 
 updateForm : (Form -> Form) -> Model -> ( Model, Cmd Msg )
@@ -256,7 +244,13 @@ registerResponseErrorEnum =
         ]
 
 
-register : ApiRoot -> Valid Form -> Cmd (ResponseData RegisterResponseError ())
+registerResponseDecoder : Decoder RegisterResponse
+registerResponseDecoder =
+    Decode.succeed RegisterResponse
+        |> required "jwt" Decode.string
+
+
+register : ApiRoot -> Valid Form -> Cmd (ResponseData RegisterResponseError RegisterResponse)
 register apiRoot form =
     let
         formValues =
@@ -271,7 +265,7 @@ register apiRoot form =
     Fetch.post
         { url = Fetch.register apiRoot
         , expect =
-            expectJsonWithError registerResponseErrorEnum.decoder (Decode.succeed ())
+            expectJsonWithError registerResponseErrorEnum.decoder registerResponseDecoder
         , body = body |> Http.jsonBody
         }
 

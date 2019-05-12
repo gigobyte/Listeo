@@ -1,4 +1,4 @@
-port module Session exposing (Msg(..), Session, User, fetchUser, getUser, init, pushAuthUrl, update)
+port module Session exposing (Msg(..), Session, User, fetchUser, getUser, init, jwtStored, pushAuthUrl, storeJwt, update)
 
 import Browser.Navigation as Nav
 import Json.Decode as Decode exposing (Decoder, string)
@@ -6,10 +6,16 @@ import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
-import Utils.Fetch as Fetch exposing (ApiRoot, Token, emptyToken)
+import Utils.Fetch as Fetch exposing (ApiRoot, Token(..), emptyToken)
 
 
 port removeJwt : () -> Cmd msg
+
+
+port storeJwt : String -> Cmd msg
+
+
+port jwtStored : (String -> msg) -> Sub msg
 
 
 type Msg
@@ -112,8 +118,17 @@ reset session =
 update : Msg -> Session -> ( Session, Cmd Msg )
 update msg session =
     case msg of
-        JwtStored token ->
-            { session | token = Token (Just token), Cmd.none }
+        JwtStored jwt ->
+            let
+                token =
+                    Token (Just jwt)
+            in
+            ( { session | token = token }
+            , Cmd.batch
+                [ fetchUser session.apiRoot token |> Cmd.map FetchUser
+                , Route.pushUrl session.navKey Route.Home
+                ]
+            )
 
         Logout ->
             ( reset session

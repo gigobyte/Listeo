@@ -10,6 +10,7 @@ import Control.Monad.Except (liftEither)
 import Infrastructure.MonadCrypto
 import Feature.Register.RegisterError (RegisterError(..))
 import Feature.Register.RegisterBody (RegisterBody)
+import Feature.Login.LoginService (generateJwtToken)
 import qualified Feature.Register.RegisterBody as RegisterBody
 import Feature.User.UserRepoClass (UserRepo(..))
 import qualified Feature.User.UserDTO as UserDTO
@@ -17,11 +18,12 @@ import qualified Data.Text as T
 import Data.Aeson (decode)
 
 register
-  :: (UserRepo m, MonadCrypto m) => LByteString -> m (Either RegisterError ())
+  :: (UserRepo m, MonadCrypto m) => LByteString -> m (Either RegisterError Text)
 register rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
   user <- liftEither $ mkUserDTO body
   ExceptT $ tryToInsertUser user
+  return $ generateJwtToken (UserDTO.username user)
 
 parseBody :: LByteString -> Either RegisterError RegisterBody
 parseBody body = maybeToRight InvalidRequest (decode body)
