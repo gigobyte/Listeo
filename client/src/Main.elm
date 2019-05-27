@@ -6,6 +6,7 @@ import Css exposing (..)
 import Css.Global exposing (Snippet, global, typeSelector)
 import Html.Styled as Html exposing (main_, styled, text)
 import Pages.Colors as Colors
+import Pages.CreatePlaylist as CreatePlaylist
 import Pages.Header as Header
 import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import Pages.Home as Home
@@ -13,9 +14,10 @@ import Pages.Login as Login
 import Pages.Register as Register
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
-import Session exposing (Msg(..), Session, fetchUser, jwtStored)
+import Session exposing (Msg(..), Session, User, fetchUser, jwtStored)
 import UI.Colors exposing (gray200)
 import Url exposing (Url)
+import Utils.ErrorResponse exposing (ResponseData)
 import Utils.Fetch exposing (ApiRoot(..), Token(..))
 import Utils.Styles exposing (StyledDocument, StyledElement, addIfNeeded, toUnstyledDocument)
 
@@ -27,7 +29,15 @@ type Msg
     | GotLoginMsg Login.Msg
     | GotHomeMsg Home.Msg
     | GotRegisterMsg Register.Msg
+    | GotCreatePlaylistMsg CreatePlaylist.Msg
     | GotSessionMsg Session.Msg
+      -- Global
+    | FetchUser (ResponseData () User)
+    | JwtStored String
+    | Logout
+    | AddPlaylistOverlayShown
+    | CreateNewPlaylistSelected
+    | AddPlaylistModalClosed
 
 
 type Model
@@ -35,6 +45,7 @@ type Model
     | Login Login.Model
     | Register Register.Model
     | Home Home.Model
+    | CreatePlaylist CreatePlaylist.Model
     | NotFound Session
     | DebugColors Session
     | About Session
@@ -55,15 +66,11 @@ type alias RawFlags =
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     let
-        route =
-            Route.parseUrl url
-
         ( model, cmd ) =
-            changeRouteTo route
+            changeRouteTo (Route.parseUrl url)
                 (Redirect
                     (Session.init
                         { navKey = key
-                        , route = route
                         , apiRoot = flags.apiRoot
                         , token = flags.jwt
                         }
@@ -73,7 +80,7 @@ init flags url key =
     ( model
     , Cmd.batch
         [ cmd
-        , fetchUser flags.apiRoot flags.jwt |> Cmd.map (GotSessionMsg << FetchUser)
+        , fetchUser flags.apiRoot flags.jwt |> Cmd.map FetchUser
         ]
     )
 
@@ -106,6 +113,13 @@ changeRouteTo route model =
             Home.init session
                 |> updateWith Home GotHomeMsg
 
+        Route.CreatePlaylist ->
+            CreatePlaylist.init session
+                |> updateWith CreatePlaylist GotCreatePlaylistMsg
+
+        Route.ViewPlaylist _ ->
+            ( NotFound session, Cmd.none )
+
 
 toSession : Model -> Session
 toSession page =
@@ -130,6 +144,9 @@ toSession page =
 
         Home home ->
             Home.toSession home
+
+        CreatePlaylist createPlaylist ->
+            CreatePlaylist.toSession createPlaylist
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -174,6 +191,10 @@ update msg model =
                 Home.update subMsg home
                     |> updateWith Home GotHomeMsg
 
+            ( GotCreatePlaylistMsg subMsg, CreatePlaylist createPlaylist ) ->
+                CreatePlaylist.update subMsg createPlaylist
+                    |> updateWith CreatePlaylist GotCreatePlaylistMsg
+
             ( _, _ ) ->
                 Debug.log ("Stray Message: " ++ Debug.toString msg) ( model, Cmd.none )
         )
@@ -214,6 +235,9 @@ updateSession subMsg page =
 
                 Home home ->
                     Home (Home.updateSession newSession home)
+
+                CreatePlaylist createPlaylist ->
+                    CreatePlaylist (CreatePlaylist.updateSession newSession createPlaylist)
     in
     ( newModel, Cmd.map GotSessionMsg sessionMsg )
 
@@ -301,11 +325,14 @@ view model =
             Home home ->
                 viewPage (Home.view home) GotHomeMsg
 
+            CreatePlaylist createPlaylist ->
+                viewPage (CreatePlaylist.view createPlaylist) GotCreatePlaylistMsg
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
-        [ jwtStored (GotSessionMsg << JwtStored)
+        [ jwtStored JwtStored
         ]
 
 

@@ -95,7 +95,7 @@ view session =
         , viewNav []
             (case Session.getUser session of
                 Just user ->
-                    viewPrivateNavItems user (session.route /= {- Route.CreatePlayst -} Route.Home)
+                    viewPrivateNavItems user (session.route /= Route.CreatePlaylist)
 
                 Nothing ->
                     viewPublicNavItems

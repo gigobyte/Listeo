@@ -45,7 +45,6 @@ getUser session =
 
 type alias Session =
     { navKey : Nav.Key
-    , route : Route
     , apiRoot : ApiRoot
     , token : Token
     , user : ResponseData () User
@@ -90,10 +89,9 @@ pushAuthUrl key route user =
                 Route.pushUrl key route
 
 
-init : { navKey : Nav.Key, route : Route, apiRoot : ApiRoot, token : Token } -> Session
+init : { navKey : Nav.Key, apiRoot : ApiRoot, token : Token } -> Session
 init settings =
     { navKey = settings.navKey
-    , route = settings.route
     , apiRoot = settings.apiRoot
     , token = settings.token
     , user = NotAsked
@@ -153,7 +151,7 @@ update msg session =
             updateHeader (\header -> ( { header | isOverlayShown = True }, Cmd.none )) session
 
         CreateNewPlaylistSelected ->
-            updateHeader (\header -> ( { header | isOverlayShown = False }, Route.pushUrl session.navKey {- Route.CreatePlaylist -} Route.Home )) session
+            updateHeader (\header -> ( { header | isOverlayShown = False }, Route.pushUrl session.navKey Route.CreatePlaylist )) session
 
         AddPlaylistModalClosed ->
             updateHeader (\header -> ( { header | isOverlayShown = False }, Cmd.none )) session

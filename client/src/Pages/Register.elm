@@ -21,7 +21,7 @@ import UI.Link as Link
 import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
 import Utils.Fetch as Fetch exposing (ApiRoot, Token(..))
 import Utils.Styles exposing (StyledDocument, StyledElement)
-import Utils.Validation as Validation exposing (Problems(..), getErrorForField)
+import Utils.Validation as Validation exposing (Problems(..))
 import Validate exposing (Valid, Validator, fromValid, ifBlank, validate)
 
 
