@@ -55,7 +55,7 @@ type alias LoginResponse =
 
 init : Session -> ( Model, Cmd msg )
 init session =
-    ( { session = session
+    ( { session = { session | route = Route.Login }
       , problems = NotShown
       , form =
             { username = ""

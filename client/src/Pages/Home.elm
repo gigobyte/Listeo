@@ -1,6 +1,7 @@
 module Pages.Home exposing (Model, Msg, init, toSession, update, updateSession, view)
 
 import Html.Styled exposing (div, text)
+import Route
 import Session exposing (Session)
 import Utils.Styles exposing (StyledDocument)
 
@@ -26,7 +27,7 @@ view _ =
 
 init : Session -> ( Model, Cmd Msg )
 init session =
-    ( { session = session }, Cmd.none )
+    ( { session = { session | route = Route.Home } }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

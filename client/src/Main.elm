@@ -31,13 +31,6 @@ type Msg
     | GotRegisterMsg Register.Msg
     | GotCreatePlaylistMsg CreatePlaylist.Msg
     | GotSessionMsg Session.Msg
-      -- Global
-    | FetchUser (ResponseData () User)
-    | JwtStored String
-    | Logout
-    | AddPlaylistOverlayShown
-    | CreateNewPlaylistSelected
-    | AddPlaylistModalClosed
 
 
 type Model
@@ -66,11 +59,15 @@ type alias RawFlags =
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     let
+        route =
+            Route.parseUrl url
+
         ( model, cmd ) =
-            changeRouteTo (Route.parseUrl url)
+            changeRouteTo route
                 (Redirect
                     (Session.init
                         { navKey = key
+                        , route = route
                         , apiRoot = flags.apiRoot
                         , token = flags.jwt
                         }
@@ -80,7 +77,7 @@ init flags url key =
     ( model
     , Cmd.batch
         [ cmd
-        , fetchUser flags.apiRoot flags.jwt |> Cmd.map FetchUser
+        , fetchUser flags.apiRoot flags.jwt |> Cmd.map (GotSessionMsg << FetchUser)
         ]
     )
 
@@ -304,6 +301,9 @@ view model =
     in
     toUnstyledDocument <|
         case model of
+            Redirect _ ->
+                { title = "", body = [] }
+
             Login login ->
                 viewPage (Login.view login) GotLoginMsg
 
@@ -312,9 +312,6 @@ view model =
 
             NotFound _ ->
                 { title = "404 - Listeo", body = [ text "Not Found" ] }
-
-            Redirect _ ->
-                { title = "404 - Listeo", body = [] }
 
             About _ ->
                 { title = "About - Listeo", body = [ text "About" ] }
@@ -332,7 +329,7 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
-        [ jwtStored JwtStored
+        [ jwtStored (GotSessionMsg << JwtStored)
         ]
 
 

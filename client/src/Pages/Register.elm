@@ -56,7 +56,7 @@ type RegisterResponseError
 
 init : Session -> ( Model, Cmd msg )
 init session =
-    ( { session = session
+    ( { session = { session | route = Route.Register }
       , problems = NotShown
       , form =
             { username = ""

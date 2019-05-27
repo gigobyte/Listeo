@@ -76,7 +76,7 @@ playlistStyleEnum =
 
 init : Session -> ( Model, Cmd msg )
 init session =
-    ( { session = session
+    ( { session = { session | route = Route.CreatePlaylist }
       , problems = NotShown
       , form =
             { playlistName = ""

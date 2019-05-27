@@ -45,6 +45,7 @@ getUser session =
 
 type alias Session =
     { navKey : Nav.Key
+    , route : Route
     , apiRoot : ApiRoot
     , token : Token
     , user : ResponseData () User
@@ -89,10 +90,11 @@ pushAuthUrl key route user =
                 Route.pushUrl key route
 
 
-init : { navKey : Nav.Key, apiRoot : ApiRoot, token : Token } -> Session
+init : { navKey : Nav.Key, route : Route, apiRoot : ApiRoot, token : Token } -> Session
 init settings =
     { navKey = settings.navKey
     , apiRoot = settings.apiRoot
+    , route = settings.route
     , token = settings.token
     , user = NotAsked
     , header = initHeader
