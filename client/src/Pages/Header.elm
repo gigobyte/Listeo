@@ -7,11 +7,11 @@ import Html.Styled.Attributes exposing (attribute, title)
 import Html.Styled.Events exposing (onClick)
 import Route
 import Session exposing (Msg(..), Session, User)
+import Styles exposing (StyledElement, addIfNeeded)
 import UI.Colors exposing (..)
 import UI.Icon as Icon
 import UI.Link as Link
 import UI.Logo as Logo
-import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 viewContainer : StyledElement msg

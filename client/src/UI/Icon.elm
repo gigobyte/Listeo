@@ -8,7 +8,7 @@ module UI.Icon exposing
 import Css exposing (..)
 import Html.Styled exposing (i, styled)
 import Html.Styled.Attributes exposing (class)
-import Utils.Styles exposing (StyledElement)
+import Styles exposing (StyledElement)
 
 
 icon : String -> StyledElement msg

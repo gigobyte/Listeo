@@ -3,8 +3,8 @@ module UI.Error exposing (viewText)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
+import Styles exposing (StyledElement, addIfNeeded)
 import UI.Colors exposing (crimson100)
-import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type alias ErrorTextProps =

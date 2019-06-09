@@ -4,9 +4,9 @@ module Pages.Colors exposing (view)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
+import Styles exposing (StyledDocument, StyledElement)
 import UI.Colors exposing (..)
 import UI.Container as Container
-import Utils.Styles exposing (StyledDocument, StyledElement)
 
 
 viewContainer : StyledElement msg

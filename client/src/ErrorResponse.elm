@@ -1,4 +1,4 @@
-module Utils.ErrorResponse exposing (ErrorResponse, HttpError(..), ResponseData, expectJsonWithError)
+module ErrorResponse exposing (ErrorResponse, HttpError(..), ResponseData, expectJsonWithError)
 
 import Http exposing (Expect, Response, expectStringResponse)
 import Json.Decode as Decode exposing (Decoder)

@@ -2,6 +2,8 @@ port module Pages.Login exposing (Model, Msg(..), init, toSession, update, updat
 
 import Css exposing (..)
 import Enum exposing (Enum)
+import ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
+import Fetch as Fetch exposing (ApiRoot, Token(..))
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (disabled, placeholder, type_, value)
 import Html.Styled.Events exposing (..)
@@ -13,16 +15,14 @@ import RemoteData exposing (RemoteData(..), isLoading)
 import Result.Extra as Result
 import Route
 import Session exposing (Msg(..), Session, storeJwt)
+import Styles exposing (StyledDocument, StyledElement)
 import UI.Button as Button
 import UI.Container as Container
 import UI.Error as Error
 import UI.Input as Input
 import UI.Link as Link
-import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
-import Utils.Fetch as Fetch exposing (ApiRoot, Token(..))
-import Utils.Styles exposing (StyledDocument, StyledElement)
-import Utils.Validation as Validation exposing (Problems(..))
 import Validate exposing (Valid, Validator, fromValid, ifBlank, validate)
+import Validation exposing (Problems(..))
 
 
 

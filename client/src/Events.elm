@@ -1,4 +1,4 @@
-module Utils.Events exposing (onEnter)
+module Events exposing (onEnter)
 
 import Html.Styled exposing (Attribute)
 import Html.Styled.Events exposing (..)

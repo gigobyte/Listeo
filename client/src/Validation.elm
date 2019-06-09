@@ -1,4 +1,4 @@
-module Utils.Validation exposing (Problems(..), getErrorForField, hasFailed, mapProblems)
+module Validation exposing (Problems(..), getErrorForField, hasFailed, mapProblems)
 
 import List.Extra as List
 

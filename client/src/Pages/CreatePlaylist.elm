@@ -2,6 +2,8 @@ module Pages.CreatePlaylist exposing (Model, Msg, init, toSession, update, updat
 
 import Css exposing (..)
 import Enum exposing (Enum)
+import ErrorResponse exposing (ResponseData, expectJsonWithError)
+import Fetch as Fetch exposing (ApiRoot, Token)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (placeholder, value)
 import Html.Styled.Events exposing (onClick, onInput)
@@ -14,17 +16,15 @@ import RemoteData exposing (RemoteData(..))
 import Result.Extra as Result
 import Route
 import Session exposing (Session)
+import Styles exposing (StyledDocument, StyledElement)
 import UI.Button as Button
 import UI.Container as Container
 import UI.Input as Input
 import UI.RadioButton as RadioButton
 import UI.TagInput as TagInput
 import UI.Textarea as Textarea
-import Utils.ErrorResponse exposing (ResponseData, expectJsonWithError)
-import Utils.Fetch as Fetch exposing (ApiRoot, Token)
-import Utils.Styles exposing (StyledDocument, StyledElement)
-import Utils.Validation as Validation exposing (Problems(..), getErrorForField)
 import Validate exposing (Valid, Validator, fromValid, ifBlank, validate)
+import Validation exposing (Problems(..), getErrorForField)
 
 
 

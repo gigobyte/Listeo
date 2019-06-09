@@ -5,8 +5,8 @@ import Css.Global exposing (adjacentSiblings, children, typeSelector)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (checked, type_)
 import Html.Styled.Events exposing (onClick)
+import Styles exposing (StyledElement)
 import UI.Colors exposing (blue100)
-import Utils.Styles exposing (StyledElement)
 
 
 type alias Props msg =

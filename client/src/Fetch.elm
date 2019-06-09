@@ -1,4 +1,4 @@
-module Utils.Fetch exposing
+module Fetch exposing
     ( ApiRoot(..)
     , Endpoint
     , Token(..)

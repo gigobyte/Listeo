@@ -1,12 +1,12 @@
 port module Session exposing (Msg(..), Session, User, fetchUser, getUser, init, jwtStored, pushAuthUrl, storeJwt, update)
 
 import Browser.Navigation as Nav
+import ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
+import Fetch as Fetch exposing (ApiRoot, Token(..), emptyToken)
 import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
-import Utils.ErrorResponse exposing (HttpError(..), ResponseData, expectJsonWithError)
-import Utils.Fetch as Fetch exposing (ApiRoot, Token(..), emptyToken)
 
 
 port removeJwt : () -> Cmd msg

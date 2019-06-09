@@ -4,6 +4,8 @@ import Browser exposing (UrlRequest)
 import Browser.Navigation as Nav
 import Css exposing (..)
 import Css.Global exposing (Snippet, global, typeSelector)
+import ErrorResponse exposing (ResponseData)
+import Fetch exposing (ApiRoot(..), Token(..))
 import Html.Styled as Html exposing (main_, styled, text)
 import Pages.Colors as Colors
 import Pages.CreatePlaylist as CreatePlaylist
@@ -15,11 +17,9 @@ import Pages.Register as Register
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import Session exposing (Msg(..), Session, User, fetchUser, jwtStored)
+import Styles exposing (StyledDocument, StyledElement, addIfNeeded, toUnstyledDocument)
 import UI.Colors exposing (gray200)
 import Url exposing (Url)
-import Utils.ErrorResponse exposing (ResponseData)
-import Utils.Fetch exposing (ApiRoot(..), Token(..))
-import Utils.Styles exposing (StyledDocument, StyledElement, addIfNeeded, toUnstyledDocument)
 
 
 type Msg

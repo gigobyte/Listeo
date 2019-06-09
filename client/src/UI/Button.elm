@@ -3,8 +3,8 @@ module UI.Button exposing (view)
 import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
+import Styles exposing (StyledElement)
 import UI.Colors exposing (blue300, blue400, white)
-import Utils.Styles exposing (StyledElement)
 
 
 view : StyledElement msg

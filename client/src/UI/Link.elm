@@ -3,8 +3,8 @@ module UI.Link exposing (LinkProps, view)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Route
+import Styles exposing (StyledElement)
 import UI.Colors exposing (blue200)
-import Utils.Styles exposing (StyledElement)
 
 
 type alias LinkProps =

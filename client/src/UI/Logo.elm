@@ -3,9 +3,9 @@ module UI.Logo exposing (view)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Route
+import Styles exposing (StyledElement)
 import UI.Colors exposing (blue200)
 import UI.Link as Link
-import Utils.Styles exposing (StyledElement)
 
 
 viewContainer : StyledElement msg

@@ -3,7 +3,7 @@ module Pages.Home exposing (Model, Msg, init, toSession, update, updateSession, 
 import Html.Styled exposing (div, text)
 import Route
 import Session exposing (Session)
-import Utils.Styles exposing (StyledDocument)
+import Styles exposing (StyledDocument)
 
 
 type alias Model =

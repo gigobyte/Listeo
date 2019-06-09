@@ -1,4 +1,4 @@
-module Utils.Styles exposing
+module Styles exposing
     ( StyledDocument
     , StyledElement
     , addIfNeeded

@@ -7,12 +7,12 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attributes
 import Html.Styled.Events exposing (onClick)
 import Session exposing (Msg(..))
+import Styles exposing (StyledElement)
 import UI.Button as Button
 import UI.Colors exposing (blue200)
 import UI.Container as Container
 import UI.Icon as Icon
 import UI.Modal as Modal
-import Utils.Styles exposing (StyledElement)
 
 
 viewContainer : StyledElement msg

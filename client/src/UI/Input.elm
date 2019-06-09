@@ -4,8 +4,8 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Maybe.Extra as Maybe
+import Styles exposing (StyledElement, addIfNeeded)
 import UI.Colors exposing (crimson100, gray100, gray300)
-import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type alias InputProps msg =

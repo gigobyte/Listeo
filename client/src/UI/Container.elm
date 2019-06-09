@@ -2,7 +2,7 @@ module UI.Container exposing (viewCentered, viewFullHeight)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Utils.Styles exposing (StyledElement)
+import Styles exposing (StyledElement)
 
 
 viewFullHeight : StyledElement msg -> StyledElement msg

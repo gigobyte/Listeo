@@ -1,14 +1,14 @@
 module UI.TagInput exposing (view)
 
 import Css exposing (..)
+import Events exposing (onEnter)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (value)
 import Html.Styled.Events exposing (onClick)
+import Styles exposing (StyledElement, addIfNeeded)
 import UI.Colors exposing (..)
 import UI.Icon as Icon
 import UI.Input as Input
-import Utils.Events exposing (onEnter)
-import Utils.Styles exposing (StyledElement, addIfNeeded)
 
 
 type alias TagInputProps msg =
