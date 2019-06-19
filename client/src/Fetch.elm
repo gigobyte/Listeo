@@ -6,6 +6,7 @@ module Fetch exposing
     , currentUser
     , emptyToken
     , get
+    , getPlaylist
     , getWithAuth
     , login
     , post
@@ -127,3 +128,8 @@ currentUser =
 createPlaylist : ApiRoot -> Endpoint
 createPlaylist =
     Endpoint "/playlist"
+
+
+getPlaylist : ApiRoot -> String -> Endpoint
+getPlaylist apiRoot playlistId =
+    Endpoint ("/playlist/" ++ playlistId) apiRoot

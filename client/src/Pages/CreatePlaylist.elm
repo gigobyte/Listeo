@@ -12,6 +12,8 @@ import Json.Decode as Decode exposing (Decoder, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import List.Extra as List
+import Pages.Playlist.PlaylistPrivacy as PlaylistPrivacy exposing (PlaylistPrivacy(..))
+import Pages.Playlist.PlaylistStyle as PlaylistStyle exposing (PlaylistStyle(..))
 import RemoteData exposing (RemoteData(..))
 import Result.Extra as Result
 import Route
@@ -46,32 +48,6 @@ type alias Form =
     , playlistPrivacy : PlaylistPrivacy
     , playlistStyle : PlaylistStyle
     }
-
-
-type PlaylistPrivacy
-    = Public
-    | Private
-
-
-playlistPrivacyEnum : Enum PlaylistPrivacy
-playlistPrivacyEnum =
-    Enum.create
-        [ ( "Public", Public )
-        , ( "Private", Private )
-        ]
-
-
-type PlaylistStyle
-    = Unordered
-    | Ranked
-
-
-playlistStyleEnum : Enum PlaylistStyle
-playlistStyleEnum =
-    Enum.create
-        [ ( "Unordered", Unordered )
-        , ( "Ranked", Ranked )
-        ]
 
 
 init : Session -> ( Model, Cmd msg )
@@ -247,10 +223,10 @@ update msg model =
 
         PlaylistTagInputUpdated value ->
             if String.endsWith "," value then
-                updateForm (\form -> { form | playlistTagInput = String.trim value }) model
+                update (PlaylistTagAdded <| String.dropRight 1 value) model
 
             else
-                update (PlaylistTagAdded <| String.dropRight 1 value) model
+                updateForm (\form -> { form | playlistTagInput = String.trim value }) model
 
         PlaylistTagAdded tag ->
             updateForm
@@ -348,8 +324,8 @@ createPlaylist apiRoot token form =
                 [ ( "name", Encode.string formValues.playlistName )
                 , ( "description", Encode.string formValues.playlistDescription )
                 , ( "tags", Encode.list Encode.string formValues.playlistTags )
-                , ( "privacy", playlistPrivacyEnum.encode formValues.playlistPrivacy )
-                , ( "style", playlistStyleEnum.encode formValues.playlistStyle )
+                , ( "privacy", PlaylistPrivacy.encode formValues.playlistPrivacy )
+                , ( "style", PlaylistStyle.encode formValues.playlistStyle )
                 ]
     in
     Fetch.postWithAuth

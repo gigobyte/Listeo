@@ -14,6 +14,7 @@ import Pages.Header.AddPlaylistModal as AddPlaylistModal
 import Pages.Home as Home
 import Pages.Login as Login
 import Pages.Register as Register
+import Pages.ViewPlaylist as ViewPlaylist
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import Session exposing (Msg(..), Session, User, fetchUser, jwtStored)
@@ -30,6 +31,7 @@ type Msg
     | GotHomeMsg Home.Msg
     | GotRegisterMsg Register.Msg
     | GotCreatePlaylistMsg CreatePlaylist.Msg
+    | GotViewPlaylistMsg ViewPlaylist.Msg
     | GotSessionMsg Session.Msg
 
 
@@ -39,6 +41,7 @@ type Model
     | Register Register.Model
     | Home Home.Model
     | CreatePlaylist CreatePlaylist.Model
+    | ViewPlaylist ViewPlaylist.Model
     | NotFound Session
     | DebugColors Session
     | About Session
@@ -114,8 +117,9 @@ changeRouteTo route model =
             CreatePlaylist.init session
                 |> updateWith CreatePlaylist GotCreatePlaylistMsg
 
-        Route.ViewPlaylist _ ->
-            ( NotFound session, Cmd.none )
+        Route.ViewPlaylist playlistId ->
+            ViewPlaylist.init session playlistId
+                |> updateWith ViewPlaylist GotViewPlaylistMsg
 
 
 toSession : Model -> Session
@@ -144,6 +148,9 @@ toSession page =
 
         CreatePlaylist createPlaylist ->
             CreatePlaylist.toSession createPlaylist
+
+        ViewPlaylist viewPlaylist ->
+            ViewPlaylist.toSession viewPlaylist
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -192,6 +199,10 @@ update msg model =
                 CreatePlaylist.update subMsg createPlaylist
                     |> updateWith CreatePlaylist GotCreatePlaylistMsg
 
+            ( GotViewPlaylistMsg subMsg, ViewPlaylist viewPlaylist ) ->
+                ViewPlaylist.update subMsg viewPlaylist
+                    |> updateWith ViewPlaylist GotViewPlaylistMsg
+
             ( _, _ ) ->
                 Debug.log ("Stray Message: " ++ Debug.toString msg) ( model, Cmd.none )
         )
@@ -235,6 +246,9 @@ updateSession subMsg page =
 
                 CreatePlaylist createPlaylist ->
                     CreatePlaylist (CreatePlaylist.updateSession newSession createPlaylist)
+
+                ViewPlaylist viewPlaylist ->
+                    ViewPlaylist (ViewPlaylist.updateSession newSession viewPlaylist)
     in
     ( newModel, Cmd.map GotSessionMsg sessionMsg )
 
@@ -324,6 +338,9 @@ view model =
 
             CreatePlaylist createPlaylist ->
                 viewPage (CreatePlaylist.view createPlaylist) GotCreatePlaylistMsg
+
+            ViewPlaylist viewPlaylist ->
+                viewPage (ViewPlaylist.view viewPlaylist) GotViewPlaylistMsg
 
 
 subscriptions : Model -> Sub Msg
