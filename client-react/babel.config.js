@@ -13,6 +13,6 @@ module.exports = api => {
       '@babel/typescript',
       '@babel/react'
     ],
-    plugins: ['@babel/proposal-class-properties']
+    plugins: ['@babel/proposal-class-properties', '@babel/transform-runtime']
   }
 }

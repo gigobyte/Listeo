@@ -20,6 +20,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html'
+    }),
+    new webpack.DefinePlugin({
+      'process.env.API_ROOT': `'http://localhost:8081'`
     })
   ]
 }
