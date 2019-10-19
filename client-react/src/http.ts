@@ -15,3 +15,23 @@ export const http = {
     return res.json()
   }
 }
+
+export enum DataStatus {
+  NotAsked = 'NotAsked',
+  Loading = 'Loading',
+  Success = 'Success',
+  Fail = 'Fail'
+}
+
+export type RemoteData<T> =
+  | { type: DataStatus.NotAsked }
+  | { type: DataStatus.Loading }
+  | { type: DataStatus.Success; data: T }
+  | { type: DataStatus.Fail }
+
+export const remoteData = {
+  notAsked: { type: DataStatus.NotAsked },
+  loading: { type: DataStatus.Loading },
+  success: <T>(data: T): RemoteData<T> => ({ type: DataStatus.Success, data }),
+  fail: { type: DataStatus.Fail }
+} as const

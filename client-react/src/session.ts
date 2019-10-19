@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from 'redux-starter-kit'
-import { http, HttpStatus, FailedRequest } from './http'
+import { http, HttpStatus, FailedRequest, RemoteData, remoteData } from './http'
 import { endpoints } from './endpoint'
 import { Dispatch } from 'redux'
 import { useSelector } from 'react-redux'
@@ -10,6 +10,7 @@ import {
   isAuthProtectedRoute,
   isAuthDisallowedRoute
 } from './route'
+import { createBrowserHistory } from 'history'
 
 export interface User {
   username: string
@@ -17,12 +18,14 @@ export interface User {
 }
 
 interface SessionState {
-  user: User | null
+  user: RemoteData<User>
   route: Route
 }
 
+const history = createBrowserHistory()
+
 const initialState: SessionState = {
-  user: null,
+  user: remoteData.notAsked,
   route: parseUrl(window.location.pathname)
 }
 
@@ -31,37 +34,53 @@ export const session = {
     name: 'session',
     initialState,
     reducers: {
-      fetchUserSuccess(state, action: PayloadAction<User>) {
-        state.user = action.payload
-
-        if (isAuthDisallowedRoute(state.route)) {
-          state.route = routes.home
-        }
+      locationChanged(state, action: PayloadAction<Route>) {
+        state.route = action.payload
       },
-      fetchUserFailed(state, action: PayloadAction<FailedRequest>) {
-        if (
-          action.payload.status === HttpStatus.Unauthorized &&
-          isAuthProtectedRoute(state.route)
-        ) {
-          state.route = routes.login
-        }
+      fetchUserSuccess(state, action: PayloadAction<User>) {
+        state.user = remoteData.success(action.payload)
+      },
+      fetchUserFailed(state) {
+        state.user = remoteData.fail
       }
     }
   }),
 
   effects: {
     fetchUser() {
-      return (dispatch: Dispatch) =>
+      return (dispatch: Dispatch, getState: () => SessionState) =>
         http
           .get(endpoints.currentUser)
-          .then(user => dispatch(session.actions.fetchUserSuccess(user)))
-          .catch(res => dispatch(session.actions.fetchUserFailed(res)))
+          .then(user => {
+            dispatch(session.actions.fetchUserSuccess(user))
+
+            if (isAuthDisallowedRoute(getState().route)) {
+              session.effects.redirect(routes.home)(dispatch)
+            }
+          })
+          .catch((res: FailedRequest) => {
+            dispatch(session.actions.fetchUserFailed())
+
+            if (
+              res.status === HttpStatus.Unauthorized &&
+              isAuthProtectedRoute(getState().route)
+            ) {
+              session.effects.redirect(routes.login)(dispatch)
+            }
+          })
+    },
+
+    redirect(route: Route) {
+      return (dispatch: Dispatch) => {
+        dispatch(session.actions.locationChanged(route))
+        history.push(route)
+      }
     }
   }
 }
 
-export const useUser = (): User | null =>
+export const useUser = () =>
   useSelector((session: SessionState) => session.user)
 
-export const useRoute = (): Route =>
+export const useRoute = () =>
   useSelector((session: SessionState) => session.route)
