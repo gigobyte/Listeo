@@ -7,6 +7,7 @@ export const routes = {
   login: createRoute('/login'),
   register: createRoute('/register'),
   about: createRoute('/about'),
+  createPlaylist: createRoute('/create-playlist'),
   notFound404: createRoute('/404')
 }
 

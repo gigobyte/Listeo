@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { colors } from './color'
 import { Error } from './Error'
+import { validate } from './validate'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error: string | undefined
@@ -49,8 +50,7 @@ export const useInput = ({
   shouldShowError
 }: UseInputParams) => {
   const [value, setValue] = useState('')
-  const error =
-    validations.map(([f, err]) => (f(value) ? '' : err)).find(x => !!x) || ''
+  const error = validate(validations, value) || ''
 
   return {
     value,

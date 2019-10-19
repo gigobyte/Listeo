@@ -1,7 +1,17 @@
+type Validation = [(x: string) => boolean, string]
+
 export const rule = (
   validationFn: (x: string) => boolean,
   error: string
-): [(x: string) => boolean, string] => [validationFn, error]
+): Validation => [validationFn, error]
+
+export const validate = (
+  validations: Validation[],
+  value: string
+): string | undefined =>
+  validations.map(([f, err]) => (f(value) ? '' : err)).find(x => !!x)
+
+/* Rules */
 
 export const ifBlank = (x: string): boolean => !!x
 

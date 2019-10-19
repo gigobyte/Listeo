@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { colors } from './color'
-import { useUser } from '../session'
+import { useUser, useRoute } from '../session'
 import { DataStatus } from '../http'
 import { Link } from './Link'
 import { routes } from '../route'
 import { Icons } from './Icon'
 import { Logo } from './Logo'
+import { AddPlaylistModal } from '../pages/playlist/AddPlaylistModal'
 
 const Container = styled.div`
   display: flex;
@@ -45,45 +46,60 @@ const AddButton = styled(Icons.plusCircle)`
 
 export const Header: React.FC = () => {
   const user = useUser()
+  const route = useRoute()
+  const [isAddPlaylistOverlayShown, setIsAddPlaylistOverlayShown] = useState(
+    false
+  )
+
+  const shouldShowAddPlaylistButton = route !== routes.createPlaylist
 
   return (
-    <Container>
-      <LogoWrapper>
-        <Logo />
-      </LogoWrapper>
-      <Nav>
-        {(() => {
-          switch (user.status) {
-            case DataStatus.Success:
-              return (
-                <>
-                  <AddButton />
-                  <NavItem>
-                    <Link to={routes.home}>{user.username}</Link>
-                  </NavItem>
-                  <NavItem>
-                    <Link to={routes.home}>Logout</Link>
-                  </NavItem>
-                </>
-              )
+    <>
+      <Container>
+        <LogoWrapper>
+          <Logo />
+        </LogoWrapper>
+        <Nav>
+          {(() => {
+            switch (user.status) {
+              case DataStatus.Success:
+                return (
+                  <>
+                    {shouldShowAddPlaylistButton && (
+                      <AddButton
+                        onClick={() => setIsAddPlaylistOverlayShown(true)}
+                      />
+                    )}
+                    <NavItem>
+                      <Link to={routes.home}>{user.username}</Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to={routes.home}>Logout</Link>
+                    </NavItem>
+                  </>
+                )
 
-            default:
-              return (
-                <>
-                  <NavItem>
-                    <Link to={routes.login}>Sign In</Link>
-                  </NavItem>
-                  <NavItem>
-                    <Link to={routes.register}>Register</Link>
-                  </NavItem>
-                  <NavItem>
-                    <Link to={routes.about}>About</Link>
-                  </NavItem>
-                </>
-              )
-          }
-        })()}
-      </Nav>
-    </Container>
+              default:
+                return (
+                  <>
+                    <NavItem>
+                      <Link to={routes.login}>Sign In</Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to={routes.register}>Register</Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to={routes.about}>About</Link>
+                    </NavItem>
+                  </>
+                )
+            }
+          })()}
+        </Nav>
+      </Container>
+      {isAddPlaylistOverlayShown && (
+        <AddPlaylistModal onClose={() => setIsAddPlaylistOverlayShown(false)} />
+      )}
+    </>
   )
 }
