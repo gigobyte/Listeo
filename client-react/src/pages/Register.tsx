@@ -18,10 +18,13 @@ import { useForm } from '../ui/useForm'
 import { session } from '../session'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
+import { ifBlank, ifShorterThan, rule } from '../ui/validate'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
   PasswordMissing = 'Please enter password',
+  UsernameTooShort = 'Username must be at least 4 characters long',
+  PasswordTooShort = 'Password must be at least 6 characters long',
   None = ''
 }
 
@@ -87,15 +90,19 @@ export const Register = () => {
 
   const usernameInput = useInput({
     trim: true,
-    validate: value =>
-      !value ? ValidationError.UsernameMissing : ValidationError.None,
+    validations: [
+      rule(ifBlank, ValidationError.UsernameMissing),
+      rule(ifShorterThan(4), ValidationError.UsernameTooShort)
+    ],
     shouldShowError: _ => registerForm.submitted
   })
 
   const passwordInput = useInput({
     trim: true,
-    validate: value =>
-      !value ? ValidationError.PasswordMissing : ValidationError.None,
+    validations: [
+      rule(ifBlank, ValidationError.PasswordMissing),
+      rule(ifShorterThan(6), ValidationError.PasswordTooShort)
+    ],
     shouldShowError: _ => registerForm.submitted
   })
 

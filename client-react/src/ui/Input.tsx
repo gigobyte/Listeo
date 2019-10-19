@@ -39,17 +39,18 @@ export const Input: React.FC<InputProps> = props => (
 
 interface UseInputParams {
   trim: boolean
-  validate: (value: string) => string
+  validations: [(value: string) => boolean, string][]
   shouldShowError: (value: string) => boolean
 }
 
 export const useInput = ({
-  validate,
+  validations,
   trim,
   shouldShowError
 }: UseInputParams) => {
   const [value, setValue] = useState('')
-  const error = validate(value)
+  const error =
+    validations.map(([f, err]) => (f(value) ? '' : err)).find(x => !!x) || ''
 
   return {
     value,

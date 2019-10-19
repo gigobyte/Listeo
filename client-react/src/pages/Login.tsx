@@ -18,6 +18,7 @@ import {
 } from '../http'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
+import { rule, ifBlank } from '../ui/validate'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
@@ -84,15 +85,13 @@ export const Login = () => {
 
   const usernameInput = useInput({
     trim: true,
-    validate: value =>
-      !value ? ValidationError.UsernameMissing : ValidationError.None,
+    validations: [rule(ifBlank, ValidationError.UsernameMissing)],
     shouldShowError: _ => loginForm.submitted
   })
 
   const passwordInput = useInput({
     trim: true,
-    validate: value =>
-      !value ? ValidationError.PasswordMissing : ValidationError.None,
+    validations: [rule(ifBlank, ValidationError.PasswordMissing)],
     shouldShowError: _ => loginForm.submitted
   })
 
