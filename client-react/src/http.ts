@@ -30,11 +30,11 @@ export type RemoteData<T> =
   | { status: DataStatus.Fail }
 
 export const remoteData = {
-  notAsked: { success: DataStatus.NotAsked },
-  loading: { success: DataStatus.Loading },
+  notAsked: { status: DataStatus.NotAsked },
+  loading: { status: DataStatus.Loading },
   success: <T>(data: T): RemoteData<T> => ({
     status: DataStatus.Success,
     ...data
   }),
-  fail: { success: DataStatus.Fail }
+  fail: { status: DataStatus.Fail }
 } as const
