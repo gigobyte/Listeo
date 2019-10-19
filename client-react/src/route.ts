@@ -6,6 +6,7 @@ export const routes = {
   home: createRoute('/'),
   login: createRoute('/login'),
   register: createRoute('/register'),
+  about: createRoute('/about'),
   notFound404: createRoute('/404')
 }
 

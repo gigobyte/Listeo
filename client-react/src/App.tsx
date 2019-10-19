@@ -6,6 +6,8 @@ import { session, useUser, useRoute } from './session'
 import { routes } from './route'
 import { colors } from './ui/color'
 import { DataStatus } from './http'
+import { Header } from './ui/Header'
+import MuseoSans from './assets/MuseoSans-100.ttf'
 
 const store = configureStore({
   reducer: session.reducer
@@ -20,11 +22,16 @@ export const App = () => {
 }
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: Museo-Sans;
+    src: url(${MuseoSans});
+  }
+
   html, body {
     height: 100%;
     margin: 0;
     font-family: 'Museo-Sans';
-    background-color: ${colors.gray200}
+    background-color: ${colors.gray200};
   }
 `
 
@@ -37,7 +44,10 @@ const Screen = styled.main`
 const Layout: React.FC = ({ children }) => (
   <>
     <GlobalStyle />
-    <Screen>{children}</Screen>
+    <Screen>
+      <Header />
+      {children}
+    </Screen>
   </>
 )
 
@@ -51,7 +61,7 @@ export const Main = () => {
   const user = useUser()
   const route = useRoute()
 
-  switch (user.type) {
+  switch (user.status) {
     case DataStatus.NotAsked:
     case DataStatus.Loading:
       return null

@@ -24,14 +24,17 @@ export enum DataStatus {
 }
 
 export type RemoteData<T> =
-  | { type: DataStatus.NotAsked }
-  | { type: DataStatus.Loading }
-  | { type: DataStatus.Success; data: T }
-  | { type: DataStatus.Fail }
+  | { status: DataStatus.NotAsked }
+  | { status: DataStatus.Loading }
+  | { status: DataStatus.Success } & T
+  | { status: DataStatus.Fail }
 
 export const remoteData = {
-  notAsked: { type: DataStatus.NotAsked },
-  loading: { type: DataStatus.Loading },
-  success: <T>(data: T): RemoteData<T> => ({ type: DataStatus.Success, data }),
-  fail: { type: DataStatus.Fail }
+  notAsked: { success: DataStatus.NotAsked },
+  loading: { success: DataStatus.Loading },
+  success: <T>(data: T): RemoteData<T> => ({
+    status: DataStatus.Success,
+    ...data
+  }),
+  fail: { success: DataStatus.Fail }
 } as const
