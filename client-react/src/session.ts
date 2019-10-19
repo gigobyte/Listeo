@@ -91,7 +91,7 @@ export const session = {
       }
     },
 
-    storeJwt(token: string) {
+    loginSuccess(token: string) {
       return (dispatch: AppDispatch) => {
         dispatch(session.actions.storeJwt(token))
         dispatch(session.effects.fetchUser())

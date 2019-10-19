@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTitle } from 'react-use'
 import { centered } from '../ui/Container'
 import styled from 'styled-components'
@@ -33,7 +33,7 @@ enum ValidationError {
 
 enum LoginResponseError {
   UserNotFound = 'UserNotFound',
-  InvalidRequrest = 'InvalidRequest',
+  InvalidRequest = 'InvalidRequest',
   ServerError = 'ServerError'
 }
 
@@ -52,6 +52,7 @@ export const Login = () => {
 
   const dispatch = useDispatch()
   const http = useHttp()
+  const [loginError, setLoginError] = useState()
 
   const loginForm = useForm({
     onSubmit: () => {
@@ -62,10 +63,10 @@ export const Login = () => {
             password: passwordInput.value
           })
           .then(({ jwt }: LoginSuccessResponse) => {
-            dispatch(session.effects.storeJwt(jwt))
+            dispatch(session.effects.loginSuccess(jwt))
           })
           .catch(({ error }: LoginFailResponse) => {
-            console.log(error)
+            setLoginError(error)
           })
       }
     }
@@ -91,6 +92,16 @@ export const Login = () => {
       <Input {...usernameInput} placeholder="Username" />
       <Input {...passwordInput} placeholder="Password" type="password" />
       <SubmitButton>Let's go</SubmitButton>
+      {loginError &&
+        (() => {
+          switch (loginError) {
+            case LoginResponseError.UserNotFound:
+              return 'User not found'
+
+            default:
+              return 'Something went wrong'
+          }
+        })()}
       <Link to={routes.register}>Don't have an account?</Link>
     </LoginForm>
   )
