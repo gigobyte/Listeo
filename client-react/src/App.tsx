@@ -1,27 +1,28 @@
-import React, { useContext } from 'react'
-import { useAsync } from 'react-async'
-import { http } from './api/http'
-import { endpoint } from './api/endpoint'
-import { SessionContext } from './session'
+import React, { useEffect } from 'react'
+import { configureStore } from 'redux-starter-kit'
+import { Provider, useDispatch } from 'react-redux'
+import { session, useUser } from './session'
 
-const fetchUser = () => http.get(endpoint.currentUser)
+const store = configureStore({
+  reducer: session.reducer
+})
 
 export const App = () => {
-  const { data: user, isPending } = useAsync({ promiseFn: fetchUser })
-
-  if (isPending) {
-    return null
-  }
-
   return (
-    <SessionContext.Provider value={{ user }}>
+    <Provider store={store}>
       <Main />
-    </SessionContext.Provider>
+    </Provider>
   )
 }
 
 export const Main = () => {
-  const session = useContext(SessionContext)
+  const dispatch = useDispatch()
 
-  return <div>{JSON.stringify(session.user)}</div>
+  useEffect(() => {
+    dispatch(session.effects.fetchUser())
+  }, [])
+
+  const user = useUser()
+
+  return <div>{JSON.stringify(user)}</div>
 }
