@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { useMount } from 'react-use'
 import styled, { createGlobalStyle } from 'styled-components'
 import { configureStore } from 'redux-starter-kit'
 import { Provider, useDispatch } from 'react-redux'
@@ -8,10 +9,13 @@ import { colors } from './ui/color'
 import { DataStatus } from './http'
 import { Header } from './ui/Header'
 import MuseoSans from './assets/MuseoSans-100.ttf'
+import { Login } from './pages/Login'
 
 const store = configureStore({
   reducer: session.reducer
 })
+
+export type AppDispatch = typeof store.dispatch
 
 export const App = () => {
   return (
@@ -54,9 +58,9 @@ const Layout: React.FC = ({ children }) => (
 export const Main = () => {
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  useMount(() => {
     dispatch(session.effects.fetchUser())
-  }, [])
+  })
 
   const user = useUser()
   const route = useRoute()
@@ -69,10 +73,14 @@ export const Main = () => {
     default: {
       switch (route) {
         case routes.home:
-          return null
+          return <Layout></Layout>
 
         case routes.login:
-          return <Layout>Hi login</Layout>
+          return (
+            <Layout>
+              <Login />
+            </Layout>
+          )
 
         case routes.notFound404:
         default:

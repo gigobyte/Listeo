@@ -17,7 +17,7 @@ const LinkWrapper = styled.a`
 export const Link: React.FC<LinkProps> = ({ to, children }) => {
   const dispatch = useDispatch()
   const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (e: React.MouseEvent) => {
       e.preventDefault()
       dispatch(session.effects.redirect(to))
     },

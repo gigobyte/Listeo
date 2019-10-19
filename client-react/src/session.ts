@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from 'redux-starter-kit'
-import { http, HttpStatus, FailedRequest, RemoteData, remoteData } from './http'
-import { endpoints } from './endpoint'
-import { Dispatch } from 'redux'
+import {
+  HttpStatus,
+  FailedRequest,
+  RemoteData,
+  remoteData,
+  createHttp
+} from './http'
+import { createEndpoint } from './endpoint'
 import { useSelector } from 'react-redux'
 import {
   Route,
@@ -11,8 +16,9 @@ import {
   isAuthDisallowedRoute
 } from './route'
 import { createBrowserHistory } from 'history'
+import { AppDispatch } from './App'
 
-export interface User {
+interface User {
   username: string
   createdOn: string
 }
@@ -20,13 +26,16 @@ export interface User {
 interface SessionState {
   user: RemoteData<User>
   route: Route
+  jwt: string | null
 }
 
+const currentUserEndpoint = createEndpoint<User>('/me')
 const history = createBrowserHistory()
 
 const initialState: SessionState = {
   user: remoteData.notAsked,
-  route: parseUrl(window.location.pathname)
+  route: parseUrl(window.location.pathname),
+  jwt: localStorage.getItem('jwt')
 }
 
 export const session = {
@@ -37,20 +46,25 @@ export const session = {
       locationChanged(state, action: PayloadAction<Route>) {
         state.route = action.payload
       },
+
       fetchUserSuccess(state, action: PayloadAction<User>) {
         state.user = remoteData.success(action.payload)
       },
+
       fetchUserFailed(state) {
         state.user = remoteData.fail
+      },
+
+      storeJwt(state, action: PayloadAction<string>) {
+        state.jwt = action.payload
       }
     }
   }),
-
   effects: {
     fetchUser() {
-      return (dispatch: Dispatch, getState: () => SessionState) =>
-        http
-          .get(endpoints.currentUser)
+      return (dispatch: AppDispatch, getState: () => SessionState) =>
+        createHttp(getState().jwt)
+          .get(currentUserEndpoint)
           .then(user => {
             dispatch(session.actions.fetchUserSuccess(user))
 
@@ -65,15 +79,24 @@ export const session = {
               res.status === HttpStatus.Unauthorized &&
               isAuthProtectedRoute(getState().route)
             ) {
-              session.effects.redirect(routes.login)(dispatch)
+              dispatch(session.effects.redirect(routes.login))
             }
           })
     },
 
     redirect(route: Route) {
-      return (dispatch: Dispatch) => {
+      return (dispatch: AppDispatch) => {
         dispatch(session.actions.locationChanged(route))
         history.push(route)
+      }
+    },
+
+    storeJwt(token: string) {
+      return (dispatch: AppDispatch) => {
+        dispatch(session.actions.storeJwt(token))
+        dispatch(session.effects.fetchUser())
+        dispatch(session.effects.redirect(routes.home))
+        localStorage.setItem('jwt', token)
       }
     }
   }
@@ -84,3 +107,5 @@ export const useUser = () =>
 
 export const useRoute = () =>
   useSelector((session: SessionState) => session.route)
+
+export const useJwt = () => useSelector((session: SessionState) => session.jwt)
