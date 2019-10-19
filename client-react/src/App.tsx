@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { configureStore } from 'redux-starter-kit'
 import { Provider, useDispatch } from 'react-redux'
-import { session, useUser } from './session'
+import { session, useUser, useRoute } from './session'
+import { routes } from './route'
 
 const store = configureStore({
   reducer: session.reducer
@@ -23,6 +24,21 @@ export const Main = () => {
   }, [])
 
   const user = useUser()
+  const route = useRoute()
 
-  return <div>{JSON.stringify(user)}</div>
+  if (!user) {
+    return null
+  }
+
+  switch (route) {
+    case routes.home:
+      return null
+
+    case routes.login:
+      return null
+
+    case routes.notFound404:
+    default:
+      return null
+  }
 }

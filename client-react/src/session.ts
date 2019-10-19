@@ -1,9 +1,15 @@
-import { createSlice, PayloadAction, createSelector } from 'redux-starter-kit'
-import { http, FailedRequest } from './api/http'
-import { endpoint } from './api/endpoint'
+import { createSlice, PayloadAction } from 'redux-starter-kit'
+import { http, HttpStatus, FailedRequest } from './http'
+import { endpoints } from './endpoint'
 import { Dispatch } from 'redux'
 import { useSelector } from 'react-redux'
-import { Route, parseUrl } from './route'
+import {
+  Route,
+  parseUrl,
+  routes,
+  isAuthProtectedRoute,
+  isAuthDisallowedRoute
+} from './route'
 
 export interface User {
   username: string
@@ -15,23 +21,31 @@ interface SessionState {
   route: Route
 }
 
+const initialState: SessionState = {
+  user: null,
+  route: parseUrl(window.location.pathname)
+}
+
 export const session = {
   ...createSlice({
     name: 'session',
-
-    initialState: {
-      user: null,
-      route: parseUrl(window.location.pathname)
-    },
-
+    initialState,
     reducers: {
-      fetchUserSuccess(state: SessionState, action: PayloadAction<User>) {
+      fetchUserSuccess(state, action: PayloadAction<User>) {
         state.user = action.payload
+
+        if (isAuthDisallowedRoute(state.route)) {
+          state.route = routes.home
+        }
       },
-      fetchUserFailed(
-        state: SessionState,
-        action: PayloadAction<FailedRequest>
-      ) {}
+      fetchUserFailed(state, action: PayloadAction<FailedRequest>) {
+        if (
+          action.payload.status === HttpStatus.Unauthorized &&
+          isAuthProtectedRoute(state.route)
+        ) {
+          state.route = routes.login
+        }
+      }
     }
   }),
 
@@ -39,11 +53,15 @@ export const session = {
     fetchUser() {
       return (dispatch: Dispatch) =>
         http
-          .get(endpoint.currentUser)
+          .get(endpoints.currentUser)
           .then(user => dispatch(session.actions.fetchUserSuccess(user)))
-          .catch(hmm => dispatch(session.actions.fetchUserFailed(hmm)))
+          .catch(res => dispatch(session.actions.fetchUserFailed(res)))
     }
   }
 }
 
-export const useUser = () => useSelector((state: SessionState) => state.user)
+export const useUser = (): User | null =>
+  useSelector((session: SessionState) => session.user)
+
+export const useRoute = (): Route =>
+  useSelector((session: SessionState) => session.route)
