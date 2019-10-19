@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { colors } from './color'
+import { Error } from './Error'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error: string | undefined
   shouldShowError: boolean
-}
-
-interface InputErrorProps {
-  visible: boolean
 }
 
 const InputWrapper = styled.input<InputProps>`
@@ -31,28 +28,12 @@ const InputWrapper = styled.input<InputProps>`
   ${props => (props.error ? 'margin-bottom: 5px' : '')};
 `
 
-const InputError = styled.div<InputErrorProps>`
-  color: ${colors.crimson100};
-  max-height: 0;
-  transition: max-height 3000ms, opacity 1000ms;
-  opacity: 0;
-
-  ${props =>
-    props.visible
-      ? `
-    opacity: 1;
-    max-height: 999px;
-    margin-bottom: 10px;
-  `
-      : ''}
-`
-
 export const Input: React.FC<InputProps> = props => (
   <>
     <InputWrapper {...props} />
-    <InputError visible={!!props.error && props.shouldShowError}>
+    <Error visible={!!props.error && props.shouldShowError}>
       {props.error}
-    </InputError>
+    </Error>
   </>
 )
 

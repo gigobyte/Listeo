@@ -37,21 +37,21 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Museo-Sans';
     background-color: ${colors.gray200};
   }
+
+  main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 `
 
-const Screen = styled.main`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`
+const Screen = styled
 
 const Layout: React.FC = ({ children }) => (
   <>
     <GlobalStyle />
-    <Screen>
-      <Header />
-      {children}
-    </Screen>
+    <Header />
+    {children}
   </>
 )
 

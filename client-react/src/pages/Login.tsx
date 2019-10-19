@@ -7,6 +7,7 @@ import { Input, useInput } from '../ui/Input'
 import { useForm } from '../ui/useForm'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
+import { Error } from '../ui/Error'
 import { createEndpoint } from '../endpoint'
 import { FailedRequest, useHttp } from '../http'
 import { useDispatch } from 'react-redux'
@@ -92,8 +93,8 @@ export const Login = () => {
       <Input {...usernameInput} placeholder="Username" />
       <Input {...passwordInput} placeholder="Password" type="password" />
       <SubmitButton>Let's go</SubmitButton>
-      {loginError &&
-        (() => {
+      <Error visible={!!loginError}>
+        {(() => {
           switch (loginError) {
             case LoginResponseError.UserNotFound:
               return 'User not found'
@@ -102,6 +103,7 @@ export const Login = () => {
               return 'Something went wrong'
           }
         })()}
+      </Error>
       <Link to={routes.register}>Don't have an account?</Link>
     </LoginForm>
   )
