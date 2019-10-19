@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { useTitle } from 'react-use'
 import { centered } from '../ui/Container'
-import styled from 'styled-components'
 import { Button } from '../ui/Button'
 import { Input, useInput } from '../ui/Input'
 import { useForm } from '../ui/useForm'
@@ -9,22 +9,15 @@ import { routes } from '../route'
 import { Link } from '../ui/Link'
 import { Error } from '../ui/Error'
 import { createEndpoint } from '../endpoint'
-import { FailedRequest, useHttp } from '../http'
+import {
+  FailedRequest,
+  useHttp,
+  DataStatus,
+  remoteData,
+  RemoteData
+} from '../http'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
-
-const LoginForm = styled(centered(styled.form))`
-  height: 66%;
-`
-
-const Title = styled.h1`
-  font-size: 3rem;
-`
-
-const SubmitButton = styled(Button).attrs({ type: 'submit' })`
-  margin-top: 10px;
-  margin-bottom: 15px;
-`
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
@@ -48,12 +41,27 @@ interface LoginFailResponse extends FailedRequest {
 
 const loginEndpoint = createEndpoint<LoginSuccessResponse>('/login')
 
+const LoginForm = styled(centered(styled.form))`
+  height: 66%;
+`
+
+const Title = styled.h1`
+  font-size: 3rem;
+`
+
+const SubmitButton = styled(Button).attrs({ type: 'submit' })`
+  margin-top: 10px;
+  margin-bottom: 15px;
+`
+
 export const Login = () => {
   useTitle('Login - Listeo')
 
   const dispatch = useDispatch()
   const http = useHttp()
-  const [loginError, setLoginError] = useState()
+  const [loginResponse, setLoginResponse] = useState<
+    RemoteData<LoginSuccessResponse, LoginFailResponse>
+  >(remoteData.notAsked)
 
   const loginForm = useForm({
     onSubmit: () => {
@@ -63,11 +71,12 @@ export const Login = () => {
             username: usernameInput.value,
             password: passwordInput.value
           })
-          .then(({ jwt }: LoginSuccessResponse) => {
-            dispatch(session.effects.loginSuccess(jwt))
+          .then((response: LoginSuccessResponse) => {
+            dispatch(session.effects.authSuccess(response.jwt))
+            setLoginResponse(remoteData.success(response))
           })
-          .catch(({ error }: LoginFailResponse) => {
-            setLoginError(error)
+          .catch((response: LoginFailResponse) => {
+            setLoginResponse(remoteData.fail(response))
           })
       }
     }
@@ -87,23 +96,35 @@ export const Login = () => {
     shouldShowError: _ => loginForm.submitted
   })
 
+  const loginRequestErrorText = (() => {
+    switch (loginResponse.status) {
+      case DataStatus.Fail: {
+        switch (loginResponse.error) {
+          case LoginResponseError.UserNotFound:
+            return 'User not found'
+
+          default:
+            return 'Something went wrong'
+        }
+      }
+
+      default:
+        return ''
+    }
+  })()
+
+  const isSubmitButtonDisabled =
+    loginResponse.status === DataStatus.Loading ||
+    !usernameInput.isValid ||
+    !passwordInput.isValid
+
   return (
     <LoginForm {...loginForm}>
       <Title>Sign In</Title>
       <Input {...usernameInput} placeholder="Username" />
       <Input {...passwordInput} placeholder="Password" type="password" />
-      <SubmitButton>Let's go</SubmitButton>
-      <Error visible={!!loginError}>
-        {(() => {
-          switch (loginError) {
-            case LoginResponseError.UserNotFound:
-              return 'User not found'
-
-            default:
-              return 'Something went wrong'
-          }
-        })()}
-      </Error>
+      <SubmitButton disabled={isSubmitButtonDisabled}>Let's go</SubmitButton>
+      <Error visible={!!loginRequestErrorText}>{loginRequestErrorText}</Error>
       <Link to={routes.register}>Don't have an account?</Link>
     </LoginForm>
   )

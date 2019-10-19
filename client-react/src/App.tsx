@@ -10,6 +10,7 @@ import { DataStatus } from './http'
 import { Header } from './ui/Header'
 import MuseoSans from './assets/MuseoSans-100.ttf'
 import { Login } from './pages/Login'
+import { Register } from './pages/Register'
 
 const store = configureStore({
   reducer: session.reducer
@@ -45,8 +46,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const Screen = styled
-
 const Layout: React.FC = ({ children }) => (
   <>
     <GlobalStyle />
@@ -79,6 +78,13 @@ export const Main = () => {
           return (
             <Layout>
               <Login />
+            </Layout>
+          )
+
+        case routes.register:
+          return (
+            <Layout>
+              <Register />
             </Layout>
           )
 

@@ -51,8 +51,8 @@ export const session = {
         state.user = remoteData.success(action.payload)
       },
 
-      fetchUserFailed(state) {
-        state.user = remoteData.fail
+      fetchUserFailed(state, action: PayloadAction<FailedRequest>) {
+        state.user = remoteData.fail(action.payload)
       },
 
       storeJwt(state, action: PayloadAction<string>) {
@@ -73,10 +73,10 @@ export const session = {
             }
           })
           .catch((res: FailedRequest) => {
-            dispatch(session.actions.fetchUserFailed())
+            dispatch(session.actions.fetchUserFailed(res))
 
             if (
-              res.status === HttpStatus.Unauthorized &&
+              res.statusCode === HttpStatus.Unauthorized &&
               isAuthProtectedRoute(getState().route)
             ) {
               dispatch(session.effects.redirect(routes.login))
@@ -91,7 +91,7 @@ export const session = {
       }
     },
 
-    loginSuccess(token: string) {
+    authSuccess(token: string) {
       return (dispatch: AppDispatch) => {
         dispatch(session.actions.storeJwt(token))
         dispatch(session.effects.fetchUser())

@@ -7,7 +7,7 @@ export enum HttpStatus {
 }
 
 export interface FailedRequest {
-  status: HttpStatus
+  statusCode: HttpStatus
 }
 
 export const createHttp = (jwt: string | null) => ({
@@ -20,7 +20,8 @@ export const createHttp = (jwt: string | null) => ({
     })
 
     if (!res.ok) {
-      throw { status: res.status }
+      const fail: FailedRequest = { statusCode: res.status }
+      throw fail
     }
 
     return res.json()
@@ -37,7 +38,8 @@ export const createHttp = (jwt: string | null) => ({
     const res = await rawRes.json()
 
     if (!rawRes.ok) {
-      throw { status: rawRes.status, ...res }
+      const fail: FailedRequest = { statusCode: res.status }
+      throw { ...fail, ...res }
     }
 
     return res
@@ -57,18 +59,21 @@ export enum DataStatus {
   Fail = 'Fail'
 }
 
-export type RemoteData<T> =
+export type RemoteData<T, E = FailedRequest> =
   | { status: DataStatus.NotAsked }
   | { status: DataStatus.Loading }
   | { status: DataStatus.Success } & T
-  | { status: DataStatus.Fail }
+  | { status: DataStatus.Fail } & E
 
 export const remoteData = {
   notAsked: { status: DataStatus.NotAsked },
   loading: { status: DataStatus.Loading },
-  success: <T>(data: T): RemoteData<T> => ({
+  success: <T>(data: T): RemoteData<T, never> => ({
     status: DataStatus.Success,
     ...data
   }),
-  fail: { status: DataStatus.Fail }
+  fail: <E>(error: E): RemoteData<never, E> => ({
+    status: DataStatus.Fail,
+    ...error
+  })
 } as const
