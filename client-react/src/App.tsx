@@ -11,6 +11,7 @@ import { Header } from './ui/Header'
 import MuseoSans from './assets/MuseoSans-100.ttf'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
+import { CreatePlaylist } from './pages/playlist/CreatePlaylist'
 
 const store = configureStore({
   reducer: session.reducer
@@ -85,6 +86,13 @@ export const Main = () => {
           return (
             <Layout>
               <Register />
+            </Layout>
+          )
+
+        case routes.createPlaylist:
+          return (
+            <Layout>
+              <CreatePlaylist />
             </Layout>
           )
 

@@ -7,6 +7,7 @@ import { Button } from '../../ui/Button'
 import { useDispatch } from 'react-redux'
 import { session } from '../../session'
 import { routes } from '../../route'
+import { Modal } from '../../ui/Modal'
 
 const Container = styled(fullHeight(styled.div))`
   display: flex;
@@ -74,11 +75,15 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
   const dispatch = useDispatch()
 
   return (
-    <div onClose={onClose}>
+    <Modal onClose={onClose}>
       <Container>
         <Header>
-          <Title>New playlist</Title>
-          <Subtitle>Choose a starting point</Subtitle>
+          <div>
+            <Title>New playlist</Title>
+          </div>
+          <div>
+            <Subtitle>Choose a starting point</Subtitle>
+          </div>
         </Header>
         <OptionsContainer>
           <OptionCard>
@@ -101,6 +106,6 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
           </OptionCard>
         </OptionsContainer>
       </Container>
-    </div>
+    </Modal>
   )
 }
