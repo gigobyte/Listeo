@@ -57,6 +57,7 @@ export const useInput = ({
     shouldShowError: shouldShowError(value),
     error,
     isValid: !error,
+    setValue: (newValue: string) => (trim ? newValue.trim() : newValue),
     onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
       setValue(trim ? e.target.value.trim() : e.target.value)
   }

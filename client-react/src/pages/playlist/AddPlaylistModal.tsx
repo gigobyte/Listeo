@@ -90,9 +90,10 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
             <NewPlaylistIcon />
             <OptionDescription>Start with an empty playlist.</OptionDescription>
             <Button
-              onClick={() =>
+              onClick={() => {
+                onClose()
                 dispatch(session.effects.redirect(routes.createPlaylist))
-              }
+              }}
             >
               Create new
             </Button>

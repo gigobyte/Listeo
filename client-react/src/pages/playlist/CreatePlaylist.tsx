@@ -5,6 +5,7 @@ import { useTitle } from 'react-use'
 import { useInput, Input } from '../../ui/Input'
 import { ifBlank, rule } from '../../ui/validate'
 import { useForm } from '../../ui/useForm'
+import { TagInput, useTagInput } from '../../ui/TagInput'
 
 enum ValidationError {
   PlaylistNameMissing = 'PlaylistNameMissing'
@@ -53,10 +54,13 @@ export const CreatePlaylist = () => {
     shouldShowError: _ => createPlaylistForm.submitted
   })
 
+  const tagsInput = useTagInput()
+
   return (
     <Container>
       <Title>Create a new playlist</Title>
       <Input {...playlistNameInput} placeholder="Name of list" />
+      <TagInput {...tagsInput} placeholder="Tags (optional" />
     </Container>
   )
 }
