@@ -81,15 +81,12 @@ export const TagInput: React.FC<TagInputProps> = ({
 }
 
 export const useTagInput = () => {
-  const [value, setValue] = useState('')
   const [tags, setTags] = useState<string[]>([])
 
   return {
-    value,
     tags,
     onAddTag: (tag: string) => {
       setTags([...new Set([...tags, tag])])
-      setValue('')
     },
     onRemoveTag: (tag: string) => setTags(tags.filter(x => x !== tag))
   }

@@ -4,12 +4,13 @@ import { colors } from './color'
 import { Error } from './Error'
 import { validate } from './validate'
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error: string | undefined
   shouldShowError: boolean
 }
 
-const InputWrapper = styled.input<InputProps>`
+const TextareaWrapper = styled.textarea<TextareaProps>`
   border-radius: 2px;
   padding: 7px;
   width: 200px;
@@ -17,6 +18,8 @@ const InputWrapper = styled.input<InputProps>`
   font-size: 16px;
   margin-bottom: 10px;
   height: 25px;
+  min-height: 75px;
+  max-height: 150px;
   border: 0;
   transition: border-color 1000ms;
   font-family: 'Museo-Sans';
@@ -35,26 +38,26 @@ const InputWrapper = styled.input<InputProps>`
       : ''};
 `
 
-export const Input: React.FC<InputProps> = props => (
+export const Textarea: React.FC<TextareaProps> = props => (
   <>
-    <InputWrapper {...props} />
+    <TextareaWrapper {...props} />
     <Error visible={!!props.error && props.shouldShowError}>
       {props.error}
     </Error>
   </>
 )
 
-interface UseInputParams {
+interface UseTextareaParams {
   trim: boolean
   validations: [(value: string) => boolean, string][]
   shouldShowError: (value: string) => boolean
 }
 
-export const useInput = ({
+export const useTextarea = ({
   validations,
   trim,
   shouldShowError
-}: UseInputParams) => {
+}: UseTextareaParams) => {
   const [value, setValue] = useState('')
   const error = validate(validations, value) || ''
 
@@ -64,7 +67,7 @@ export const useInput = ({
     error,
     isValid: !error,
     setValue: (newValue: string) => setValue(trim ? newValue.trim() : newValue),
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) =>
       setValue(trim ? e.target.value.trim() : e.target.value)
   }
 }

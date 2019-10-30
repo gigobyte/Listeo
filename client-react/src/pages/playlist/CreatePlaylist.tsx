@@ -6,10 +6,45 @@ import { useInput, Input } from '../../ui/Input'
 import { ifBlank, rule } from '../../ui/validate'
 import { useForm } from '../../ui/useForm'
 import { TagInput, useTagInput } from '../../ui/TagInput'
+import { Textarea, useTextarea } from '../../ui/Textarea'
+import { RadioButton, useRadioButtons } from '../../ui/RadioButton'
+import { Button } from '../../ui/Button'
+import { useHttp, FailedRequest } from '../../http'
+import { createEndpoint } from '../../endpoint'
+import { session } from '../../session'
+import { useDispatch } from 'react-redux'
+import { routes } from '../../route'
 
 enum ValidationError {
-  PlaylistNameMissing = 'PlaylistNameMissing'
+  PlaylistNameMissing = 'Please enter the name of the playlist'
 }
+
+enum PlaylistPrivacy {
+  Public,
+  Private
+}
+
+enum PlaylistStyle {
+  Ranked,
+  Unordered
+}
+
+enum CreatePlaylistResponseError {
+  InvalidRequest = 'InvalidRequest',
+  ValidationFailed = 'ValidationFailed'
+}
+
+interface CreatePlaylistSuccessResponse {
+  playlistId: string
+}
+
+interface CreatePlaylistFailResponse extends FailedRequest {
+  error: CreatePlaylistResponseError
+}
+
+const createPlaylistEndpoint = createEndpoint<CreatePlaylistSuccessResponse>(
+  '/playlist'
+)
 
 const Container = styled(centered(styled.div))`
   height: 66%;
@@ -44,8 +79,25 @@ const Separator = styled.div`
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
+  const http = useHttp()
+  const dispatch = useDispatch()
+
   const createPlaylistForm = useForm({
-    onSubmit: () => {}
+    onSubmit: () => {
+      if (playlistNameInput.isValid) {
+        http
+          .post(createPlaylistEndpoint, {
+            name: playlistNameInput.value,
+            description: descriptionInput.value,
+            tags: tagsInput.tags,
+            privacy: playlistPrivacy.value,
+            style: playlistStyle.value
+          })
+          .then(response => {
+            dispatch(session.effects.redirect(routes.viewPlaylist))
+          })
+      }
+    }
   })
 
   const playlistNameInput = useInput({
@@ -56,11 +108,48 @@ export const CreatePlaylist = () => {
 
   const tagsInput = useTagInput()
 
+  const descriptionInput = useTextarea({
+    trim: false,
+    validations: [],
+    shouldShowError: _ => false
+  })
+
+  const playlistPrivacy = useRadioButtons({
+    initialValue: PlaylistPrivacy.Public,
+    values: [PlaylistPrivacy.Public, PlaylistPrivacy.Private]
+  })
+
+  const [publicRadioButton, privateRadioButton] = playlistPrivacy.radioButtons
+
+  const playlistStyle = useRadioButtons({
+    initialValue: PlaylistStyle.Unordered,
+    values: [PlaylistStyle.Ranked, PlaylistStyle.Unordered]
+  })
+
+  const [rankedRadioButton, unorderedRadioButton] = playlistStyle.radioButtons
+
   return (
     <Container>
       <Title>Create a new playlist</Title>
       <Input {...playlistNameInput} placeholder="Name of list" />
-      <TagInput {...tagsInput} placeholder="Tags (optional" />
+      <TagInput {...tagsInput} placeholder="Tags (optional)" />
+      <Textarea {...descriptionInput} placeholder="Description (optional)" />
+      <Settings>
+        <SettingsColumn>
+          <SettingLabel>Privacy</SettingLabel>
+          <Separator />
+          <SettingLabel>Style</SettingLabel>
+        </SettingsColumn>
+        <SettingsColumn>
+          <RadioButton {...publicRadioButton} label="Public" />
+          <RadioButton {...rankedRadioButton} label="Ranked" />
+        </SettingsColumn>
+        <SettingsColumn>
+          <RadioButton {...privateRadioButton} label="Private" />
+          <RadioButton {...unorderedRadioButton} label="Unordered" />
+        </SettingsColumn>
+      </Settings>
+      <Button onClick={createPlaylistForm.onSubmit}>Create</Button>
     </Container>
   )
 }

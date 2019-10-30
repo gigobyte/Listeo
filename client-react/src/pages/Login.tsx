@@ -72,7 +72,7 @@ export const Login = () => {
             username: usernameInput.value,
             password: passwordInput.value
           })
-          .then((response: LoginSuccessResponse) => {
+          .then(response => {
             dispatch(session.effects.authSuccess(response.jwt))
             setLoginResponse(remoteData.success(response))
           })
