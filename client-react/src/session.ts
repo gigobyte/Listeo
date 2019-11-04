@@ -13,7 +13,8 @@ import {
   parseUrl,
   routes,
   isAuthProtectedRoute,
-  isAuthDisallowedRoute
+  isAuthDisallowedRoute,
+  routeToString
 } from './route'
 import { createBrowserHistory } from 'history'
 import { AppDispatch } from './App'
@@ -87,7 +88,7 @@ export const session = {
     redirect(route: Route) {
       return (dispatch: AppDispatch) => {
         dispatch(session.actions.locationChanged(route))
-        history.push(route)
+        history.push(routeToString(route))
       }
     },
 

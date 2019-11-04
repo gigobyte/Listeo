@@ -94,7 +94,9 @@ export const CreatePlaylist = () => {
             style: playlistStyle.value
           })
           .then(response => {
-            dispatch(session.effects.redirect(routes.viewPlaylist))
+            dispatch(
+              session.effects.redirect(routes.viewPlaylist(response.playlistId))
+            )
           })
       }
     }

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Route } from '../route'
+import { Route, routeToString } from '../route'
 import styled from 'styled-components'
 import { colors } from './color'
 import { useDispatch } from 'react-redux'
@@ -25,7 +25,7 @@ export const Link: React.FC<LinkProps> = ({ to, children }) => {
   )
 
   return (
-    <LinkWrapper onClick={handleClick} href={to}>
+    <LinkWrapper onClick={handleClick} href={routeToString(to)}>
       {children}
     </LinkWrapper>
   )
