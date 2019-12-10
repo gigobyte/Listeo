@@ -13,7 +13,6 @@ import Feature.Login.LoginError (LoginError(..))
 import Feature.Login.LoginBody (LoginBody)
 import qualified Feature.Login.LoginBody as LoginBody
 import qualified Data.Aeson as Aeson
-import qualified Data.Map as Map
 import qualified Feature.User.User as User
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
@@ -39,12 +38,10 @@ findUserByCredentials req = do
     Crypto.validate (User.password user) (LoginBody.password req)
 
 generateJwtToken :: Text -> Text
-generateJwtToken username = JWT.encodeSigned JWT.HS256 key cs
+generateJwtToken username = JWT.encodeSigned key mempty cs
  where
-  cs = JWT.def
-    { JWT.iss                = JWT.stringOrURI "listeo"
-    , JWT.sub                = JWT.stringOrURI username
-    , JWT.unregisteredClaims = Map.fromList
-      [("http://localhost:1234", (Aeson.Bool True))]
+  cs = mempty
+    { JWT.iss = JWT.stringOrURI "listeo"
+    , JWT.sub = JWT.stringOrURI username
     }
-  key = JWT.secret Secrets.jwtSecret
+  key = JWT.hmacSecret Secrets.jwtSecret
