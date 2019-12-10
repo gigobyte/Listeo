@@ -9,6 +9,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   shouldShowError: boolean
 }
 
+const isErrorVisible = (props: InputProps): boolean =>
+  !!props.error && props.shouldShowError
+
 const InputWrapper = styled.input<InputProps>`
   border-radius: 2px;
   padding: 7px;
@@ -27,7 +30,7 @@ const InputWrapper = styled.input<InputProps>`
     box-shadow: 1px 2px 3px 1px ${colors.gray300};
   }
   ${props =>
-    props.error
+    isErrorVisible(props)
       ? `
     margin-bottom: 5px;
     border-color: ${colors.crimson100};
@@ -38,9 +41,7 @@ const InputWrapper = styled.input<InputProps>`
 export const Input: React.FC<InputProps> = props => (
   <>
     <InputWrapper {...props} />
-    <Error visible={!!props.error && props.shouldShowError}>
-      {props.error}
-    </Error>
+    <Error visible={isErrorVisible(props)}>{props.error}</Error>
   </>
 )
 

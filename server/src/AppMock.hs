@@ -46,7 +46,7 @@ instance RegisterService AppMockT where
     register = \_ -> pure $ Right ""
 
 instance LoginService AppMockT where
-    login = \_ -> pure $ Right "jwt token lol"
+    login = \_ -> pure $ Right "some jwt"
 
 instance PlaylistService AppMockT where
     createPlaylist = \_ -> pure $ Right mockId
