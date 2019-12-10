@@ -1,5 +1,5 @@
 # Listeo
-Platform for sharing and creating video playlists from multiple sources (Haskell + Elm)
+Platform for sharing and creating video playlists from multiple sources (Haskell + TS)
 
 Maxed out technical spec:
 #### Front-end
