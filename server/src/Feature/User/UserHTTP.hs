@@ -11,7 +11,7 @@ import qualified Feature.User.User as User
 
 dbUserToPublicUser :: User.User -> PublicUser
 dbUserToPublicUser user =
-  PublicUser {username = User.username user, createdOn = User.createdOn user}
+  PublicUser { username = User.username user, createdOn = User.createdOn user }
 
 routes :: (AuthService m, MonadIO m) => ScottyT LText m ()
 routes = do

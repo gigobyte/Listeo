@@ -4,8 +4,7 @@ module Feature.Auth.AuthService
 where
 
 import Protolude
-import Web.Scotty.Trans (ActionT)
-import Web.Scotty.Trans (header, status, finish)
+import Web.Scotty.Trans (ActionT, header, status, finish)
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status (status401)
 import Feature.User.UserRepoClass (UserRepo, findUser)

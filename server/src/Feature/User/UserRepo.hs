@@ -5,16 +5,18 @@ module Feature.User.UserRepo
 where
 
 import Protolude
-import Database.MongoDB (findOne, insert_, select, (=:))
-import Feature.User.UserDTO (UserDTO)
+import Database.MongoDB (Document, findOne, insert_, select, (=:))
 import Feature.User.User (User)
 import qualified Feature.User.User as User
-import qualified Feature.User.UserDTO as UserDTO
+import Feature.User.UserRepoClass (InsertUser(..))
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 
-insertUser :: (MonadDB m) => UserDTO -> m ()
-insertUser user =
-  withConn $ \conn -> runQuery conn (insert_ "user" (UserDTO.toBson user))
+insertUser :: (MonadDB m) => InsertUser -> m ()
+insertUser user = withConn
+  $ \conn -> runQuery conn (insert_ "user" (toBson user))
+ where
+  toBson :: InsertUser -> Document
+  toBson u = ["username" =: username u, "password" =: password u]
 
 findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do

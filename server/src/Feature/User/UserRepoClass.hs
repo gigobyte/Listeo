@@ -2,8 +2,12 @@ module Feature.User.UserRepoClass where
 
 import Protolude
 import Feature.User.User (User)
-import Feature.User.UserDTO (UserDTO)
+
+data InsertUser = InsertUser
+  { username :: Text
+  , password :: Text
+  }
 
 class Monad m => UserRepo m where
-  insertUser :: UserDTO -> m ()
+  insertUser :: InsertUser -> m ()
   findUser :: Text -> m (Maybe User)

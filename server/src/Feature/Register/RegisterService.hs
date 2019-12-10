@@ -4,14 +4,12 @@ module Feature.Register.RegisterService
 where
 
 import Protolude hiding (hash)
-import Feature.User.UserDTO (UserDTO(..))
 import Control.Monad.Trans.Maybe
 import Control.Monad.Except (liftEither)
 import Infrastructure.MonadCrypto
 import Feature.Login.LoginService (generateJwtToken)
 import Feature.Register.RegisterResult (RegisterError(..))
-import Feature.User.UserRepoClass (UserRepo(..))
-import qualified Feature.User.UserDTO as UserDTO
+import Feature.User.UserRepoClass (InsertUser(..), UserRepo(..))
 import qualified Data.Text as T
 import Data.Aeson
 
@@ -28,17 +26,17 @@ register
   :: (UserRepo m, MonadCrypto m) => LByteString -> m (Either RegisterError Text)
 register rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
-  user <- liftEither $ mkUserDTO body
+  user <- liftEither $ mkInsertUser body
   ExceptT $ tryToInsertUser user
-  return $ generateJwtToken (UserDTO.username user)
+  return $ generateJwtToken (username user)
 
 parseBody :: LByteString -> Either RegisterError Register
 parseBody body = maybeToRight InvalidRequest (decode body)
 
 tryToInsertUser
-  :: (UserRepo m, MonadCrypto m) => UserDTO -> m (Either RegisterError ())
+  :: (UserRepo m, MonadCrypto m) => InsertUser -> m (Either RegisterError ())
 tryToInsertUser user = runExceptT $ do
-  userExists <- lift $ doesUserAlreadyExist (UserDTO.username user)
+  userExists <- lift $ doesUserAlreadyExist (username user)
 
   when userExists $ throwE UserAlreadyExists
 
@@ -51,10 +49,10 @@ doesUserAlreadyExist username = do
   userInDB <- findUser username
   return $ isJust userInDB
 
-mkUserDTO :: Register -> Either RegisterError UserDTO
-mkUserDTO req =
+mkInsertUser :: Register -> Either RegisterError InsertUser
+mkInsertUser req =
   maybeToRight ValidationFailed
-    $   UserDTO
+    $   InsertUser
     <$> (validateUsername $ registerUsername req)
     <*> (validatePassword $ registerPassword req)
 
@@ -68,11 +66,11 @@ validatePassword str
   | T.length str < 6 = Nothing
   | otherwise        = Just (T.strip str)
 
-hashPasswordInUser :: MonadCrypto m => UserDTO -> m (Maybe UserDTO)
-hashPasswordInUser user@UserDTO { UserDTO.password } = do
+hashPasswordInUser :: MonadCrypto m => InsertUser -> m (Maybe InsertUser)
+hashPasswordInUser user@InsertUser { password } = do
   hashedPassword <- hash $ encodeUtf8 $ password
-  return (setHashedPassword <$> decodeUtf8 <$> hashedPassword)
+  return (setHashedPassword . decodeUtf8 <$> hashedPassword)
  where
-  setHashedPassword :: Text -> UserDTO
-  setHashedPassword p = user { UserDTO.password = p }
+  setHashedPassword :: Text -> InsertUser
+  setHashedPassword p = user { password = p }
 

@@ -8,7 +8,6 @@ import Web.Scotty.Trans (ActionT)
 import qualified Web.Scotty.Trans as ScottyT
 
 instance ToJSON RegisterError where
-  toJSON = genericToJSON (defaultOptions { tagSingleConstructors = True })
 data RegisterError
   = UserAlreadyExists
   | InvalidRequest
