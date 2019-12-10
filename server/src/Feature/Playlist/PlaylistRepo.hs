@@ -10,14 +10,19 @@ import Database.MongoDB (findOne, insert, select, cast', (=:))
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 import Infrastructure.Utils.Id (Id)
 import Feature.Playlist.Playlist (Playlist)
-import Feature.Playlist.PlaylistDTO (PlaylistDTO)
+import Feature.Playlist.PlaylistRepoClass (InsertPlaylist(..))
 import qualified Feature.Playlist.Playlist as Playlist
-import qualified Feature.Playlist.PlaylistDTO as PlaylistDTO
 
-insertPlaylist :: (MonadDB m) => PlaylistDTO -> m (Id Playlist)
+insertPlaylist :: (MonadDB m) => InsertPlaylist -> m (Id Playlist)
 insertPlaylist playlist = withConn $ \conn -> do
-  playlistId <- runQuery conn (insert "playlist" $ PlaylistDTO.toBson playlist)
+  playlistId <- runQuery conn (insert "playlist" playlistBson)
   return $ fromJust $ cast' playlistId
+  where
+    playlistBson =
+      [ "name" =: insertPlaylistName playlist
+      , "style" =: (fromEnum $ insertPlaylistStyle playlist)
+      , "privacy" =: (fromEnum $ insertPlaylistPrivacy playlist)
+      ]
 
 findPlaylist :: (MonadDB m) => Text -> m (Maybe Playlist)
 findPlaylist playlistId = withConn $ \conn -> do

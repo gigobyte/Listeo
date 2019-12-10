@@ -5,8 +5,7 @@ import qualified Data.ByteString.Lazy as B
 import qualified Feature.Playlist.Playlist as Playlist
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
-import Feature.Playlist.GetPlaylist.GetPlaylistError
-import Feature.Playlist.GetPlaylist.GetPlaylistResponse
+import Feature.Playlist.GetPlaylist.GetPlaylistResult (GetPlaylistError(..), GetPlaylistResponse(..))
 
 getPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m)

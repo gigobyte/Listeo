@@ -1,10 +1,15 @@
 module Feature.Playlist.PlaylistRepoClass where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist)
-import Feature.Playlist.PlaylistDTO (PlaylistDTO)
+import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
 import Infrastructure.Utils.Id (Id)
 
+data InsertPlaylist = InsertPlaylist
+  { insertPlaylistName :: Text
+  , insertPlaylistStyle :: PlaylistStyle
+  , insertPlaylistPrivacy :: PlaylistPrivacy
+  }
+
 class Monad m => PlaylistRepo m where
-    insertPlaylist :: PlaylistDTO -> m (Id Playlist)
-    findPlaylist :: Text -> m (Maybe Playlist)
+  insertPlaylist :: InsertPlaylist -> m (Id Playlist)
+  findPlaylist :: Text -> m (Maybe Playlist)

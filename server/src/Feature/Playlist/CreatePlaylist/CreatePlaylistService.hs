@@ -5,11 +5,10 @@ import Data.Aeson (decode)
 import Control.Monad.Except (liftEither)
 import Infrastructure.Utils.Id (Id)
 import Feature.Playlist.CreatePlaylist.CreatePlaylistBody (CreatePlaylistBody)
-import Feature.Playlist.CreatePlaylist.CreatePlaylistError
+import Feature.Playlist.CreatePlaylist.CreatePlaylistResult (CreatePlaylistError(..))
 import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistBody as CreatePlaylistBody
 import Feature.Playlist.Playlist (Playlist)
-import Feature.Playlist.PlaylistDTO (PlaylistDTO(..))
-import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
+import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..), InsertPlaylist(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass
   (PlaylistTagRepo(..), InsertPlaylistTag(..))
 import qualified Data.Text as T
@@ -20,7 +19,7 @@ createPlaylist
   -> m (Either CreatePlaylistError (Id Playlist))
 createPlaylist rawBody = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
-  playlist           <- liftEither $ mkPlaylistDTO body
+  playlist           <- liftEither $ mkInsertPlaylist body
   insertedPlaylistId <- lift $ insertPlaylist playlist
   tags               <-
     liftEither
@@ -35,10 +34,11 @@ createPlaylist rawBody = runExceptT $ do
 parseBody :: LByteString -> Either CreatePlaylistError CreatePlaylistBody
 parseBody body = maybeToRight InvalidRequest (decode body)
 
-mkPlaylistDTO :: CreatePlaylistBody -> Either CreatePlaylistError PlaylistDTO
-mkPlaylistDTO req =
+mkInsertPlaylist
+  :: CreatePlaylistBody -> Either CreatePlaylistError InsertPlaylist
+mkInsertPlaylist req =
   maybeToRight ValidationFailed
-    $   PlaylistDTO
+    $   InsertPlaylist
     <$> (validatePlaylistName $ CreatePlaylistBody.name req)
     <*> pure (CreatePlaylistBody.style req)
     <*> pure (CreatePlaylistBody.privacy req)

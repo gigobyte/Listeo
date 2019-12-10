@@ -16,7 +16,7 @@ import Feature.Playlist.Playlist
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
-import Feature.Playlist.GetPlaylist.GetPlaylistResponse
+import Feature.Playlist.GetPlaylist.GetPlaylistResult (GetPlaylistResponse(..))
 import Feature.PlaylistTag.PlaylistTag
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
