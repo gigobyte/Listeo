@@ -1,8 +1,8 @@
 module Feature.Login.LoginServiceClass where
 
 import Protolude
-import Feature.Login.LoginError (LoginError)
+import Feature.Login.LoginResult (LoginError)
 
 class Monad m => LoginService m where
-    login :: LByteString -> m (Either LoginError Text)
+  login :: LByteString -> m (Either LoginError Text)
 
