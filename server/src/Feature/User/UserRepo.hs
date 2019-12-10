@@ -16,7 +16,8 @@ insertUser user = withConn
   $ \conn -> runQuery conn (insert_ "user" (toBson user))
  where
   toBson :: InsertUser -> Document
-  toBson u = ["username" =: username u, "password" =: password u]
+  toBson u =
+    ["username" =: insertUserUsername u, "password" =: insertUserPassword u]
 
 findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do

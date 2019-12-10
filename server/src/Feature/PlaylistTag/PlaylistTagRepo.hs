@@ -4,16 +4,16 @@ import Protolude hiding (find)
 import Data.Maybe (fromJust)
 import Feature.Playlist.Playlist (Playlist)
 import Feature.PlaylistTag.PlaylistTag (PlaylistTag)
-import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
-import qualified Feature.PlaylistTag.PlaylistTagDTO as PlaylistTagDTO
 import qualified Feature.PlaylistTag.PlaylistTag as PlaylistTag
+import Feature.PlaylistTag.PlaylistTagRepoClass (InsertPlaylistTag(..))
 import Infrastructure.DB (MonadDB, runQuery, withConn)
 import Infrastructure.Utils.Id (Id)
 import Database.MongoDB (insert, insert_, cast', find, select, rest, (=:))
 
-insertPlaylistTag :: (MonadDB m) => Id Playlist -> PlaylistTagDTO -> m ()
+insertPlaylistTag :: (MonadDB m) => Id Playlist -> InsertPlaylistTag -> m ()
 insertPlaylistTag playlistId tag = withConn $ \conn -> do
-  tagIdVal <- runQuery conn $ insert "playlistTag" (PlaylistTagDTO.toBson tag)
+  tagIdVal <- runQuery conn
+    $ insert "playlistTag" ["name" =: insertPlaylistTagName tag]
   let tagId = fromJust $ cast' tagIdVal :: Id PlaylistTag
   runQuery
     conn

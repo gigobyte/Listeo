@@ -28,7 +28,7 @@ register rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
   user <- liftEither $ mkInsertUser body
   ExceptT $ tryToInsertUser user
-  return $ generateJwtToken (username user)
+  return $ generateJwtToken (insertUserUsername user)
 
 parseBody :: LByteString -> Either RegisterError Register
 parseBody body = maybeToRight InvalidRequest (decode body)
@@ -36,7 +36,7 @@ parseBody body = maybeToRight InvalidRequest (decode body)
 tryToInsertUser
   :: (UserRepo m, MonadCrypto m) => InsertUser -> m (Either RegisterError ())
 tryToInsertUser user = runExceptT $ do
-  userExists <- lift $ doesUserAlreadyExist (username user)
+  userExists <- lift $ doesUserAlreadyExist (insertUserUsername user)
 
   when userExists $ throwE UserAlreadyExists
 
@@ -67,10 +67,10 @@ validatePassword str
   | otherwise        = Just (T.strip str)
 
 hashPasswordInUser :: MonadCrypto m => InsertUser -> m (Maybe InsertUser)
-hashPasswordInUser user@InsertUser { password } = do
-  hashedPassword <- hash $ encodeUtf8 $ password
+hashPasswordInUser user@InsertUser { insertUserPassword } = do
+  hashedPassword <- hash $ encodeUtf8 $ insertUserPassword
   return (setHashedPassword . decodeUtf8 <$> hashedPassword)
  where
   setHashedPassword :: Text -> InsertUser
-  setHashedPassword p = user { password = p }
+  setHashedPassword p = user { insertUserPassword = p }
 

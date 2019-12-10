@@ -4,8 +4,8 @@ import Protolude
 import Feature.User.User (User)
 
 data InsertUser = InsertUser
-  { username :: Text
-  , password :: Text
+  { insertUserUsername :: Text
+  , insertUserPassword :: Text
   }
 
 class Monad m => UserRepo m where

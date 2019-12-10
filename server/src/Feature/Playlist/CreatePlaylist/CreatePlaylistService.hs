@@ -10,8 +10,8 @@ import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistBody as CreatePla
 import Feature.Playlist.Playlist (Playlist)
 import Feature.Playlist.PlaylistDTO (PlaylistDTO(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
-import Feature.PlaylistTag.PlaylistTagDTO (PlaylistTagDTO(..))
-import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
+import Feature.PlaylistTag.PlaylistTagRepoClass
+  (PlaylistTagRepo(..), InsertPlaylistTag(..))
 import qualified Data.Text as T
 
 createPlaylist
@@ -23,7 +23,10 @@ createPlaylist rawBody = runExceptT $ do
   playlist           <- liftEither $ mkPlaylistDTO body
   insertedPlaylistId <- lift $ insertPlaylist playlist
   tags               <-
-    liftEither $ sequence $ mkPlaylistTagDTO <$> (CreatePlaylistBody.tags body)
+    liftEither
+    $   sequence
+    $   mkInsertPlaylistTag
+    <$> (CreatePlaylistBody.tags body)
 
   lift $ forM_ tags (insertPlaylistTag insertedPlaylistId)
 
@@ -40,10 +43,10 @@ mkPlaylistDTO req =
     <*> pure (CreatePlaylistBody.style req)
     <*> pure (CreatePlaylistBody.privacy req)
 
-mkPlaylistTagDTO :: Text -> Either CreatePlaylistError PlaylistTagDTO
-mkPlaylistTagDTO tagName =
+mkInsertPlaylistTag :: Text -> Either CreatePlaylistError InsertPlaylistTag
+mkInsertPlaylistTag tagName =
   maybeToRight ValidationFailed
-    $   PlaylistTagDTO
+    $   InsertPlaylistTag
     <$> (validatePlaylistTag tagName)
 
 validatePlaylistName :: Text -> Maybe Text
