@@ -20,13 +20,13 @@ enum ValidationError {
 }
 
 enum PlaylistPrivacy {
-  Public,
-  Private
+  Public = 'Public',
+  Private = 'Private'
 }
 
 enum PlaylistStyle {
-  Ranked,
-  Unordered
+  Ranked = 'Ranked',
+  Unordered = 'Unordered'
 }
 
 enum CreatePlaylistResponseError {

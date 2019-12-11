@@ -56,6 +56,7 @@ mkInsertPlaylist req =
   maybeToRight ValidationFailed
     $   InsertPlaylist
     <$> (validatePlaylistName $ createPlaylistName req)
+    <*> pure (createPlaylistDescription req)
     <*> pure (createPlaylistStyle req)
     <*> pure (createPlaylistPrivacy req)
 

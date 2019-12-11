@@ -2,7 +2,7 @@ CREATE TABLE users (
   id bigserial PRIMARY KEY,
   username text NOT NULL UNIQUE,
   pass text NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now()
+  created_on timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TYPE playlist_style AS enum (
@@ -16,21 +16,21 @@ CREATE TYPE playlist_privacy AS enum (
 );
 
 CREATE TABLE playlists (
-  playlist_id bigserial PRIMARY KEY,
-  title text NOT NULL,
+  id bigserial PRIMARY KEY,
+  p_name text NOT NULL,
+  p_description text,
   style playlist_style NOT NULL,
   privacy playlist_privacy NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now()
+  created_on timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TABLE playlist_tags (
-  tag_id bigserial PRIMARY KEY,
-  tag text NOT NULL
+  id bigserial PRIMARY KEY,
+  t_name text NOT NULL
 );
 
 CREATE TABLE playlists_playlist_tags (
-  PRIMARY KEY (playlist_id, playlist_tag_id),
-  playlist_id bigserial REFERENCES playlists (playlist_id) ON DELETE CASCADE,
-  playlist_tag_id bigserial REFERENCES playlist_tags (tag_id) ON DELETE CASCADE
+  playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
+  playlist_tag_id bigserial REFERENCES playlist_tags (id) ON DELETE CASCADE
 );
 

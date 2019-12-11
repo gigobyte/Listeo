@@ -6,6 +6,7 @@ import Infrastructure.Utils.Id (Id)
 
 data InsertPlaylist = InsertPlaylist
   { insertPlaylistName :: Text
+  , insertPlaylistDescription :: Text
   , insertPlaylistStyle :: PlaylistStyle
   , insertPlaylistPrivacy :: PlaylistPrivacy
   }

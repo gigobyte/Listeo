@@ -1,7 +1,6 @@
 module Feature.Playlist.Playlist where
 
 import Protolude
-import Data.ByteString.Builder (byteString)
 import Infrastructure.Utils.Id (Id)
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
@@ -21,11 +20,11 @@ instance FromField PlaylistPrivacy where
   fromField _ mdata = return $ case mdata of
     Just "public"  -> Public
     Just "private" -> Private
-    _              -> undefined
+    _              -> Private
 
 instance ToField PlaylistPrivacy where
-  toField Public  = Plain (byteString "public")
-  toField Private = Plain (byteString "private")
+  toField Public  = toField ("public" :: Text)
+  toField Private = toField ("private" :: Text)
 
 instance ToJSON PlaylistStyle
 instance FromJSON PlaylistStyle
@@ -38,11 +37,11 @@ instance FromField PlaylistStyle where
   fromField _ mdata = return $ case mdata of
     Just "unordered" -> Unordered
     Just "ranked"    -> Ranked
-    _                -> undefined
+    _                -> Unordered
 
 instance ToField PlaylistStyle where
-  toField Unordered = Plain (byteString "unordered")
-  toField Ranked    = Plain (byteString "ranked")
+  toField Unordered = toField ("unordered" :: Text)
+  toField Ranked    = toField ("ranked" :: Text)
 
 data Playlist = Playlist
   { id :: Id Playlist
