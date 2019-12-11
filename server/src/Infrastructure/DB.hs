@@ -1,23 +1,42 @@
 module Infrastructure.DB
-  ( runQuery
-  , withConn
+  ( withConn
+  , init
   , MonadDB
   , Env
   )
 where
 
 import Protolude
-import Database.MongoDB (Action, Pipe, access, master)
+import Data.Pool
+import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.Migration
+import System.Environment
 
-type Connection = Pipe
-type Env = Connection
+type Env = Pool Connection
 
-type MonadDB m = (MonadReader Connection m, MonadIO m)
+type MonadDB m = (MonadReader Env m, MonadIO m)
+
+init :: IO Env
+init = do
+  pool <- acquirePool
+  migrateDb pool
+  return pool
+
+acquirePool :: IO (Pool Connection)
+acquirePool = do
+  envUrl <- lookupEnv "DATABASE_URL"
+  let pgUrl = toS $ fromMaybe "postgresql://localhost/listeo" envUrl
+  createPool (connectPostgreSQL pgUrl) close 1 10 10
+
+migrateDb :: Pool Connection -> IO ()
+migrateDb pool = withResource pool
+  $ \conn -> void $ withTransaction conn (runMigration (ctx conn))
+ where
+  ctx = MigrationContext cmd False
+  cmd =
+    MigrationCommands [MigrationInitialization, MigrationDirectory "postgresql"]
 
 withConn :: MonadDB m => (Connection -> IO a) -> m a
 withConn action = do
-  conn <- ask
-  liftIO $ action conn
-
-runQuery :: Connection -> Action IO a -> IO a
-runQuery pipe = access pipe master "listeodb"
+  pool <- ask
+  liftIO $ withResource pool action

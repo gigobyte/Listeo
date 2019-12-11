@@ -2,7 +2,7 @@ module Feature.Playlist.CreatePlaylist.CreatePlaylistResult where
 
 import Protolude
 import Data.Aeson
-import Infrastructure.Utils.Id (Id(..))
+import Infrastructure.Utils.Id (Id)
 import Infrastructure.AppError
 import Network.HTTP.Types.Status (badRequest400)
 import Feature.Playlist.Playlist (Playlist)
@@ -26,4 +26,4 @@ toHttpResult (Left err) = do
   ScottyT.status badRequest400
   ScottyT.json $ ErrorResponse err
 toHttpResult (Right id) =
-  ScottyT.json $ CreatePlaylistResponse (show $ unId id)
+  ScottyT.json $ CreatePlaylistResponse (show id)

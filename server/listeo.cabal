@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6c8b2b9c8c4614c9814db5132d336ec492a9dc42265e1a4a303207dfbcdaaab
+-- hash: 2a10ebfe1fd93f2ca35c8b641d226fc1755750f2a4675a234ac48775baaaf6b8
 
 name:           listeo
 version:        0.1.0.0
@@ -77,9 +77,11 @@ executable listeo-exe
     , containers
     , http-types
     , jwt
-    , mongoDB
     , mtl
+    , postgresql-simple
+    , postgresql-simple-migration
     , protolude
+    , resource-pool
     , scotty
     , text
     , time

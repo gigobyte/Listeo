@@ -2,7 +2,8 @@ module Feature.User.User where
 
 import Protolude
 import Infrastructure.Utils.Id (Id)
-import Database.MongoDB (Document, lookup, timestamp)
+import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.FromRow
 import Data.Time.Clock (UTCTime)
 
 data User = User
@@ -12,10 +13,5 @@ data User = User
   , createdOn :: UTCTime
   }
 
-fromBson :: Document -> Maybe User
-fromBson doc =
-  User
-    <$> lookup "_id"      doc
-    <*> lookup "username" doc
-    <*> lookup "password" doc
-    <*> (timestamp <$> lookup "_id" doc)
+instance FromRow User where
+  fromRow = User <$> field <*> field <*> field <*> field

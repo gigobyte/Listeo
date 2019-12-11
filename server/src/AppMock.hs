@@ -2,7 +2,6 @@ module AppMock where
 
 import Protolude hiding (get)
 import System.IO.Unsafe (unsafePerformIO)
-import Database.MongoDB (genObjectId)
 import Infrastructure.MonadTime
 import Infrastructure.MonadCrypto
 import Infrastructure.Utils.Id
@@ -61,7 +60,7 @@ instance PlaylistTagRepo AppMockT where
     findPlaylistTagsByPlaylist = \_ -> pure [mockPlaylistTag]
 
 mockId :: Id a
-mockId = Id $ unsafePerformIO genObjectId
+mockId = 12345
 
 mockUser :: User
 mockUser = User
@@ -84,7 +83,6 @@ mockPlaylistTag :: PlaylistTag
 mockPlaylistTag = PlaylistTag
   { id        = mockId
   , name      = "Test"
-  , createdOn = unsafePerformIO $ Time.getCurrentTime
   }
 
 mockGetPlaylistResponse :: GetPlaylistResponse
