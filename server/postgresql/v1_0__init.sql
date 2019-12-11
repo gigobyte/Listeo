@@ -17,6 +17,7 @@ CREATE TYPE playlist_privacy AS enum (
 
 CREATE TABLE playlists (
   id bigserial PRIMARY KEY,
+  author_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   p_name text NOT NULL,
   p_description text,
   style playlist_style NOT NULL,

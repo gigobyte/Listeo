@@ -2,6 +2,7 @@ module Feature.Playlist.PlaylistRepoClass where
 
 import Protolude
 import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
+import Feature.User.User (User)
 import Infrastructure.Utils.Id (Id)
 
 data InsertPlaylist = InsertPlaylist
@@ -9,6 +10,7 @@ data InsertPlaylist = InsertPlaylist
   , insertPlaylistDescription :: Text
   , insertPlaylistStyle :: PlaylistStyle
   , insertPlaylistPrivacy :: PlaylistPrivacy
+  , insertPlaylistAuthorId :: Id User
   }
 
 class Monad m => PlaylistRepo m where

@@ -44,11 +44,11 @@ instance ToField PlaylistStyle where
   toField Ranked    = toField ("ranked" :: Text)
 
 data Playlist = Playlist
-  { id :: Id Playlist
-  , name :: Text
-  , style :: PlaylistStyle
-  , privacy :: PlaylistPrivacy
-  , createdOn :: UTCTime
+  { playlistId :: Id Playlist
+  , playlistName :: Text
+  , playlistStyle :: PlaylistStyle
+  , playlistPrivacy :: PlaylistPrivacy
+  , playlistCreatedOn :: UTCTime
   }
 
 instance FromRow Playlist where

@@ -6,7 +6,7 @@ import Infrastructure.Utils.Id (Id)
 import Data.Time.Clock (UTCTime)
 import Infrastructure.AppError
 import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
-import Feature.PlaylistTag.PlaylistTag (PlaylistTag)
+import Feature.PlaylistTag.PlaylistTag (PublicPlaylistTag)
 import Network.HTTP.Types.Status (badRequest400)
 import Web.Scotty.Trans (ActionT)
 import qualified Web.Scotty.Trans as ScottyT
@@ -24,7 +24,7 @@ data GetPlaylistResponse
       , style :: PlaylistStyle
       , privacy :: PlaylistPrivacy
       , createdOn :: UTCTime
-      , tags :: [PlaylistTag]
+      , tags :: [PublicPlaylistTag]
       }
   deriving Generic
 

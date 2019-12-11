@@ -8,11 +8,10 @@ import Protolude
 import Data.Aeson
 import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
-import Feature.User.User (User)
+import Feature.User.User (User(..))
 import Feature.User.UserRepoClass (UserRepo(..))
 import Feature.Login.LoginResult (LoginError(..))
 import qualified Data.Aeson as Aeson
-import qualified Feature.User.User as User
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Infrastructure.Secrets as Secrets
 import qualified Web.JWT as JWT
@@ -30,7 +29,7 @@ login :: UserRepo m => LByteString -> m (Either LoginError Text)
 login rawBody = runExceptT $ do
   body <- liftEither $ parseBody rawBody
   user <- ExceptT $ findUserByCredentials body
-  return $ generateJwtToken (User.username user)
+  return $ generateJwtToken (userUsername user)
 
 parseBody :: LByteString -> Either LoginError Login
 parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
@@ -43,7 +42,7 @@ findUserByCredentials req = do
  where
   isPasswordValid :: User -> Bool
   isPasswordValid user =
-    Crypto.validate (User.password user) (loginPassword req)
+    Crypto.validate (userPassword user) (loginPassword req)
 
 generateJwtToken :: Text -> Text
 generateJwtToken username = JWT.encodeSigned key mempty cs

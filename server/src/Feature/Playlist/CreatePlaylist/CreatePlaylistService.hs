@@ -10,6 +10,7 @@ import Feature.Playlist.CreatePlaylist.CreatePlaylistResult
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..), InsertPlaylist(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass
   (PlaylistTagRepo(..), InsertPlaylistTag(..))
+import Feature.User.User (User(..))
 import qualified Data.Text as T
 
 data CreatePlaylist = CreatePlaylist
@@ -37,10 +38,11 @@ instance FromJSON CreatePlaylist where
 createPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m)
   => LByteString
+  -> User
   -> m (Either CreatePlaylistError (Id Playlist))
-createPlaylist rawBody = runExceptT $ do
+createPlaylist rawBody user = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
-  playlist           <- liftEither $ mkInsertPlaylist body
+  playlist           <- liftEither $ mkInsertPlaylist body user
   insertedPlaylistId <- lift $ insertPlaylist playlist
   tags               <- liftEither $ mkInsertPlaylistTags body
 
@@ -51,14 +53,16 @@ createPlaylist rawBody = runExceptT $ do
 parseBody :: LByteString -> Either CreatePlaylistError CreatePlaylist
 parseBody body = maybeToRight InvalidRequest (decode body)
 
-mkInsertPlaylist :: CreatePlaylist -> Either CreatePlaylistError InsertPlaylist
-mkInsertPlaylist req =
+mkInsertPlaylist
+  :: CreatePlaylist -> User -> Either CreatePlaylistError InsertPlaylist
+mkInsertPlaylist req user =
   maybeToRight ValidationFailed
     $   InsertPlaylist
     <$> (validatePlaylistName $ createPlaylistName req)
     <*> pure (createPlaylistDescription req)
     <*> pure (createPlaylistStyle req)
     <*> pure (createPlaylistPrivacy req)
+    <*> pure (userId user)
 
 mkInsertPlaylistTags
   :: CreatePlaylist -> Either CreatePlaylistError [InsertPlaylistTag]
