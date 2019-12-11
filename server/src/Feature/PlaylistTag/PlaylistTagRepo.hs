@@ -10,10 +10,10 @@ import Database.PostgreSQL.Simple
 
 insertPlaylistTag :: (MonadDB m) => Id Playlist -> InsertPlaylistTag -> m ()
 insertPlaylistTag playlistId tag = withConn $ \conn -> do
-  let tagQry = "insert into playlist_tags (t_name) values (?)"
+  let tagQry = "INSERT INTO playlist_tags (t_name) VALUES (?)"
   let
     relQry
-      = "insert into playlists_playlist_tags (playlist_id, playlist_tag_id) values (?, ?)"
+      = "INSERT INTO playlists_playlist_tags (playlist_id, playlist_tag_id) VALUES (?, ?)"
 
   tagId <- execute conn tagQry (Only $ insertPlaylistTagName tag)
   void $ execute conn relQry (playlistId, tagId)
@@ -22,11 +22,11 @@ findPlaylistTagsByPlaylist :: (MonadDB m) => Text -> m [PlaylistTag]
 findPlaylistTagsByPlaylist playlistId = withConn $ \conn -> do
   let
     qry
-      = "select * from playlist_tags\
-        \join playlists_playlist_tags\
-        \on playlists_playlist_tags.playlist_tag_id = playlist_tags.id\
-        \join playlists\
-        \on playlists_playlist_tags.playlist_id = playlists.id\
-        \where playlists.id = ?"
+      = "SELECT * FROM playlist_tags\
+        \JOIN playlists_playlist_tags\
+        \ON playlists_playlist_tags.playlist_tag_id = playlist_tags.id\
+        \JOIN playlists\
+        \ON playlists_playlist_tags.playlist_id = playlists.id\
+        \WHERE playlists.id = ?"
 
   liftIO $ query conn qry (Only playlistId)
