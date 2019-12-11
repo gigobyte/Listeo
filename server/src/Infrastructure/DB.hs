@@ -1,6 +1,7 @@
 module Infrastructure.DB
   ( withConn
   , init
+  , extractReturning
   , MonadDB
   , Env
   )
@@ -12,6 +13,7 @@ import Data.Pool
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.Migration
 import System.Environment
+import Infrastructure.Utils.Id (Id)
 import Infrastructure.Secrets (dbPassword)
 
 type Env = Pool Connection
@@ -45,3 +47,7 @@ withConn :: MonadDB m => (Connection -> IO a) -> m a
 withConn action = do
   pool <- ask
   liftIO $ withResource pool action
+
+extractReturning :: [Only (Id a)] -> Id a
+extractReturning ((Only x) : _) = x
+extractReturning []             = 0

@@ -31,6 +31,7 @@ CREATE TABLE playlist_tags (
 );
 
 CREATE TABLE playlists_playlist_tags (
+  PRIMARY KEY (playlist_id, playlist_tag_id),
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
   playlist_tag_id bigserial REFERENCES playlist_tags (id) ON DELETE CASCADE
 );

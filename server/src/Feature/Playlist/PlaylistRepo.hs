@@ -5,7 +5,7 @@ module Feature.Playlist.PlaylistRepo
 where
 
 import Protolude
-import Infrastructure.DB (MonadDB, withConn)
+import Infrastructure.DB (MonadDB, withConn, extractReturning)
 import Infrastructure.Utils.Id (Id)
 import Database.PostgreSQL.Simple
 import Feature.Playlist.Playlist (Playlist)
@@ -15,16 +15,17 @@ insertPlaylist :: (MonadDB m) => InsertPlaylist -> m (Id Playlist)
 insertPlaylist playlist = withConn $ \conn -> do
   let
     qry
-      = "INSERT INTO playlists (p_name, p_description, style, privacy) VALUES (?, ?, ?, ?)"
-  playlistId <- liftIO $ execute
+      = "INSERT INTO playlists (author_id, p_name, p_description, style, privacy) VALUES (?, ?, ?, ?, ?) RETURNING id"
+  result <- liftIO $ query
     conn
     qry
-    ( insertPlaylistName playlist
+    ( insertPlaylistAuthorId playlist
+    , insertPlaylistName playlist
     , insertPlaylistDescription playlist
     , insertPlaylistStyle playlist
     , insertPlaylistPrivacy playlist
     )
-  return playlistId
+  return $ extractReturning result
 
 findPlaylist :: (MonadDB m) => Text -> m (Maybe Playlist)
 findPlaylist playlistId = withConn $ \conn -> do

@@ -45,3 +45,4 @@ default-extensions:
   - ConstraintKinds
   - FlexibleContexts
   - GeneralizedNewtypeDeriving
+  - ScopedTypeVariables
