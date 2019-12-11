@@ -14,6 +14,7 @@ import qualified Data.Text as T
 
 data CreatePlaylist = CreatePlaylist
     { createPlaylistName :: Text
+    , createPlaylistDescription :: Text
     , createPlaylistTags :: [Text]
     , createPlaylistPrivacy :: PlaylistPrivacy
     , createPlaylistStyle :: PlaylistStyle
@@ -24,6 +25,8 @@ instance FromJSON CreatePlaylist where
     CreatePlaylist
       <$> o
       .:  "name"
+      <*> o
+      .:  "description"
       <*> o
       .:  "tags"
       <*> o

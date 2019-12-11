@@ -5,3 +5,5 @@ import Protolude
 jwtSecret :: Text
 jwtSecret = ""
 
+dbPassword :: Text
+dbPassword = ""

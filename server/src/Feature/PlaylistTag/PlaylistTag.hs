@@ -8,9 +8,9 @@ import Database.PostgreSQL.Simple.FromRow
 
 instance ToJSON PlaylistTag
 data PlaylistTag = PlaylistTag
-    { id :: Id PlaylistTag
-    , name :: Text
-    } deriving Generic
+  { id :: Id PlaylistTag
+  , name :: Text
+  } deriving Generic
 
 instance FromRow PlaylistTag where
   fromRow = PlaylistTag <$> field <*> field

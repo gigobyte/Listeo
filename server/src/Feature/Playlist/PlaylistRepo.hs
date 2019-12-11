@@ -14,7 +14,13 @@ import Feature.Playlist.PlaylistRepoClass (InsertPlaylist(..))
 insertPlaylist :: (MonadDB m) => InsertPlaylist -> m (Id Playlist)
 insertPlaylist playlist = withConn $ \conn -> do
   let qry = "insert into playlists (title, style, privacy) values (?, ?, ?)"
-  playlistId <- liftIO $ execute conn qry (insertPlaylistName playlist, insertPlaylistStyle playlist, insertPlaylistPrivacy playlist)
+  playlistId <- liftIO $ execute
+    conn
+    qry
+    ( insertPlaylistName playlist
+    , insertPlaylistStyle playlist
+    , insertPlaylistPrivacy playlist
+    )
   return playlistId
 
 findPlaylist :: (MonadDB m) => Text -> m (Maybe Playlist)

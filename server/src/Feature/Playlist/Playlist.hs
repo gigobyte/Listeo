@@ -18,14 +18,13 @@ data PlaylistPrivacy
   deriving (Generic, Enum)
 
 instance FromField PlaylistPrivacy where
-  fromField _ mdata =
-    return $ case mdata of
-      Just "public" -> Public
-      Just "private" -> Private
-      _ -> undefined
- 
+  fromField _ mdata = return $ case mdata of
+    Just "public"  -> Public
+    Just "private" -> Private
+    _              -> undefined
+
 instance ToField PlaylistPrivacy where
-  toField Public = Plain (byteString "public")
+  toField Public  = Plain (byteString "public")
   toField Private = Plain (byteString "private")
 
 instance ToJSON PlaylistStyle
@@ -36,16 +35,15 @@ data PlaylistStyle
     deriving (Generic, Enum)
 
 instance FromField PlaylistStyle where
-  fromField _ mdata =
-    return $ case mdata of
-      Just "unordered" -> Unordered
-      Just "ranked" -> Ranked
-      _ -> undefined
+  fromField _ mdata = return $ case mdata of
+    Just "unordered" -> Unordered
+    Just "ranked"    -> Ranked
+    _                -> undefined
 
 instance ToField PlaylistStyle where
   toField Unordered = Plain (byteString "unordered")
-  toField Ranked = Plain (byteString "ranked")
-    
+  toField Ranked    = Plain (byteString "ranked")
+
 data Playlist = Playlist
   { id :: Id Playlist
   , name :: Text

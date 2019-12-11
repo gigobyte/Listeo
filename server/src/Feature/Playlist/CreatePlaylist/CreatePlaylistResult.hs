@@ -11,19 +11,18 @@ import qualified Web.Scotty.Trans as ScottyT
 
 instance ToJSON CreatePlaylistError
 data CreatePlaylistError
-    = InvalidRequest
-    | ValidationFailed
-    deriving Generic
+  = InvalidRequest
+  | ValidationFailed
+  deriving Generic
 
 instance ToJSON CreatePlaylistResponse
 data CreatePlaylistResponse
-    = CreatePlaylistResponse { playlistId :: Text }
-    deriving Generic
+  = CreatePlaylistResponse { playlistId :: Text }
+  deriving Generic
 
 toHttpResult
   :: Monad m => Either CreatePlaylistError (Id Playlist) -> ActionT LText m ()
 toHttpResult (Left err) = do
   ScottyT.status badRequest400
   ScottyT.json $ ErrorResponse err
-toHttpResult (Right id) =
-  ScottyT.json $ CreatePlaylistResponse (show id)
+toHttpResult (Right id) = ScottyT.json $ CreatePlaylistResponse (show id)

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2a10ebfe1fd93f2ca35c8b641d226fc1755750f2a4675a234ac48775baaaf6b8
+-- hash: fb9ea81679d8ddb18d93792c87b05c3cc74f8fb6db7bf343ec652926c914c42c
 
 name:           listeo
 version:        0.1.0.0
@@ -54,7 +54,6 @@ executable listeo-exe
       Feature.User.UserRepoClass
       Infrastructure.AppError
       Infrastructure.DB
-      Infrastructure.HTTP
       Infrastructure.Middleware.Cors
       Infrastructure.MonadCrypto
       Infrastructure.MonadTime

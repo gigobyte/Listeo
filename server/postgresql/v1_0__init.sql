@@ -1,7 +1,3 @@
-CREATE DATABASE listeo;
-
-USE listeo;
-
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
     username text NOT NULL UNIQUE,
