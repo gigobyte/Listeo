@@ -25,36 +25,36 @@ import qualified Data.Time.Clock as Time
 type Env = (DB.Env)
 
 newtype AppT a = AppT
-    { unAppT :: ReaderT Env IO a
-    } deriving (Applicative, Functor, Monad, MonadIO, MonadReader Env)
+  { unAppT :: ReaderT Env IO a
+  } deriving (Applicative, Functor, Monad, MonadIO, MonadReader Env)
 
 instance MonadTime AppT where
-    getCurrentTime = liftIO Time.getCurrentTime
+  getCurrentTime = liftIO Time.getCurrentTime
 
 instance MonadCrypto AppT where
-    hash = Crypto.hash
+  hash = Crypto.hash
 
 instance UserRepo AppT where
-    insertUser = UserRepo.insertUser
-    findUser = UserRepo.findUser
+  insertUser = UserRepo.insertUser
+  findUser   = UserRepo.findUser
 
 instance AuthService AppT where
-    requireUser = AuthService.requireUser
+  requireUser = AuthService.requireUser
 
 instance RegisterService AppT where
-    register = RegisterService.register
+  register = RegisterService.register
 
 instance LoginService AppT where
-    login = LoginService.login
+  login = LoginService.login
 
 instance PlaylistService AppT where
-    createPlaylist = PlaylistService.createPlaylist
-    getPlaylist = PlaylistService.getPlaylist
+  createPlaylist = PlaylistService.createPlaylist
+  getPlaylist    = PlaylistService.getPlaylist
 
 instance PlaylistRepo AppT where
-    insertPlaylist = PlaylistRepo.insertPlaylist
-    findPlaylist = PlaylistRepo.findPlaylist
+  insertPlaylist = PlaylistRepo.insertPlaylist
+  findPlaylist   = PlaylistRepo.findPlaylist
 
 instance PlaylistTagRepo AppT where
-    insertPlaylistTag = PlaylistTagRepo.insertPlaylistTag
-    findPlaylistTagsByPlaylist = PlaylistTagRepo.findPlaylistTagsByPlaylist
+  insertPlaylistTag          = PlaylistTagRepo.insertPlaylistTag
+  findPlaylistTagsByPlaylist = PlaylistTagRepo.findPlaylistTagsByPlaylist

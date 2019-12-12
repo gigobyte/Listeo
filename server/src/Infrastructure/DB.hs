@@ -30,9 +30,10 @@ acquirePool :: IO (Pool Connection)
 acquirePool = do
   envUrl <- lookupEnv "DATABASE_URL"
   let
-    pgUrl = toS $ fromMaybe
+    pgUrl = toS $ maybe
       ("postgresql://postgres:" <> dbPassword <> "@localhost/listeo")
-      (T.pack <$> envUrl)
+      T.pack
+      envUrl
   createPool (connectPostgreSQL pgUrl) close 1 10 10
 
 migrateDb :: Pool Connection -> IO ()

@@ -5,5 +5,5 @@ import Data.Aeson
 
 instance ToJSON a => ToJSON (ErrorResponse a)
 newtype ErrorResponse a = ErrorResponse
-    { error :: a
-    } deriving Generic
+  { error :: a
+  } deriving Generic

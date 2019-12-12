@@ -15,12 +15,13 @@ import Data.Aeson
 
 data Register = Register
   { registerUsername :: Text
+  , registerEmail :: Text
   , registerPassword :: Text
   }
 
 instance FromJSON Register where
   parseJSON = withObject "register"
-    $ \o -> Register <$> o .: "username" <*> o .: "password"
+    $ \o -> Register <$> o .: "username" <*> o .: "email" <*> o .: "password"
 
 register
   :: (UserRepo m, MonadCrypto m) => LByteString -> m (Either RegisterError Text)
@@ -54,12 +55,18 @@ mkInsertUser req =
   maybeToRight ValidationFailed
     $   InsertUser
     <$> (validateUsername $ registerUsername req)
+    <*> (validateEmail $ registerEmail req)
     <*> (validatePassword $ registerPassword req)
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
   | T.length str < 4 = Nothing
   | otherwise        = Just (T.strip str)
+
+validateEmail :: Text -> Maybe Text
+validateEmail str
+  | not $ T.isInfixOf "@" str = Nothing
+  | otherwise                 = Just (T.strip str)
 
 validatePassword :: Text -> Maybe Text
 validatePassword str

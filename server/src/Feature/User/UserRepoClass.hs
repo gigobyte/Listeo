@@ -7,6 +7,7 @@ import Database.PostgreSQL.Simple.ToRow
 
 data InsertUser = InsertUser
   { insertUserUsername :: Text
+  , insertUserEmail :: Text
   , insertUserPassword :: Text
   }
 
