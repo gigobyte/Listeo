@@ -5,3 +5,5 @@ dist
 .cache
 .stack-work
 server/src/Infrastructure/Secrets.hs
+client/cypress/videos
+client/cypress/screenshots

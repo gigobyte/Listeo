@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "@types/history": "^4.7.3",
@@ -34,6 +35,7 @@
     "@babel/types": "^7.6.3",
     "@types/webpack": "^4.39.4",
     "babel-loader": "^8.0.6",
+    "cypress": "^3.8.0",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.18.2",
     "typescript": "^3.6.4",
