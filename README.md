@@ -5,7 +5,7 @@ Maxed out technical spec:
 #### Front-end
 * React with TypeScript, purify-ts, hooks and a little bit of redux for context
 * Webpack for builds, Babel 7 with progressive polyfilling
-* Integration tests with react-testing-library
+* E2E tests with cypress
 * i18n tests with keyboard navigation
 * PWA with Offline available
 * Dark mode
