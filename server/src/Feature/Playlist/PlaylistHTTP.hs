@@ -8,15 +8,14 @@ import qualified Feature.Playlist.CreatePlaylist.CreatePlaylistResult as CreateP
 import qualified Feature.Playlist.GetPlaylist.GetPlaylistResult as GetPlaylistResult
 import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Auth.AuthServiceClass (AuthService, requireUser)
-import Web.Scotty.Trans (get, post, param, ScottyT)
-import qualified Web.Scotty.Trans as ScottyT
+import Web.Scotty.Trans
 
 routes :: (PlaylistService m, AuthService m, MonadIO m) => ScottyT LText m ()
 routes = do
   post "/playlist" $ do
-    user   <- requireUser
-    body   <- ScottyT.body
-    result <- lift $ createPlaylist body user
+    user    <- requireUser
+    rawBody <- body
+    result  <- lift $ createPlaylist rawBody user
     CreatePlaylistResult.toHttpResult result
 
   get "/playlist/:playlistId" $ do

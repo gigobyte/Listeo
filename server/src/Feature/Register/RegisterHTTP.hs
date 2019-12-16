@@ -4,14 +4,13 @@ module Feature.Register.RegisterHTTP
 where
 
 import Protolude
-import Web.Scotty.Trans (post, ScottyT)
+import Web.Scotty.Trans
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import qualified Feature.Register.RegisterResult as RegisterResult
-import qualified Web.Scotty.Trans as ScottyT
 
 routes :: (RegisterService m, MonadIO m) => ScottyT LText m ()
 routes = do
   post "/register" $ do
-    body   <- ScottyT.body
-    result <- lift $ register body
+    rawBody <- body
+    result  <- lift $ register rawBody
     RegisterResult.toHttpResult result

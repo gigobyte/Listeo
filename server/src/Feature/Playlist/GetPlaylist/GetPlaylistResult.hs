@@ -8,8 +8,7 @@ import Infrastructure.AppError
 import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
 import Feature.PlaylistTag.PlaylistTag (PublicPlaylistTag)
 import Network.HTTP.Types.Status (badRequest400)
-import Web.Scotty.Trans (ActionT)
-import qualified Web.Scotty.Trans as ScottyT
+import Web.Scotty.Trans
 
 instance ToJSON GetPlaylistError
 data GetPlaylistError
@@ -33,6 +32,6 @@ toHttpResult
   => Either GetPlaylistError GetPlaylistResponse
   -> ActionT LText m ()
 toHttpResult (Left err) = do
-  ScottyT.status badRequest400
-  ScottyT.json $ ErrorResponse err
-toHttpResult (Right res) = ScottyT.json res
+  status badRequest400
+  json $ ErrorResponse err
+toHttpResult (Right res) = json res

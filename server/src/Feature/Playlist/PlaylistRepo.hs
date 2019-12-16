@@ -15,8 +15,8 @@ insertPlaylist :: (MonadDB m) => InsertPlaylist -> m (Id Playlist)
 insertPlaylist playlist = withConn $ \conn -> do
   let
     qry
-      = "INSERT INTO playlists (author_id, name, description, style, privacy)\
-        \VALUES (?, ?, ?, ?, ?)\
+      = "INSERT INTO playlists (author_id, name, description, style, privacy) \
+        \VALUES (?, ?, ?, ?, ?) \
         \RETURNING id"
 
   result <- liftIO $ query
@@ -34,8 +34,8 @@ findPlaylist :: (MonadDB m) => Text -> m (Maybe Playlist)
 findPlaylist playlistId = withConn $ \conn -> do
   let
     qry
-      = "SELECT * FROM playlists\
-        \WHERE playlist_id = ?\
+      = "SELECT * FROM playlists \
+        \WHERE playlist_id = ? \
         \LIMIT 1"
 
   result <- liftIO $ query conn qry (Only playlistId)

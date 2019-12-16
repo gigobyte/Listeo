@@ -22,11 +22,7 @@ insertUser (InsertUser insertUserUsername insertUserEmail insertUserPassword) =
 
 findUser :: MonadDB m => Text -> m (Maybe User)
 findUser username = withConn $ \conn -> do
-  let
-    qry =
-      "SELECT * FROM users\
-        \WHERE username = ?\
-        \LIMIT 1"
+  let qry = "SELECT * FROM users WHERE username = ? LIMIT 1"
 
   results <- liftIO $ query conn qry (Only username)
   return $ head results

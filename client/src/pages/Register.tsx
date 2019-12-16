@@ -18,10 +18,20 @@ import { useForm } from '../ui/useForm'
 import { session } from '../session'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
-import { ifBlank, ifShorterThan, rule } from '../ui/validate'
+import {
+  ifBlank,
+  ifShorterThan,
+  rule,
+  fail,
+  ifContains,
+  ifRegexFails
+} from '../ui/validate'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
+  InvalidUsername = 'Please enter a valid username, the only special characters allowed are - and _',
+  EmailMissing = 'Please enter email',
+  InvalidEmail = 'Please enter a valid email',
   PasswordMissing = 'Please enter password',
   UsernameTooShort = 'Username must be at least 4 characters long',
   PasswordTooShort = 'Password must be at least 6 characters long',
@@ -75,6 +85,7 @@ export const Register = () => {
         http
           .post(registerEndpoint, {
             username: usernameInput.value,
+            email: emailInput.value,
             password: passwordInput.value
           })
           .then((response: RegisterSuccessResponse) => {
@@ -92,7 +103,17 @@ export const Register = () => {
     trim: true,
     validations: [
       rule(ifBlank, ValidationError.UsernameMissing),
-      rule(ifShorterThan(4), ValidationError.UsernameTooShort)
+      rule(ifShorterThan(4), ValidationError.UsernameTooShort),
+      rule(ifRegexFails(/([A-Za-z0-9_-]+)/), ValidationError.EmailMissing)
+    ],
+    shouldShowError: _ => registerForm.submitted
+  })
+
+  const emailInput = useInput({
+    trim: true,
+    validations: [
+      rule(ifBlank, ValidationError.EmailMissing),
+      rule(fail(ifContains('@')), ValidationError.InvalidEmail)
     ],
     shouldShowError: _ => registerForm.submitted
   })
@@ -132,6 +153,7 @@ export const Register = () => {
     <RegisterForm {...registerForm}>
       <Title>Register</Title>
       <Input {...usernameInput} placeholder="Username" />
+      <Input {...emailInput} placeholder="Email" />
       <Input {...passwordInput} placeholder="Password" type="password" />
       <SubmitButton disabled={isSubmitButtonDisabled}>Beam me up!</SubmitButton>
       <Error visible={!!registerRequestErrorText}>

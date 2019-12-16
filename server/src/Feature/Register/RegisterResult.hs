@@ -1,11 +1,10 @@
 module Feature.Register.RegisterResult where
 
 import Protolude
-import Data.Aeson
+import Data.Aeson (ToJSON)
 import Infrastructure.AppError
 import Network.HTTP.Types.Status (badRequest400)
-import Web.Scotty.Trans (ActionT)
-import qualified Web.Scotty.Trans as ScottyT
+import Web.Scotty.Trans
 
 instance ToJSON RegisterError where
 data RegisterError
@@ -22,6 +21,6 @@ data RegisterResponse
 
 toHttpResult :: Monad m => Either RegisterError Text -> ActionT LText m ()
 toHttpResult (Left err) = do
-  ScottyT.status badRequest400
-  ScottyT.json $ ErrorResponse (Just err)
-toHttpResult (Right jwt) = ScottyT.json $ RegisterResponse jwt
+  status badRequest400
+  json $ ErrorResponse (Just err)
+toHttpResult (Right jwt) = json $ RegisterResponse jwt

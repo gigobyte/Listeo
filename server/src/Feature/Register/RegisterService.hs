@@ -61,17 +61,17 @@ mkInsertUser req =
 validateUsername :: Text -> Maybe Text
 validateUsername str
   | T.length str < 4 = Nothing
-  | otherwise        = Just (T.strip str)
+  | otherwise        = Just str
 
 validateEmail :: Text -> Maybe Text
 validateEmail str
   | not $ T.isInfixOf "@" str = Nothing
-  | otherwise                 = Just (T.strip str)
+  | otherwise                 = Just str
 
 validatePassword :: Text -> Maybe Text
 validatePassword str
   | T.length str < 6 = Nothing
-  | otherwise        = Just (T.strip str)
+  | otherwise        = Just str
 
 hashPasswordInUser :: MonadCrypto m => InsertUser -> m (Maybe InsertUser)
 hashPasswordInUser user@InsertUser { insertUserPassword } = do

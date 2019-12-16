@@ -5,6 +5,8 @@ import qualified App
 import qualified AppMock
 import System.Environment (lookupEnv)
 import Web.Scotty.Trans
+import Infrastructure.AppError (ErrorResponse(..))
+import Network.HTTP.Types.Status (status500)
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import Feature.Auth.AuthServiceClass (AuthService(..))
@@ -33,6 +35,10 @@ routes = do
 
   get "/health" $ json True
 
+  defaultHandler $ \str -> do
+    status status500
+    json $ ErrorResponse str
+
 isMockEnv :: IO Bool
 isMockEnv = do
   isMockVar <- lookupEnv "MOCK"
@@ -40,6 +46,7 @@ isMockEnv = do
   case isMockVar of
     Just "true" -> return True
     _           -> return False
+
 
 
 main :: IO ()
