@@ -75,6 +75,7 @@ export const session = {
           })
           .catch((res: FailedRequest) => {
             dispatch(session.actions.fetchUserFailed(res))
+            dispatch(session.effects.redirect(routes.error))
 
             if (
               res.statusCode === HttpStatus.Unauthorized &&

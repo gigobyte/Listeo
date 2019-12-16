@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { fullHeight } from '../../ui/Container'
 import { colors } from '../../ui/color'
 import { Icons } from '../../ui/Icon'
 import { Button } from '../../ui/Button'
@@ -9,7 +8,8 @@ import { session } from '../../session'
 import { routes } from '../../route'
 import { Modal } from '../../ui/Modal'
 
-const Container = styled(fullHeight(styled.div))`
+const Container = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
 `

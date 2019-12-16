@@ -46,7 +46,8 @@ const createPlaylistEndpoint = createEndpoint<CreatePlaylistSuccessResponse>(
   '/playlist'
 )
 
-const Container = styled(centered(styled.div))`
+const Container = styled.div`
+  ${centered};
   height: 66%;
 `
 

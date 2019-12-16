@@ -42,7 +42,8 @@ interface LoginFailResponse extends FailedRequest {
 
 const loginEndpoint = createEndpoint<LoginSuccessResponse>('/login')
 
-const LoginForm = styled(centered(styled.form))`
+const LoginForm = styled.form`
+  ${centered};
   height: 66%;
 `
 

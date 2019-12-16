@@ -55,7 +55,8 @@ interface RegisterFailResponse extends FailedRequest {
 
 const registerEndpoint = createEndpoint<RegisterSuccessResponse>('/register')
 
-const RegisterForm = styled(centered(styled.form))`
+const RegisterForm = styled.form`
+  ${centered};
   height: 66%;
 `
 

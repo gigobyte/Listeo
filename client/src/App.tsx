@@ -4,7 +4,7 @@ import styled, { createGlobalStyle } from 'styled-components'
 import { configureStore } from 'redux-starter-kit'
 import { Provider, useDispatch } from 'react-redux'
 import { session, useUser, useRoute } from './session'
-import { routes } from './route'
+import { routes, RouteTag } from './route'
 import { colors } from './ui/color'
 import { DataStatus } from './http'
 import { Header } from './ui/Header'
@@ -12,6 +12,7 @@ import MuseoSans from './assets/MuseoSans-100.ttf'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { CreatePlaylist } from './pages/playlist/CreatePlaylist'
+import { ErrorPage } from './pages/ErrorPage'
 
 const store = configureStore({
   reducer: session.reducer
@@ -71,32 +72,39 @@ export const Main = () => {
       return null
 
     default: {
-      switch (route) {
-        case routes.home:
+      switch (route.tag) {
+        case RouteTag.Home:
           return <Layout></Layout>
 
-        case routes.login:
+        case RouteTag.Login:
           return (
             <Layout>
               <Login />
             </Layout>
           )
 
-        case routes.register:
+        case RouteTag.Register:
           return (
             <Layout>
               <Register />
             </Layout>
           )
 
-        case routes.createPlaylist:
+        case RouteTag.CreatePlaylist:
           return (
             <Layout>
               <CreatePlaylist />
             </Layout>
           )
 
-        case routes.notFound404:
+        case RouteTag.Error:
+          return (
+            <Layout>
+              <ErrorPage />
+            </Layout>
+          )
+
+        case RouteTag.NotFound404:
         default:
           return null
       }
