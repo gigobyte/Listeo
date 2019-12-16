@@ -66,48 +66,52 @@ export const Main = () => {
   const user = useUser()
   const route = useRoute()
 
-  switch (user.status) {
-    case DataStatus.NotAsked:
-    case DataStatus.Loading:
-      return null
+  if (
+    user.status === DataStatus.NotAsked ||
+    user.status === DataStatus.Loading
+  ) {
+    return null
+  }
 
-    default: {
-      switch (route.tag) {
-        case RouteTag.Home:
-          return <Layout></Layout>
+  switch (route.tag) {
+    case RouteTag.Home:
+      return <Layout></Layout>
 
-        case RouteTag.Login:
-          return (
-            <Layout>
-              <Login />
-            </Layout>
-          )
+    case RouteTag.Login:
+      return (
+        <Layout>
+          <Login />
+        </Layout>
+      )
 
-        case RouteTag.Register:
-          return (
-            <Layout>
-              <Register />
-            </Layout>
-          )
+    case RouteTag.Register:
+      return (
+        <Layout>
+          <Register />
+        </Layout>
+      )
 
-        case RouteTag.CreatePlaylist:
-          return (
-            <Layout>
-              <CreatePlaylist />
-            </Layout>
-          )
+    case RouteTag.About:
+      return <Layout></Layout>
 
-        case RouteTag.Error:
-          return (
-            <Layout>
-              <ErrorPage />
-            </Layout>
-          )
+    case RouteTag.CreatePlaylist:
+      return (
+        <Layout>
+          <CreatePlaylist />
+        </Layout>
+      )
 
-        case RouteTag.NotFound404:
-        default:
-          return null
-      }
-    }
+    case RouteTag.ViewPlaylist:
+      return <Layout></Layout>
+
+    case RouteTag.NotFound404:
+      return <h1>404</h1>
+
+    case RouteTag.Error:
+      return (
+        <Layout>
+          <ErrorPage />
+        </Layout>
+      )
   }
 }

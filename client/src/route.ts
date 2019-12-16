@@ -1,53 +1,75 @@
+import { create } from 'domain'
+
 /**
  * Temporary implementation until I figure out url parsing
  */
 
-export type Route = {
-  tag: string
-  params?: Record<string, string>
-} & {
+export enum RouteTag {
+  Home = 'home',
+  Login = 'login',
+  Register = 'register',
+  About = 'about',
+  CreatePlaylist = 'create-playlist',
+  ViewPlaylist = 'view-playlist',
+  NotFound404 = '404',
+  Error = 'error'
+}
+
+type T = Route[]
+
+export type Route = (
+  | { tag: RouteTag.Home }
+  | { tag: RouteTag.Login }
+  | { tag: RouteTag.Register }
+  | { tag: RouteTag.About }
+  | { tag: RouteTag.CreatePlaylist }
+  | { tag: RouteTag.ViewPlaylist; params: { playlistId: string } }
+  | { tag: RouteTag.NotFound404 }
+  | { tag: RouteTag.Error }) & {
   __brand: 'Route'
 }
 
-const createRoute = (tag: string, params?: Record<string, string>): Route =>
+const createRoute = (tag: RouteTag, params?: Record<string, string>): Route =>
   ({ tag, params } as Route)
 
 export const routes = {
-  home: createRoute('home'),
-  login: createRoute('login'),
-  register: createRoute('register'),
-  about: createRoute('about'),
-  createPlaylist: createRoute('create-playlist'),
+  home: createRoute(RouteTag.Home),
+  login: createRoute(RouteTag.Login),
+  register: createRoute(RouteTag.Register),
+  about: createRoute(RouteTag.About),
+  createPlaylist: createRoute(RouteTag.CreatePlaylist),
   viewPlaylist: (playlistId: string) =>
-    createRoute('view-playlist', { playlistId }),
-  notFound404: createRoute('404')
+    createRoute(RouteTag.ViewPlaylist, { playlistId }),
+  notFound404: createRoute(RouteTag.NotFound404),
+  error: createRoute(RouteTag.Error)
 }
 
 export const routeToString = (route: Route): string => {
   switch (route.tag) {
-    case 'home':
+    case RouteTag.Home:
       return '/'
 
-    case 'login':
+    case RouteTag.Login:
       return '/login'
 
-    case 'register':
+    case RouteTag.Register:
       return '/register'
 
-    case 'about':
+    case RouteTag.About:
       return '/about'
 
-    case 'create-playlist':
+    case RouteTag.CreatePlaylist:
       return '/create-playlist'
 
-    case 'view-playlist':
-      return '/playlist/' + route.params!.playlistId
+    case RouteTag.ViewPlaylist:
+      return '/playlist/' + route.params.playlistId
 
-    case '404':
+    case RouteTag.NotFound404:
       return '/404'
-  }
 
-  throw new Error('Invalid route')
+    case RouteTag.Error:
+      return '/error'
+  }
 }
 
 export const parseUrl = (url: string): Route => {
@@ -65,6 +87,8 @@ export const parseUrl = (url: string): Route => {
     return routes.viewPlaylist(url.replace('/playlist/', ''))
   } else if (url === '/404') {
     return routes.notFound404
+  } else if (url === '/error') {
+    return routes.error
   }
 
   return routes.notFound404
