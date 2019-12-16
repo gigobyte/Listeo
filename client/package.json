@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack",
-    "tsc": "tsc",
+    "tsc": "tsc --noEmit",
     "test:e2e": "cypress run"
   },
   "dependencies": {
