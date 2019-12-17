@@ -14,7 +14,8 @@ import {
   useHttp,
   DataStatus,
   remoteData,
-  RemoteData
+  RemoteData,
+  HttpStatus
 } from '../http'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
@@ -68,6 +69,7 @@ export const Login = () => {
   const loginForm = useForm({
     onSubmit: () => {
       if (usernameInput.isValid && passwordInput.isValid) {
+        setLoginResponse(remoteData.loading)
         http
           .post(loginEndpoint, {
             username: usernameInput.value,
@@ -79,6 +81,10 @@ export const Login = () => {
           })
           .catch((response: LoginFailResponse) => {
             setLoginResponse(remoteData.fail(response))
+
+            if (response.statusCode === HttpStatus.ServerError) {
+              dispatch(session.effects.redirect(routes.error))
+            }
           })
       }
     }
@@ -115,16 +121,29 @@ export const Login = () => {
 
   const isSubmitButtonDisabled =
     loginResponse.status === DataStatus.Loading ||
-    !usernameInput.isValid ||
-    !passwordInput.isValid
+    usernameInput.isShowingError ||
+    passwordInput.isShowingError
 
   return (
     <LoginForm {...loginForm}>
       <Title>Sign In</Title>
-      <Input {...usernameInput} placeholder="Username" />
-      <Input {...passwordInput} placeholder="Password" type="password" />
-      <SubmitButton disabled={isSubmitButtonDisabled}>Let's go</SubmitButton>
-      <Error visible={!!loginRequestErrorText}>{loginRequestErrorText}</Error>
+      <Input
+        {...usernameInput}
+        data-test="login--username"
+        placeholder="Username"
+      />
+      <Input
+        {...passwordInput}
+        data-test="login--password"
+        placeholder="Password"
+        type="password"
+      />
+      <SubmitButton data-test="login--submit" disabled={isSubmitButtonDisabled}>
+        Let's go
+      </SubmitButton>
+      <Error data-test="login--api-error" visible={!!loginRequestErrorText}>
+        {loginRequestErrorText}
+      </Error>
       <Link to={routes.register}>Don't have an account?</Link>
     </LoginForm>
   )

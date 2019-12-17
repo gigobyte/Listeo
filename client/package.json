@@ -23,7 +23,8 @@
     "react-use": "^12.7.1",
     "redux": "^4.0.4",
     "redux-starter-kit": "^0.9.1",
-    "styled-components": "^5.0.0-beta.9"
+    "styled-components": "^5.0.0-beta.9",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

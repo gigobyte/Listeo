@@ -18,7 +18,10 @@ data LoginResponse
   deriving Generic
 
 toHttpResult :: Monad m => Either LoginError Text -> ActionT LText m ()
-toHttpResult (Left error) = do
+toHttpResult (error@(Left InvalidRequest)) = do
+  status badRequest400
+  json $ ErrorResponse error
+toHttpResult (error@(Left UserNotFound)) = do
   status badRequest400
   json $ ErrorResponse error
 toHttpResult (Right jwt) = json $ LoginResponse jwt

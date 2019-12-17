@@ -105,7 +105,7 @@ export const Register = () => {
     validations: [
       rule(ifBlank, ValidationError.UsernameMissing),
       rule(ifShorterThan(4), ValidationError.UsernameTooShort),
-      rule(ifRegexFails(/([A-Za-z0-9_-]+)/), ValidationError.EmailMissing)
+      rule(ifRegexFails(/(^[A-Za-z0-9_-]+)$/), ValidationError.InvalidUsername)
     ],
     shouldShowError: _ => registerForm.submitted
   })
@@ -147,8 +147,8 @@ export const Register = () => {
 
   const isSubmitButtonDisabled =
     registerResponse.status === DataStatus.Loading ||
-    !usernameInput.isValid ||
-    !passwordInput.isValid
+    usernameInput.isShowingError ||
+    passwordInput.isShowingError
 
   return (
     <RegisterForm {...registerForm}>

@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux'
 import { useJwt } from './session'
 
 export enum HttpStatus {
-  Unauthorized = 401
+  Unauthorized = 401,
+  ServerError = 500
 }
 
 export interface FailedRequest {

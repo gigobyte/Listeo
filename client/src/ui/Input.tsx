@@ -5,6 +5,7 @@ import { Error } from './Error'
 import { validate } from './validate'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  'data-test'?: string
   error: string | undefined
   shouldShowError: boolean
 }
@@ -41,7 +42,12 @@ const InputWrapper = styled.input<InputProps>`
 export const Input: React.FC<InputProps> = props => (
   <>
     <InputWrapper {...props} />
-    <Error visible={isErrorVisible(props)}>{props.error}</Error>
+    <Error
+      data-test={props['data-test'] + '-error'}
+      visible={isErrorVisible(props)}
+    >
+      {props.error}
+    </Error>
   </>
 )
 
@@ -58,12 +64,14 @@ export const useInput = ({
 }: UseInputParams) => {
   const [value, setValue] = useState('')
   const error = validate(validations, value) || ''
+  const showError = shouldShowError(value)
 
   return {
     value,
-    shouldShowError: shouldShowError(value),
+    shouldShowError: showError,
     error,
     isValid: !error,
+    isShowingError: !!error && showError,
     setValue: (newValue: string) => setValue(trim ? newValue.trim() : newValue),
     onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
       setValue(trim ? e.target.value.trim() : e.target.value)
