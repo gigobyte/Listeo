@@ -100,10 +100,6 @@ export const Register = () => {
           })
           .catch((response: RegisterFailResponse) => {
             setRegisterResponse(remoteData.fail(response))
-
-            if (response.statusCode == HttpStatus.ServerError) {
-              dispatch(session.effects.redirect(routes.error))
-            }
           })
       }
     }

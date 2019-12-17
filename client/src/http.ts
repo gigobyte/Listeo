@@ -1,10 +1,11 @@
 import { Endpoint } from './endpoint'
-import { useDispatch } from 'react-redux'
 import { useJwt } from './session'
 
+// These are the only status codes the back-end can return
+// that can be handled, all other ones are treated as exceptions and redirect to /error
 export enum HttpStatus {
-  Unauthorized = 401,
-  ServerError = 500
+  BadRequest = 400,
+  Unauthorized = 401
 }
 
 export interface FailedRequest {
@@ -25,7 +26,12 @@ export const createHttp = (jwt: string | null) => ({
       throw fail
     }
 
-    return res.json()
+    try {
+      return res.json()
+    } catch {
+      window.location.assign('/error')
+      throw {}
+    }
   },
 
   async post<T>(url: Endpoint<T>, body: any): Promise<T> {
@@ -36,7 +42,15 @@ export const createHttp = (jwt: string | null) => ({
         Authorization: 'Bearer ' + jwt
       }
     })
-    const res = await rawRes.json()
+
+    let res
+
+    try {
+      res = await rawRes.json()
+    } catch {
+      window.location.assign('/error')
+      throw {}
+    }
 
     if (!rawRes.ok) {
       const fail: FailedRequest = { statusCode: res.status }

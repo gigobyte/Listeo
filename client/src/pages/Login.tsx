@@ -85,10 +85,6 @@ export const Login = () => {
           })
           .catch((response: LoginFailResponse) => {
             setLoginResponse(remoteData.fail(response))
-
-            if (response.statusCode === HttpStatus.ServerError) {
-              dispatch(session.effects.redirect(routes.error))
-            }
           })
       }
     }
