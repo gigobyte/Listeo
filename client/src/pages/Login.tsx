@@ -28,9 +28,7 @@ enum ValidationError {
 }
 
 enum LoginResponseError {
-  UserNotFound = 'UserNotFound',
-  InvalidRequest = 'InvalidRequest',
-  ServerError = 'ServerError'
+  UserNotFound = 'UserNotFound'
 }
 
 interface LoginSuccessResponse {
@@ -56,6 +54,12 @@ const SubmitButton = styled(Button).attrs({ type: 'submit' })`
   margin-top: 10px;
   margin-bottom: 15px;
 `
+const showLoginResponseError = ({ error }: LoginFailResponse) => {
+  switch (error) {
+    case LoginResponseError.UserNotFound:
+      return 'User not found'
+  }
+}
 
 export const Login = () => {
   useTitle('Login - Listeo')
@@ -102,22 +106,10 @@ export const Login = () => {
     shouldShowError: _ => loginForm.submitted
   })
 
-  const loginRequestErrorText = (() => {
-    switch (loginResponse.status) {
-      case DataStatus.Fail: {
-        switch (loginResponse.error) {
-          case LoginResponseError.UserNotFound:
-            return 'User not found'
-
-          default:
-            return 'Something went wrong'
-        }
-      }
-
-      default:
-        return ''
-    }
-  })()
+  const loginRequestErrorText = remoteData.showError(
+    loginResponse,
+    showLoginResponseError
+  )
 
   const isSubmitButtonDisabled =
     loginResponse.status === DataStatus.Loading ||

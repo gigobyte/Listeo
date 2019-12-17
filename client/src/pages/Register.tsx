@@ -5,7 +5,8 @@ import {
   useHttp,
   remoteData,
   RemoteData,
-  DataStatus
+  DataStatus,
+  HttpStatus
 } from '../http'
 import { createEndpoint } from '../endpoint'
 import { centered } from '../ui/Container'
@@ -39,10 +40,7 @@ enum ValidationError {
 }
 
 enum RegisterResponseError {
-  UserAlreadyExists = 'UserAlreadyExists',
-  InvalidRequest = 'InvalidRequest',
-  PasswordHashingFailed = 'PasswordHashingFailed',
-  ValidationFailed = 'ValidationFailed'
+  UserAlreadyExists = 'UserAlreadyExists'
 }
 
 interface RegisterSuccessResponse {
@@ -68,6 +66,13 @@ const SubmitButton = styled(Button).attrs({ type: 'submit' })`
   margin-top: 10px;
   margin-bottom: 15px;
 `
+
+const showRegisterResponseError = ({ error }: RegisterFailResponse) => {
+  switch (error) {
+    case RegisterResponseError.UserAlreadyExists:
+      return 'User already exists'
+  }
+}
 
 export const Register = () => {
   useTitle('Register - Listeo')
@@ -95,6 +100,10 @@ export const Register = () => {
           })
           .catch((response: RegisterFailResponse) => {
             setRegisterResponse(remoteData.fail(response))
+
+            if (response.statusCode == HttpStatus.ServerError) {
+              dispatch(session.effects.redirect(routes.error))
+            }
           })
       }
     }
@@ -128,22 +137,10 @@ export const Register = () => {
     shouldShowError: _ => registerForm.submitted
   })
 
-  const registerRequestErrorText = (() => {
-    switch (registerResponse.status) {
-      case DataStatus.Fail: {
-        switch (registerResponse.error) {
-          case RegisterResponseError.UserAlreadyExists:
-            return 'User already exists'
-
-          default:
-            return 'Something went wrong'
-        }
-      }
-
-      default:
-        return ''
-    }
-  })()
+  const registerRequestErrorText = remoteData.showError(
+    registerResponse,
+    showRegisterResponseError
+  )
 
   const isSubmitButtonDisabled =
     registerResponse.status === DataStatus.Loading ||

@@ -47,8 +47,6 @@ isMockEnv = do
     Just "true" -> return True
     _           -> return False
 
-
-
 main :: IO ()
 main = do
   isMock <- isMockEnv

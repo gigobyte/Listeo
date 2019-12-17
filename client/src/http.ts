@@ -76,5 +76,17 @@ export const remoteData = {
   fail: <E>(error: E): RemoteData<never, E> => ({
     status: DataStatus.Fail,
     ...error
-  })
+  }),
+  showError: <T, E>(
+    error: RemoteData<T, E>,
+    show: (error: E) => string
+  ): string => {
+    switch (error.status) {
+      case DataStatus.Fail:
+        return show(error)
+
+      default:
+        return ''
+    }
+  }
 } as const
