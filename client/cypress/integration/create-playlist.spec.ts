@@ -23,14 +23,10 @@ describe('Create playlist', () => {
     })
   })
 
-  describe.only('Inside the page', () => {
+  describe('Inside the page', () => {
     const NAME = 'create-playlist--name'
     const TAGS = 'create-playlist--tags'
     const DESCRIPTION = 'create-playlist--description'
-    const PRIVACY_PUBLIC = 'create-playlist--privacy-public'
-    const PRIVACY_PRIVATE = 'create-playlist--privacy-private'
-    const STYLE_RANKED = 'create-playlist--style-ranked'
-    const STYLE_UNORDERED = 'create-playlist--style-unordered'
     const SUBMIT = 'create-playlist--submit'
     const ERROR = '-error'
     const INPUT = '-input'
@@ -80,6 +76,12 @@ describe('Create playlist', () => {
           .should('have.value', 'v')
       })
 
+      it('trims input', () => {
+        cy.dataTest(TAGS + INPUT)
+          .type(' v ')
+          .should('have.value', 'v')
+      })
+
       it('creates a tag underneath the input on enter', () => {
         cy.dataTest(TAGS + INPUT).type('v{enter}')
         cy.dataTest(TAGS + TAG(1))
@@ -110,6 +112,71 @@ describe('Create playlist', () => {
         cy.dataTest(TAGS + INPUT).type('v{enter}')
         cy.dataTest(TAGS + TAG(1) + DELETE).click()
         cy.dataTest(TAGS + TAG(1)).should('not.exist')
+      })
+
+      it('should show an error when you try to add an empty tag', () => {
+        cy.dataTest(TAGS + INPUT).type('{enter}')
+        cy.dataTest(TAGS + INPUT + ERROR)
+          .should('be.visible')
+          .should('have.text', 'Please enter a tag first')
+      })
+
+      it('should show an error when you try to add more than 10 tags', () => {
+        for (let i = 0; i < 10; i++) {
+          cy.dataTest(TAGS + INPUT).type(`${i}{enter}`)
+        }
+
+        cy.dataTest(TAGS + INPUT).type(`v{enter}`)
+        cy.dataTest(TAGS + INPUT + ERROR)
+          .should('be.visible')
+          .should('have.text', 'You can only add up to 10 tags')
+      })
+
+      it('should clear the error when the input changes', () => {
+        cy.dataTest(TAGS + INPUT)
+          .type('{enter}')
+          .type('v')
+        cy.dataTest(TAGS + INPUT + ERROR).should('not.be.visible')
+      })
+    })
+
+    describe('Description field', () => {
+      it('works', () => {
+        cy.dataTest(DESCRIPTION)
+          .type('v')
+          .should('have.value', 'v')
+      })
+    })
+
+    describe.only('Submit button', () => {
+      it('triggers validation on click', () => {
+        cy.dataTest(SUBMIT).click()
+        cy.dataTest(NAME + ERROR).should('be.visible')
+      })
+
+      it('becomes disabled if the name is showing an error', () => {
+        cy.dataTest(SUBMIT).click()
+        cy.dataTest(SUBMIT).should('be.disabled')
+      })
+
+      it('becomes disabled if the create playlist request is pending', () => {
+        //TODO Fix test
+        cy.server()
+        cy.route({
+          method: 'POST',
+          url: 'http://localhost:8081/playlist',
+          status: 500,
+          response: {},
+          delay: 500
+        }).as('createPlaylist')
+
+        cy.dataTest(NAME).type('v')
+        cy.dataTest(SUBMIT).click()
+        cy.dataTest(SUBMIT).should('be.disabled')
+
+        cy.wait('@createPlaylist').then(() => {
+          cy.dataTest(SUBMIT).should('not.be.disabled')
+        })
       })
     })
   })

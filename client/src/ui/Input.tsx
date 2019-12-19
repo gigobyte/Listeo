@@ -46,7 +46,7 @@ export const Input: React.FC<InputProps> = props => (
       data-test={props['data-test'] + '-error'}
       visible={isErrorVisible(props)}
     >
-      {props.error}
+      {isErrorVisible(props) ? props.error : ''}
     </Error>
   </>
 )

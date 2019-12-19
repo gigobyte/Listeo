@@ -72,7 +72,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         TagInputValidationError.InvalidTag
       ),
       rule(
-        fail(() => tags.length >= 3),
+        fail(() => tags.length >= 10),
         TagInputValidationError.TagLimitReached
       )
     ],

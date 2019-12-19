@@ -62,14 +62,14 @@ export const useRadioButtons = <T extends string | number>({
   values
 }: UseRadioButtonsParams<T>) => {
   const [value, setValue] = useState(initialValue)
-  const [checkedValues, setCheckedValue] = useState<{ [key: number]: boolean }>(
-    {}
-  )
+  const [checkedValues, setCheckedValue] = useState({
+    [values.findIndex(x => x === initialValue)]: true
+  })
 
   return {
     value,
     radioButtons: values.map((value, i) => ({
-      checked: checkedValues[i],
+      checked: !!checkedValues[i],
       onClick: () => {
         setCheckedValue({ [i]: true })
         setValue(value)

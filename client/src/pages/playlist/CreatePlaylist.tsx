@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { centered } from '../../ui/Container'
 import { useTitle } from 'react-use'
@@ -9,7 +9,13 @@ import { TagInput, useTagInput } from '../../ui/TagInput'
 import { Textarea, useTextarea } from '../../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../../ui/RadioButton'
 import { Button } from '../../ui/Button'
-import { useHttp, FailedRequest } from '../../http'
+import {
+  useHttp,
+  FailedRequest,
+  remoteData,
+  RemoteData,
+  DataStatus
+} from '../../http'
 import { createEndpoint } from '../../endpoint'
 import { session } from '../../session'
 import { useDispatch } from 'react-redux'
@@ -64,8 +70,12 @@ const SettingsColumn = styled.div`
   }
 `
 
-const SettingLabel = styled.span`
+const PrivacyLabel = styled.span`
   font-weight: bold;
+`
+
+const StyleLabel = styled(PrivacyLabel)`
+  line-height: 26px;
 `
 
 const Settings = styled.div`
@@ -74,7 +84,7 @@ const Settings = styled.div`
 `
 
 const Separator = styled.div`
-  height: 5px;
+  height: 8px;
 `
 
 export const CreatePlaylist = () => {
@@ -82,10 +92,14 @@ export const CreatePlaylist = () => {
 
   const http = useHttp()
   const dispatch = useDispatch()
+  const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
+    RemoteData<CreatePlaylistSuccessResponse, CreatePlaylistFailResponse>
+  >(remoteData.notAsked)
 
   const createPlaylistForm = useForm({
     onSubmit: () => {
       if (playlistNameInput.isValid) {
+        setCreatePlaylistResponse(remoteData.loading)
         http
           .post(createPlaylistEndpoint, {
             name: playlistNameInput.value,
@@ -95,9 +109,13 @@ export const CreatePlaylist = () => {
             style: playlistStyle.value
           })
           .then(response => {
+            setCreatePlaylistResponse(remoteData.success(response))
             dispatch(
               session.effects.redirect(routes.viewPlaylist(response.playlistId))
             )
+          })
+          .catch(response => {
+            setCreatePlaylistResponse(remoteData.fail(response))
           })
       }
     }
@@ -131,6 +149,10 @@ export const CreatePlaylist = () => {
 
   const [rankedRadioButton, unorderedRadioButton] = playlistStyle.radioButtons
 
+  const isSubmitButtonDisabled =
+    createPlaylistResponse.status === DataStatus.Loading ||
+    playlistNameInput.isShowingError
+
   return (
     <Container>
       <Title>Create a new playlist</Title>
@@ -151,38 +173,25 @@ export const CreatePlaylist = () => {
       />
       <Settings>
         <SettingsColumn>
-          <SettingLabel>Privacy</SettingLabel>
+          <PrivacyLabel>Privacy</PrivacyLabel>
           <Separator />
-          <SettingLabel>Style</SettingLabel>
+          <StyleLabel>Style</StyleLabel>
         </SettingsColumn>
         <SettingsColumn>
-          <RadioButton
-            data-test="create-playlist--privacy-public"
-            {...publicRadioButton}
-            label="Public"
-          />
-          <RadioButton
-            data-test="create-playlist--style-ranked"
-            {...rankedRadioButton}
-            label="Ranked"
-          />
+          <RadioButton {...publicRadioButton} label="Public" />
+          <Separator />
+          <RadioButton {...rankedRadioButton} label="Ranked" />
         </SettingsColumn>
         <SettingsColumn>
-          <RadioButton
-            data-test="create-playlist--privacy-private"
-            {...privateRadioButton}
-            label="Private"
-          />
-          <RadioButton
-            data-test="create-playlist--style-unordered"
-            {...unorderedRadioButton}
-            label="Unordered"
-          />
+          <RadioButton {...privateRadioButton} label="Private" />
+          <Separator />
+          <RadioButton {...unorderedRadioButton} label="Unordered" />
         </SettingsColumn>
       </Settings>
       <Button
         data-test="create-playlist--submit"
         onClick={createPlaylistForm.onSubmit}
+        disabled={isSubmitButtonDisabled}
       >
         Create
       </Button>
