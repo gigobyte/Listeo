@@ -14,24 +14,24 @@ export interface FailedRequest {
 
 export const createHttp = (jwt: string | null) => ({
   async get<T>(url: Endpoint<T>): Promise<T> {
-    const res = await window.fetch(url, {
+    const rawRes = await window.fetch(url, {
       method: 'GET',
       headers: {
         Authorization: 'Bearer ' + jwt
       }
     })
 
-    if (!res.ok) {
-      const fail: FailedRequest = { statusCode: res.status }
-      throw fail
-    }
-
-    try {
-      return res.json()
-    } catch {
+    if (rawRes.status === 500) {
       window.location.assign('/error')
       throw {}
     }
+
+    if (!rawRes.ok) {
+      const fail: FailedRequest = { statusCode: rawRes.status }
+      throw fail
+    }
+
+    return rawRes.json()
   },
 
   async post<T>(url: Endpoint<T>, body: any): Promise<T> {
@@ -43,14 +43,12 @@ export const createHttp = (jwt: string | null) => ({
       }
     })
 
-    let res
-
-    try {
-      res = await rawRes.json()
-    } catch {
+    if (rawRes.status === 500) {
       window.location.assign('/error')
       throw {}
     }
+
+    const res = await rawRes.json()
 
     if (!rawRes.ok) {
       const fail: FailedRequest = { statusCode: res.status }

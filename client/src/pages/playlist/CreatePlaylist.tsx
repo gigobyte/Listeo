@@ -134,9 +134,21 @@ export const CreatePlaylist = () => {
   return (
     <Container>
       <Title>Create a new playlist</Title>
-      <Input {...playlistNameInput} placeholder="Name of list" />
-      <TagInput {...tagsInput} placeholder="Tags (optional)" />
-      <Textarea {...descriptionInput} placeholder="Description (optional)" />
+      <Input
+        data-test="create-playlist--name"
+        {...playlistNameInput}
+        placeholder="Name of list"
+      />
+      <TagInput
+        data-test="create-playlist--tags"
+        {...tagsInput}
+        placeholder="Tags (optional)"
+      />
+      <Textarea
+        data-test="create-playlist--description"
+        {...descriptionInput}
+        placeholder="Description (optional)"
+      />
       <Settings>
         <SettingsColumn>
           <SettingLabel>Privacy</SettingLabel>
@@ -144,15 +156,36 @@ export const CreatePlaylist = () => {
           <SettingLabel>Style</SettingLabel>
         </SettingsColumn>
         <SettingsColumn>
-          <RadioButton {...publicRadioButton} label="Public" />
-          <RadioButton {...rankedRadioButton} label="Ranked" />
+          <RadioButton
+            data-test="create-playlist--privacy-public"
+            {...publicRadioButton}
+            label="Public"
+          />
+          <RadioButton
+            data-test="create-playlist--style-ranked"
+            {...rankedRadioButton}
+            label="Ranked"
+          />
         </SettingsColumn>
         <SettingsColumn>
-          <RadioButton {...privateRadioButton} label="Private" />
-          <RadioButton {...unorderedRadioButton} label="Unordered" />
+          <RadioButton
+            data-test="create-playlist--privacy-private"
+            {...privateRadioButton}
+            label="Private"
+          />
+          <RadioButton
+            data-test="create-playlist--style-unordered"
+            {...unorderedRadioButton}
+            label="Unordered"
+          />
         </SettingsColumn>
       </Settings>
-      <Button onClick={createPlaylistForm.onSubmit}>Create</Button>
+      <Button
+        data-test="create-playlist--submit"
+        onClick={createPlaylistForm.onSubmit}
+      >
+        Create
+      </Button>
     </Container>
   )
 }

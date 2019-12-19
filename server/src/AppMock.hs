@@ -66,6 +66,7 @@ mockUser :: User
 mockUser = User
   { userId        = mockId
   , userUsername  = "mockUser"
+  , userEmail = "mock@user"
   , userPassword  = "mockUser"
   , userCreatedOn = unsafePerformIO $ Time.getCurrentTime
   }

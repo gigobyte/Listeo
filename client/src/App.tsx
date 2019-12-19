@@ -58,20 +58,13 @@ const Layout: React.FC = ({ children }) => (
 
 export const Main = () => {
   const dispatch = useDispatch()
-
-  useMount(() => {
-    dispatch(session.effects.fetchUser())
-  })
-
-  const user = useUser()
   const route = useRoute()
 
-  if (
-    user.status === DataStatus.NotAsked ||
-    user.status === DataStatus.Loading
-  ) {
-    return null
-  }
+  useMount(() => {
+    if (route.tag !== RouteTag.Error) {
+      dispatch(session.effects.fetchUser())
+    }
+  })
 
   switch (route.tag) {
     case RouteTag.Home:

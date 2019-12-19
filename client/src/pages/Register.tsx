@@ -25,7 +25,8 @@ import {
   rule,
   fail,
   ifContains,
-  ifRegexFails
+  ifRegexFails,
+  pass
 } from '../ui/validate'
 
 enum ValidationError {
@@ -35,8 +36,7 @@ enum ValidationError {
   InvalidEmail = 'Please enter a valid email',
   PasswordMissing = 'Please enter password',
   UsernameTooShort = 'Username must be at least 4 characters long',
-  PasswordTooShort = 'Password must be at least 6 characters long',
-  None = ''
+  PasswordTooShort = 'Password must be at least 6 characters long'
 }
 
 enum RegisterResponseError {
@@ -85,7 +85,11 @@ export const Register = () => {
 
   const registerForm = useForm({
     onSubmit: () => {
-      if (usernameInput.isValid && passwordInput.isValid) {
+      if (
+        usernameInput.isValid &&
+        emailInput.isValid &&
+        passwordInput.isValid
+      ) {
         setRegisterResponse(remoteData.loading)
 
         http
@@ -119,7 +123,7 @@ export const Register = () => {
     trim: true,
     validations: [
       rule(ifBlank, ValidationError.EmailMissing),
-      rule(fail(ifContains('@')), ValidationError.InvalidEmail)
+      rule(pass(ifContains('@')), ValidationError.InvalidEmail)
     ],
     shouldShowError: _ => registerForm.submitted
   })
@@ -141,16 +145,34 @@ export const Register = () => {
   const isSubmitButtonDisabled =
     registerResponse.status === DataStatus.Loading ||
     usernameInput.isShowingError ||
+    emailInput.isShowingError ||
     passwordInput.isShowingError
 
   return (
     <RegisterForm {...registerForm}>
       <Title>Register</Title>
-      <Input {...usernameInput} placeholder="Username" />
-      <Input {...emailInput} placeholder="Email" />
-      <Input {...passwordInput} placeholder="Password" type="password" />
-      <SubmitButton disabled={isSubmitButtonDisabled}>Beam me up!</SubmitButton>
-      <Error visible={!!registerRequestErrorText}>
+      <Input
+        data-test="register--username"
+        {...usernameInput}
+        placeholder="Username"
+      />
+      <Input data-test="register--email" {...emailInput} placeholder="Email" />
+      <Input
+        data-test="register--password"
+        {...passwordInput}
+        placeholder="Password"
+        type="password"
+      />
+      <SubmitButton
+        data-test="register--submit"
+        disabled={isSubmitButtonDisabled}
+      >
+        Beam me up!
+      </SubmitButton>
+      <Error
+        data-test="register--api-error"
+        visible={!!registerRequestErrorText}
+      >
         {registerRequestErrorText}
       </Error>
       <Link to={routes.login}>Already have an account?</Link>

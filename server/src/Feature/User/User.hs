@@ -10,6 +10,7 @@ import Data.Time.Clock (UTCTime)
 data User = User
   { userId        :: Id User
   , userUsername  :: Text
+  , userEmail :: Text
   , userPassword  :: Text
   , userCreatedOn :: UTCTime
   }
@@ -21,7 +22,7 @@ data PublicUser = PublicUser
   } deriving Generic
 
 instance FromRow User where
-  fromRow = User <$> field <*> field <*> field <*> field
+  fromRow = User <$> field <*> field <*> field <*> field <*> field
 
 toPublicUser :: User -> PublicUser
 toPublicUser user =

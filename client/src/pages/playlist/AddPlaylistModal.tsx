@@ -90,6 +90,7 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
             <NewPlaylistIcon />
             <OptionDescription>Start with an empty playlist.</OptionDescription>
             <Button
+              data-test="add-playlist--create"
               onClick={() => {
                 onClose()
                 dispatch(session.effects.redirect(routes.createPlaylist))

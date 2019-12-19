@@ -14,8 +14,7 @@ import {
   useHttp,
   DataStatus,
   remoteData,
-  RemoteData,
-  HttpStatus
+  RemoteData
 } from '../http'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
@@ -23,8 +22,7 @@ import { rule, ifBlank } from '../ui/validate'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
-  PasswordMissing = 'Please enter password',
-  None = ''
+  PasswordMissing = 'Please enter password'
 }
 
 enum LoginResponseError {

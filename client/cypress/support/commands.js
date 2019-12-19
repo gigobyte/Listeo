@@ -25,3 +25,16 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('dataTest', value => cy.get(`[data-test=${value}]`))
+
+Cypress.Commands.add('login', () => {
+  cy.request({
+    method: 'POST',
+    url: 'http://localhost:8081/login',
+    body: {
+      username: 'testuser',
+      password: 'testuser'
+    }
+  }).then(res => {
+    window.localStorage.setItem('jwt', res.body.jwt)
+  })
+})

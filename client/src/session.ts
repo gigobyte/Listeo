@@ -76,17 +76,11 @@ export const session = {
           .catch((res: FailedRequest) => {
             dispatch(session.actions.fetchUserFailed(res))
 
-            switch (res.statusCode) {
-              case HttpStatus.Unauthorized: {
-                if (isAuthProtectedRoute(getState().route)) {
-                  dispatch(session.effects.redirect(routes.login))
-                }
-                break
-              }
-
-              default:
-                dispatch(session.effects.redirect(routes.error))
-                break
+            if (
+              res.statusCode === HttpStatus.Unauthorized &&
+              isAuthProtectedRoute(getState().route)
+            ) {
+              dispatch(session.effects.redirect(routes.login))
             }
           })
     },

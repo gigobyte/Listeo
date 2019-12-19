@@ -67,13 +67,14 @@ export const Header: React.FC = () => {
                   <>
                     {shouldShowAddPlaylistButton && (
                       <AddButton
+                        data-test="header--add-playlist"
                         onClick={() => setIsAddPlaylistOverlayShown(true)}
                       />
                     )}
-                    <NavItem>
+                    <NavItem data-test="header--username">
                       <Link to={routes.home}>{user.username}</Link>
                     </NavItem>
-                    <NavItem>
+                    <NavItem data-test="header--logout">
                       <Link to={routes.home}>Logout</Link>
                     </NavItem>
                   </>
@@ -82,10 +83,10 @@ export const Header: React.FC = () => {
               default:
                 return (
                   <>
-                    <NavItem>
+                    <NavItem data-test="header--login">
                       <Link to={routes.login}>Sign In</Link>
                     </NavItem>
-                    <NavItem>
+                    <NavItem data-test="header--register">
                       <Link to={routes.register}>Register</Link>
                     </NavItem>
                     <NavItem>

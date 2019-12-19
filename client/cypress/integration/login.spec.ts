@@ -2,6 +2,7 @@ describe('Login', () => {
   const USERNAME = 'login--username'
   const PASSWORD = 'login--password'
   const SUBMIT = 'login--submit'
+  const API_ERROR = 'login--api-error'
   const ERROR = '-error'
 
   beforeEach(() => {
@@ -15,8 +16,8 @@ describe('Login', () => {
   describe('Username field', () => {
     it('works', () => {
       cy.dataTest(USERNAME)
-        .type('sample')
-        .should('have.value', 'sample')
+        .type('v')
+        .should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -27,7 +28,7 @@ describe('Login', () => {
     })
 
     it('does not show error if its value is not empty', () => {
-      cy.dataTest(USERNAME).type('sample{enter}')
+      cy.dataTest(USERNAME).type('v{enter}')
       cy.dataTest(USERNAME + ERROR).should('not.be.visible')
     })
 
@@ -48,8 +49,8 @@ describe('Login', () => {
   describe('Password field', () => {
     it('works', () => {
       cy.dataTest(PASSWORD)
-        .type('sample')
-        .should('have.value', 'sample')
+        .type('v')
+        .should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -60,7 +61,7 @@ describe('Login', () => {
     })
 
     it('does not show error if its value is not empty', () => {
-      cy.dataTest(PASSWORD).type('sample{enter}')
+      cy.dataTest(PASSWORD).type('v{enter}')
       cy.dataTest(PASSWORD + ERROR).should('not.be.visible')
     })
 
@@ -87,27 +88,79 @@ describe('Login', () => {
 
     it('becomes disabled if the username is showing an error', () => {
       cy.dataTest(USERNAME).type('{enter}')
-      cy.dataTest(PASSWORD).type('validnow')
+      cy.dataTest(PASSWORD).type('v')
       cy.dataTest(SUBMIT).should('be.disabled')
     })
 
     it('becomes disabled if the password is showing an error', () => {
-      cy.dataTest(USERNAME).type('validnow')
+      cy.dataTest(USERNAME).type('v')
       cy.dataTest(PASSWORD).type('{enter}')
       cy.dataTest(SUBMIT).should('be.disabled')
     })
 
     it('becomes disabled if the login request is pending', () => {
-      cy.server({ delay: 5000, status: 500 })
-      cy.clock()
-      cy.route('POST', 'http://localhost:8081/login', {})
+      cy.server()
+      cy.route({
+        method: 'POST',
+        url: 'http://localhost:8081/login',
+        status: 200,
+        response: {},
+        delay: 500
+      }).as('login')
 
-      cy.dataTest(USERNAME).type('validnow')
-      cy.dataTest(PASSWORD).type('validnow')
+      cy.dataTest(USERNAME).type('v')
+      cy.dataTest(PASSWORD).type('v')
       cy.dataTest(SUBMIT).click()
       cy.dataTest(SUBMIT).should('be.disabled')
-      cy.tick(5000)
-      cy.dataTest(SUBMIT).should('not.be.disabled')
+
+      cy.wait('@login').then(() => {
+        cy.dataTest(SUBMIT).should('not.be.disabled')
+      })
+    })
+
+    it('should show server error on submit', () => {
+      cy.server()
+      cy.route({
+        method: 'POST',
+        url: 'http://localhost:8081/login',
+        status: 401,
+        response: {
+          error: 'UserNotFound'
+        }
+      }).as('login')
+      cy.dataTest(USERNAME).type('v')
+      cy.dataTest(PASSWORD).type('v')
+      cy.dataTest(SUBMIT).click()
+
+      cy.wait('@login').then(() => {
+        cy.dataTest(API_ERROR).should('have.text', 'User not found')
+      })
+    })
+
+    it('should redirect to home after successful login', () => {
+      cy.server()
+      cy.route({
+        method: 'POST',
+        url: 'http://localhost:8081/login',
+        status: 200,
+        response: {
+          jwt: ''
+        }
+      }).as('login')
+      cy.route({
+        method: 'GET',
+        url: 'http://localhost:8081/me',
+        status: 200,
+        response: {}
+      })
+
+      cy.dataTest(USERNAME).type('v')
+      cy.dataTest(PASSWORD).type('v')
+      cy.dataTest(SUBMIT).click()
+
+      cy.wait('@login').then(() => {
+        cy.url().should('eq', Cypress.config().baseUrl + '/')
+      })
     })
   })
 })

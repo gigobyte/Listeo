@@ -17,6 +17,10 @@ export const fail = (validation: (value: string) => boolean) => (
   value: string
 ): boolean => !validation(value)
 
+export const pass = (validation: (value: string) => boolean) => (
+  value: string
+): boolean => validation(value)
+
 /* Rules */
 
 export const ifBlank = (x: string): boolean => !!x
