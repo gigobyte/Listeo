@@ -1,6 +1,10 @@
 describe('Create playlist', () => {
   beforeEach(() => {
     cy.login()
+
+    Cypress.on('window:before:load', win => {
+      delete win.fetch
+    })
   })
 
   describe('Entering the page', () => {
@@ -148,7 +152,7 @@ describe('Create playlist', () => {
       })
     })
 
-    describe.only('Submit button', () => {
+    describe('Submit button', () => {
       it('triggers validation on click', () => {
         cy.dataTest(SUBMIT).click()
         cy.dataTest(NAME + ERROR).should('be.visible')
@@ -160,7 +164,6 @@ describe('Create playlist', () => {
       })
 
       it('becomes disabled if the create playlist request is pending', () => {
-        //TODO Fix test
         cy.server()
         cy.route({
           method: 'POST',
@@ -176,6 +179,24 @@ describe('Create playlist', () => {
 
         cy.wait('@createPlaylist').then(() => {
           cy.dataTest(SUBMIT).should('not.be.disabled')
+        })
+      })
+
+      it('should redirect to the playlist page after success', () => {
+        cy.server()
+        cy.route({
+          method: 'POST',
+          url: 'http://localhost:8081/playlist',
+          status: 200,
+          response: { playlistId: 1337 },
+          delay: 500
+        }).as('createPlaylist')
+
+        cy.dataTest(NAME).type('v')
+        cy.dataTest(SUBMIT).click()
+
+        cy.wait('@createPlaylist').then(() => {
+          cy.url().should('eq', Cypress.config().baseUrl + '/playlist/1337')
         })
       })
     })

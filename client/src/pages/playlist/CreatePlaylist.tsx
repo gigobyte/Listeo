@@ -34,18 +34,8 @@ enum PlaylistStyle {
   Ranked = 'Ranked',
   Unordered = 'Unordered'
 }
-
-enum CreatePlaylistResponseError {
-  InvalidRequest = 'InvalidRequest',
-  ValidationFailed = 'ValidationFailed'
-}
-
 interface CreatePlaylistSuccessResponse {
   playlistId: string
-}
-
-interface CreatePlaylistFailResponse extends FailedRequest {
-  error: CreatePlaylistResponseError
 }
 
 const createPlaylistEndpoint = createEndpoint<CreatePlaylistSuccessResponse>(
@@ -93,7 +83,7 @@ export const CreatePlaylist = () => {
   const http = useHttp()
   const dispatch = useDispatch()
   const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
-    RemoteData<CreatePlaylistSuccessResponse, CreatePlaylistFailResponse>
+    RemoteData<CreatePlaylistSuccessResponse>
   >(remoteData.notAsked)
 
   const createPlaylistForm = useForm({

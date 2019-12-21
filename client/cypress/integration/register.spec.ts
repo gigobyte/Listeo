@@ -206,7 +206,7 @@ describe('Register', () => {
       }).as('register')
       cy.dataTest(USERNAME).type('validnow')
       cy.dataTest(PASSWORD).type('validnow')
-      cy.dataTest(EMAIL).type('valid@now')
+      cy.dataTest(EMAIL).type('v@n')
       cy.dataTest(SUBMIT).click()
 
       cy.wait('@register').then(() => {
@@ -233,7 +233,7 @@ describe('Register', () => {
 
       cy.dataTest(USERNAME).type('validnow')
       cy.dataTest(PASSWORD).type('validnow')
-      cy.dataTest(EMAIL).type('valid@now')
+      cy.dataTest(EMAIL).type('v@n')
       cy.dataTest(SUBMIT).click()
 
       cy.wait('@register').then(() => {
