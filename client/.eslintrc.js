@@ -1,7 +1,8 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node: true
   },
   extends: [
     'eslint:recommended',
@@ -24,11 +25,13 @@ module.exports = {
   plugins: ['react', '@typescript-eslint'],
   rules: {
     '@typescript-eslint/member-delimiter-style': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off'
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-use-before-define': 'off'
   },
   settings: {
     react: {
       version: 'detect'
     }
-  }
+  },
+  ignorePatterns: ['**/*.js']
 }
