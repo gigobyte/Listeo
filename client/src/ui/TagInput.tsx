@@ -103,7 +103,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       {tags.length > 0 && (
         <TagsContainer>
           {tags.map((tag, i) => (
-            <TagContainer data-test={`${dataTest}-tag-${i + 1}`}>
+            <TagContainer key={tag} data-test={`${dataTest}-tag-${i + 1}`}>
               <TagContent>{tag}</TagContent>
               <TagRemoveButton
                 data-test={`${dataTest}-tag-${i + 1}-delete`}

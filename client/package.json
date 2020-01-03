@@ -8,7 +8,7 @@
     "build": "webpack",
     "tsc": "tsc --noEmit",
     "test:e2e": "cypress run",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.{ts,tsx}"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.1",

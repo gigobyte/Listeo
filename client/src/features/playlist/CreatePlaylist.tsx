@@ -99,7 +99,7 @@ export const CreatePlaylist = () => {
   const playlistNameInput = useInput({
     trim: false,
     validations: [rule(ifBlank, ValidationError.PlaylistNameMissing)],
-    shouldShowError: () => createPlaylistForm.submitted
+    shouldShowError: _ => createPlaylistForm.submitted
   })
 
   const tagsInput = useTagInput()
@@ -107,7 +107,7 @@ export const CreatePlaylist = () => {
   const descriptionInput = useTextarea({
     trim: false,
     validations: [],
-    shouldShowError: () => false
+    shouldShowError: _ => false
   })
 
   const playlistPrivacy = useRadioButtons({
