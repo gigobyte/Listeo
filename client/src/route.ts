@@ -1,5 +1,3 @@
-import { create } from 'domain'
-
 /**
  * Temporary implementation until I figure out url parsing
  */

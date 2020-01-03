@@ -1,8 +1,6 @@
 import { Endpoint } from './endpoint'
-import { useJwt } from './session'
 
-// These are the only status codes the back-end can return
-// that can be handled, all other ones are treated as exceptions and redirect to /error
+// These are the only status codes the back-end can return that can be handled
 export enum HttpStatus {
   BadRequest = 400,
   Unauthorized = 401
@@ -35,7 +33,7 @@ export const http = {
     return rawRes.json()
   },
 
-  async post<T>(url: Endpoint<T>, body: any): Promise<T> {
+  async post<T>(url: Endpoint<T>, body: unknown): Promise<T> {
     const jwt = localStorage.getItem('jwt')
     const rawRes = await window.fetch(url, {
       method: 'POST',
