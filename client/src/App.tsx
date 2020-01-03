@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMount } from 'react-use'
 import { createGlobalStyle } from 'styled-components'
-import { configureStore } from 'redux-starter-kit'
+import { configureStore } from '@reduxjs/toolkit'
 import { Provider, useDispatch } from 'react-redux'
 import { session, useRoute } from './session'
 import { RouteTag } from './route'

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from 'redux-starter-kit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { HttpStatus, FailedRequest, RemoteData, remoteData, http } from './http'
 import { createEndpoint } from './endpoint'
 import { useSelector } from 'react-redux'
