@@ -1,18 +1,18 @@
 import React from 'react'
 import { useMount } from 'react-use'
-import styled, { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 import { configureStore } from 'redux-starter-kit'
 import { Provider, useDispatch } from 'react-redux'
-import { session, useUser, useRoute } from './session'
-import { routes, RouteTag } from './route'
+import { session, useRoute } from './session'
+import { RouteTag } from './route'
 import { colors } from './ui/color'
-import { DataStatus } from './http'
 import { Header } from './ui/Header'
 import MuseoSans from './assets/MuseoSans-100.ttf'
-import { Login } from './pages/Login'
-import { Register } from './pages/Register'
-import { CreatePlaylist } from './pages/playlist/CreatePlaylist'
-import { ErrorPage } from './pages/ErrorPage'
+import { Login } from './features/Login'
+import { Register } from './features/Register'
+import { CreatePlaylist } from './features/playlist/CreatePlaylist'
+import { ErrorPage } from './features/ErrorPage'
+import { ViewPlaylist } from './features/playlist/ViewPlaylist'
 
 const store = configureStore({
   reducer: session.reducer
@@ -95,7 +95,11 @@ export const Main = () => {
       )
 
     case RouteTag.ViewPlaylist:
-      return <Layout></Layout>
+      return (
+        <Layout>
+          <ViewPlaylist playlistId={route.params.playlistId} />
+        </Layout>
+      )
 
     case RouteTag.NotFound404:
       return <h1>404</h1>

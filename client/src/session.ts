@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from 'redux-starter-kit'
-import {
-  HttpStatus,
-  FailedRequest,
-  RemoteData,
-  remoteData,
-  createHttp
-} from './http'
+import { HttpStatus, FailedRequest, RemoteData, remoteData, http } from './http'
 import { createEndpoint } from './endpoint'
 import { useSelector } from 'react-redux'
 import {
@@ -64,7 +58,7 @@ export const session = {
   effects: {
     fetchUser() {
       return (dispatch: AppDispatch, getState: () => SessionState) =>
-        createHttp(getState().jwt)
+        http
           .get(currentUserEndpoint)
           .then(user => {
             dispatch(session.actions.fetchUserSuccess(user))

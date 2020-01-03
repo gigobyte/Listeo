@@ -9,31 +9,17 @@ import { TagInput, useTagInput } from '../../ui/TagInput'
 import { Textarea, useTextarea } from '../../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../../ui/RadioButton'
 import { Button } from '../../ui/Button'
-import {
-  useHttp,
-  FailedRequest,
-  remoteData,
-  RemoteData,
-  DataStatus
-} from '../../http'
+import { remoteData, RemoteData, DataStatus, http } from '../../http'
 import { createEndpoint } from '../../endpoint'
 import { session } from '../../session'
 import { useDispatch } from 'react-redux'
 import { routes } from '../../route'
+import { PlaylistPrivacy, PlaylistStyle } from './Playlist'
 
 enum ValidationError {
   PlaylistNameMissing = 'Please enter the name of the playlist'
 }
 
-enum PlaylistPrivacy {
-  Public = 'Public',
-  Private = 'Private'
-}
-
-enum PlaylistStyle {
-  Ranked = 'Ranked',
-  Unordered = 'Unordered'
-}
 interface CreatePlaylistSuccessResponse {
   playlistId: string
 }
@@ -80,7 +66,6 @@ const Separator = styled.div`
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const http = useHttp()
   const dispatch = useDispatch()
   const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
     RemoteData<CreatePlaylistSuccessResponse>

@@ -11,7 +11,7 @@ import { Error } from '../ui/Error'
 import { createEndpoint } from '../endpoint'
 import {
   FailedRequest,
-  useHttp,
+  http,
   DataStatus,
   remoteData,
   RemoteData
@@ -63,7 +63,6 @@ export const Login = () => {
   useTitle('Login - Listeo')
 
   const dispatch = useDispatch()
-  const http = useHttp()
   const [loginResponse, setLoginResponse] = useState<
     RemoteData<LoginSuccessResponse, LoginFailResponse>
   >(remoteData.notAsked)

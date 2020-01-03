@@ -15,8 +15,6 @@ export enum RouteTag {
   Error = 'error'
 }
 
-type T = Route[]
-
 export type Route = (
   | { tag: RouteTag.Home }
   | { tag: RouteTag.Login }

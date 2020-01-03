@@ -12,8 +12,9 @@ export interface FailedRequest {
   statusCode: HttpStatus
 }
 
-export const createHttp = (jwt: string | null) => ({
+export const http = {
   async get<T>(url: Endpoint<T>): Promise<T> {
+    const jwt = localStorage.getItem('jwt')
     const rawRes = await window.fetch(url, {
       method: 'GET',
       headers: {
@@ -35,6 +36,7 @@ export const createHttp = (jwt: string | null) => ({
   },
 
   async post<T>(url: Endpoint<T>, body: any): Promise<T> {
+    const jwt = localStorage.getItem('jwt')
     const rawRes = await window.fetch(url, {
       method: 'POST',
       body: JSON.stringify(body),
@@ -57,12 +59,6 @@ export const createHttp = (jwt: string | null) => ({
 
     return res
   }
-})
-
-export const useHttp = () => {
-  const jwt = useJwt()
-
-  return createHttp(jwt)
 }
 
 export enum DataStatus {

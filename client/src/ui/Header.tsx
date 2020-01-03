@@ -7,7 +7,7 @@ import { Link } from './Link'
 import { routes } from '../route'
 import { Icons } from './Icon'
 import { Logo } from './Logo'
-import { AddPlaylistModal } from '../pages/playlist/AddPlaylistModal'
+import { AddPlaylistModal } from '../features/playlist/AddPlaylistModal'
 
 const Container = styled.div`
   display: flex;

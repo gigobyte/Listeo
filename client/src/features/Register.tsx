@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import {
   FailedRequest,
-  useHttp,
+  http,
   remoteData,
   RemoteData,
-  DataStatus,
-  HttpStatus
+  DataStatus
 } from '../http'
 import { createEndpoint } from '../endpoint'
 import { centered } from '../ui/Container'
@@ -23,7 +22,6 @@ import {
   ifBlank,
   ifShorterThan,
   rule,
-  fail,
   ifContains,
   ifRegexFails,
   pass
@@ -78,7 +76,6 @@ export const Register = () => {
   useTitle('Register - Listeo')
 
   const dispatch = useDispatch()
-  const http = useHttp()
   const [registerResponse, setRegisterResponse] = useState<
     RemoteData<RegisterSuccessResponse, RegisterFailResponse>
   >(remoteData.notAsked)
