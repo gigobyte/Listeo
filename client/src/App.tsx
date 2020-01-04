@@ -78,6 +78,7 @@ export const Main = () => {
   }
 
   switch (user.status) {
+    case DataStatus.Fail:
     case DataStatus.Success: {
       switch (route.tag) {
         case RouteTag.Home:
@@ -119,7 +120,8 @@ export const Main = () => {
       }
     }
 
-    default:
+    case DataStatus.NotAsked:
+    case DataStatus.Loading:
       return (
         <Layout>
           <Spinner />

@@ -42,6 +42,10 @@ export const session = {
         state.route = action.payload
       },
 
+      fetchUserStarted(state) {
+        state.user = remoteData.loading
+      },
+
       fetchUserSuccess(state, action: PayloadAction<User>) {
         state.user = remoteData.success(action.payload)
       },
@@ -57,7 +61,9 @@ export const session = {
   }),
   effects: {
     fetchUser() {
-      return (dispatch: AppDispatch, getState: () => SessionState) =>
+      return (dispatch: AppDispatch, getState: () => SessionState) => {
+        dispatch(session.actions.fetchUserStarted())
+
         http
           .get(currentUserEndpoint)
           .then(user => {
@@ -77,6 +83,7 @@ export const session = {
               dispatch(session.effects.redirect(routes.login))
             }
           })
+      }
     },
 
     redirect(route: Route) {
@@ -88,10 +95,10 @@ export const session = {
 
     authSuccess(token: string) {
       return (dispatch: AppDispatch) => {
+        localStorage.setItem('jwt', token)
         dispatch(session.actions.storeJwt(token))
         dispatch(session.effects.fetchUser())
         dispatch(session.effects.redirect(routes.home))
-        localStorage.setItem('jwt', token)
       }
     }
   }
