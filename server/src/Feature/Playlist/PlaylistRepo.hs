@@ -35,7 +35,7 @@ findPlaylist playlistId = withConn $ \conn -> do
   let
     qry
       = "SELECT * FROM playlists \
-        \WHERE playlist_id = ? \
+        \WHERE id = ? \
         \LIMIT 1"
 
   result <- liftIO $ query conn qry (Only playlistId)

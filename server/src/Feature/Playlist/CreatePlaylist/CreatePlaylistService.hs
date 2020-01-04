@@ -77,10 +77,10 @@ mkInsertPlaylistTag tagName =
 
 validatePlaylistName :: Text -> Maybe Text
 validatePlaylistName str
-  | T.length str < 1 = Nothing
+  | T.length str == 0 = Nothing
   | otherwise        = Just (T.strip str)
 
 validatePlaylistTag :: Text -> Maybe Text
 validatePlaylistTag str
-  | T.length str < 1 = Nothing
+  | T.length str == 0 = Nothing
   | otherwise        = Just (T.strip str)

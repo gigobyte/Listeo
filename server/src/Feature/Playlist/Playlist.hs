@@ -8,6 +8,7 @@ import Database.PostgreSQL.Simple.FromField
 import Database.PostgreSQL.Simple.ToField
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time.Clock (UTCTime)
+import Feature.User.User (User)
 
 instance ToJSON PlaylistPrivacy
 instance FromJSON PlaylistPrivacy
@@ -45,11 +46,13 @@ instance ToField PlaylistStyle where
 
 data Playlist = Playlist
   { playlistId :: Id Playlist
+  , playlistAuthorId :: Id User
   , playlistName :: Text
+  , playlistDescription :: Text
   , playlistStyle :: PlaylistStyle
   , playlistPrivacy :: PlaylistPrivacy
   , playlistCreatedOn :: UTCTime
   }
 
 instance FromRow Playlist where
-  fromRow = Playlist <$> field <*> field <*> field <*> field <*> field
+  fromRow = Playlist <$> field <*> field <*> field <*> field <*> field <*> field <*> field

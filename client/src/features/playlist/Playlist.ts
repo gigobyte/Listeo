@@ -1,3 +1,5 @@
+import { PlaylistTag } from './PlaylistTag'
+
 export enum PlaylistPrivacy {
   Public = 'Public',
   Private = 'Private'
@@ -14,4 +16,5 @@ export interface Playlist {
   style: PlaylistStyle
   privacy: PlaylistPrivacy
   createdOn: string
+  tags: PlaylistTag[]
 }

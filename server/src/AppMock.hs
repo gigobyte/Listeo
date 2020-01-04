@@ -4,7 +4,6 @@ import Protolude hiding (get)
 import System.IO.Unsafe (unsafePerformIO)
 import Infrastructure.MonadTime
 import Infrastructure.MonadCrypto
-import Infrastructure.Utils.Id
 import Feature.Login.LoginServiceClass (LoginService(..))
 import Feature.Register.RegisterServiceClass (RegisterService(..))
 import Feature.Auth.AuthServiceClass (AuthService(..))
@@ -47,24 +46,21 @@ instance LoginService AppMockT where
   login _ = pure $ Right "some jwt"
 
 instance PlaylistService AppMockT where
-  createPlaylist _ _ = pure $ Right mockId
+  createPlaylist _ _ = pure $ Right 12345
   getPlaylist _ = pure $ Right mockGetPlaylistResponse
 
 instance PlaylistRepo AppMockT where
-  insertPlaylist _ = pure mockId
+  insertPlaylist _ = pure 12345
   findPlaylist _ = pure $ Just mockPlaylist
 
 instance PlaylistTagRepo AppMockT where
   insertPlaylistTag _ _ = pure ()
   findPlaylistTagsByPlaylist _ =
-    pure [PlaylistTag { playlistTagId = mockId, playlistTagName = "" }]
-
-mockId :: Id a
-mockId = 12345
+    pure [PlaylistTag { playlistTagId = 12345, playlistTagName = "" }]
 
 mockUser :: User
 mockUser = User
-  { userId        = mockId
+  { userId        = 12345
   , userUsername  = "mockUser"
   , userEmail = "mock@user"
   , userPassword  = "mockUser"
@@ -73,8 +69,10 @@ mockUser = User
 
 mockPlaylist :: Playlist
 mockPlaylist = Playlist
-  { playlistId        = mockId
+  { playlistId        = 12345
+  , playlistAuthorId = 123
   , playlistName      = "My mock playlist"
+  , playlistDescription = ""
   , playlistStyle     = Unordered
   , playlistPrivacy   = Public
   , playlistCreatedOn = unsafePerformIO $ Time.getCurrentTime

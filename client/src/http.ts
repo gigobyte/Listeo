@@ -1,4 +1,5 @@
 import { Endpoint } from './endpoint'
+import { useState, useEffect } from 'react'
 
 // These are the only status codes the back-end can return that can be handled
 export enum HttpStatus {
@@ -69,8 +70,8 @@ export enum DataStatus {
 export type RemoteData<T, E = FailedRequest> =
   | { status: DataStatus.NotAsked }
   | { status: DataStatus.Loading }
-  | { status: DataStatus.Success } & T
-  | { status: DataStatus.Fail } & E
+  | ({ status: DataStatus.Success } & T)
+  | ({ status: DataStatus.Fail } & E)
 
 export const remoteData = {
   notAsked: { status: DataStatus.NotAsked },
@@ -96,3 +97,18 @@ export const remoteData = {
     }
   }
 } as const
+
+export const useAsync = <TArgs extends unknown[], TRes>(
+  promiseFn: (...args: TArgs) => Promise<TRes>,
+  args: TArgs
+): RemoteData<TRes> => {
+  const [data, setData] = useState<RemoteData<TRes>>(remoteData.loading)
+
+  useEffect(() => {
+    promiseFn(...args)
+      .then(res => setData(remoteData.success(res)))
+      .catch(err => setData(remoteData.fail(err)))
+  }, args)
+
+  return data
+}

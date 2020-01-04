@@ -1,8 +1,7 @@
 import React from 'react'
 import useTitle from 'react-use/esm/useTitle'
-import { useAsync } from 'react-async'
 import { Playlist } from './Playlist'
-import { http } from '../../http'
+import { http, useAsync, DataStatus } from '../../http'
 import { createEndpoint } from '../../endpoint'
 
 interface ViewPlaylistProps {
@@ -10,12 +9,22 @@ interface ViewPlaylistProps {
 }
 
 const fetchPlaylist = (playlistId: string): Promise<Playlist> =>
-  http.get(createEndpoint<Playlist>('/playlist' + playlistId))
+  http.get(createEndpoint<Playlist>('/playlist/' + playlistId))
 
 export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
-  const { data, error, isPending } = useAsync(fetchPlaylist)
+  const playlist = useAsync(fetchPlaylist, [playlistId])
 
-  useTitle('Create Playlist - Listeo')
+  useTitle(
+    (() => {
+      switch (playlist.status) {
+        case DataStatus.Success:
+          return `${playlist.name} - Listeo`
+
+        default:
+          return 'Playlist - Listeo'
+      }
+    })()
+  )
 
   return <div />
 }

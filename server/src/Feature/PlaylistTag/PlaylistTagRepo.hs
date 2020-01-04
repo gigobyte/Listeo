@@ -27,7 +27,7 @@ findPlaylistTagsByPlaylist :: (MonadDB m) => Text -> m [PlaylistTag]
 findPlaylistTagsByPlaylist playlistId = withConn $ \conn -> do
   let
     qry
-      = "SELECT * FROM playlist_tags \
+      = "SELECT playlist_tags.id, playlist_tags.name FROM playlist_tags \
         \JOIN playlists_playlist_tags \
         \ON playlists_playlist_tags.playlist_tag_id = playlist_tags.id \
         \WHERE playlists_playlist_tags.playlist_id = ?"
