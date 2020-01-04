@@ -14,12 +14,19 @@ export interface FailedRequest {
 export const http = {
   async get<T>(url: Endpoint<T>): Promise<T> {
     const jwt = localStorage.getItem('jwt')
-    const rawRes = await window.fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + jwt
-      }
-    })
+    let rawRes
+
+    try {
+      rawRes = await window.fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + jwt
+        }
+      })
+    } catch {
+      window.location.assign('/error')
+      throw {}
+    }
 
     if (rawRes.status === 500) {
       window.location.assign('/error')
@@ -36,13 +43,20 @@ export const http = {
 
   async post<T>(url: Endpoint<T>, body: unknown): Promise<T> {
     const jwt = localStorage.getItem('jwt')
-    const rawRes = await window.fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        Authorization: 'Bearer ' + jwt
-      }
-    })
+    let rawRes
+
+    try {
+      rawRes = await window.fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          Authorization: 'Bearer ' + jwt
+        }
+      })
+    } catch {
+      window.location.assign('/error')
+      throw {}
+    }
 
     if (rawRes.status === 500) {
       window.location.assign('/error')

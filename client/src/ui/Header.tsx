@@ -19,7 +19,7 @@ const Nav = styled.div`
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  padding-right: 4%;
+  padding-right: 40px;
   font-size: 1.1rem;
   font-weight: bold;
 `

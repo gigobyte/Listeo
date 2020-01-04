@@ -3,7 +3,6 @@ module Feature.Playlist.Playlist where
 import Protolude
 import Infrastructure.Utils.Id (Id)
 import Database.PostgreSQL.Simple
-import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.FromField
 import Database.PostgreSQL.Simple.ToField
 import Data.Aeson (FromJSON, ToJSON)
@@ -44,6 +43,7 @@ instance ToField PlaylistStyle where
   toField Unordered = toField ("unordered" :: Text)
   toField Ranked    = toField ("ranked" :: Text)
 
+instance FromRow Playlist
 data Playlist = Playlist
   { playlistId :: Id Playlist
   , playlistAuthorId :: Id User
@@ -52,7 +52,5 @@ data Playlist = Playlist
   , playlistStyle :: PlaylistStyle
   , playlistPrivacy :: PlaylistPrivacy
   , playlistCreatedOn :: UTCTime
-  }
+  } deriving Generic
 
-instance FromRow Playlist where
-  fromRow = Playlist <$> field <*> field <*> field <*> field <*> field <*> field <*> field

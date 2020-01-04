@@ -3,7 +3,7 @@ import { useMount } from 'react-use'
 import { createGlobalStyle } from 'styled-components'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider, useDispatch } from 'react-redux'
-import { session, useRoute } from './session'
+import { session, useRoute, useUser } from './session'
 import { RouteTag } from './route'
 import { colors } from './ui/color'
 import { Header } from './ui/Header'
@@ -13,6 +13,8 @@ import { Register } from './features/Register'
 import { CreatePlaylist } from './features/playlist/CreatePlaylist'
 import { ErrorPage } from './features/ErrorPage'
 import { ViewPlaylist } from './features/playlist/ViewPlaylist'
+import { DataStatus } from './http'
+import { Spinner } from './ui/Spinner'
 
 const store = configureStore({
   reducer: session.reducer
@@ -59,6 +61,7 @@ const Layout: React.FC = ({ children }) => (
 export const Main = () => {
   const dispatch = useDispatch()
   const route = useRoute()
+  const user = useUser()
 
   useMount(() => {
     if (route.tag !== RouteTag.Error) {
@@ -66,48 +69,60 @@ export const Main = () => {
     }
   })
 
-  switch (route.tag) {
-    case RouteTag.Home:
-      return <Layout></Layout>
+  if (route.tag === RouteTag.Error) {
+    return (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    )
+  }
 
-    case RouteTag.Login:
+  switch (user.status) {
+    case DataStatus.Success: {
+      switch (route.tag) {
+        case RouteTag.Home:
+          return <Layout></Layout>
+
+        case RouteTag.Login:
+          return (
+            <Layout>
+              <Login />
+            </Layout>
+          )
+
+        case RouteTag.Register:
+          return (
+            <Layout>
+              <Register />
+            </Layout>
+          )
+
+        case RouteTag.About:
+          return <Layout></Layout>
+
+        case RouteTag.CreatePlaylist:
+          return (
+            <Layout>
+              <CreatePlaylist />
+            </Layout>
+          )
+
+        case RouteTag.ViewPlaylist:
+          return (
+            <Layout>
+              <ViewPlaylist playlistId={route.params.playlistId} />
+            </Layout>
+          )
+
+        case RouteTag.NotFound404:
+          return <h1>404</h1>
+      }
+    }
+
+    default:
       return (
         <Layout>
-          <Login />
-        </Layout>
-      )
-
-    case RouteTag.Register:
-      return (
-        <Layout>
-          <Register />
-        </Layout>
-      )
-
-    case RouteTag.About:
-      return <Layout></Layout>
-
-    case RouteTag.CreatePlaylist:
-      return (
-        <Layout>
-          <CreatePlaylist />
-        </Layout>
-      )
-
-    case RouteTag.ViewPlaylist:
-      return (
-        <Layout>
-          <ViewPlaylist playlistId={route.params.playlistId} />
-        </Layout>
-      )
-
-    case RouteTag.NotFound404:
-      return <h1>404</h1>
-
-    case RouteTag.Error:
-      return (
-        <Layout>
-          <ErrorPage />
+          <Spinner />
         </Layout>
       )
   }

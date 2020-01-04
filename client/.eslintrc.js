@@ -24,6 +24,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'react-hooks'],
   rules: {
+    'no-fallthrough': 'off',
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
