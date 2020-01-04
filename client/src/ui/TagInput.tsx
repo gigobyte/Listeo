@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { colors } from './color'
 import { Input, useInput } from './Input'
 import { Icons } from './Icon'
-import { rule, ifRegexFails, fail, ifBlank } from './validate'
+import { rule, ifRegexFails, fail, ifBlank, ifLongerThan } from './validate'
 
 interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   'data-test'?: string
@@ -14,6 +14,7 @@ interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 enum TagInputValidationError {
   TagMissing = 'Please enter a tag first',
+  TagIsTooLong = 'Please enter a shorter tag',
   InvalidTag = 'Please enter a valid tag, the only special characters allowed are - and _',
   TagLimitReached = 'You can only add up to 10 tags'
 }
@@ -67,6 +68,7 @@ export const TagInput: React.FC<TagInputProps> = ({
     trim: true,
     validations: [
       rule(ifBlank, TagInputValidationError.TagMissing),
+      rule(ifLongerThan(99), TagInputValidationError.TagIsTooLong),
       rule(
         ifRegexFails(/(^[A-Za-z0-9_-]+)$/),
         TagInputValidationError.InvalidTag

@@ -60,8 +60,9 @@ mkInsertUser req =
 
 validateUsername :: Text -> Maybe Text
 validateUsername str
-  | T.length str < 4 = Nothing
-  | otherwise        = Just str
+  | T.length str < 4  = Nothing
+  | T.length str > 99 = Nothing
+  | otherwise         = Just str
 
 validateEmail :: Text -> Maybe Text
 validateEmail str

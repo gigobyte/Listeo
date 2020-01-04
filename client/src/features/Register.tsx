@@ -24,7 +24,8 @@ import {
   rule,
   ifContains,
   ifRegexFails,
-  pass
+  pass,
+  ifLongerThan
 } from '../ui/validate'
 
 enum ValidationError {
@@ -34,6 +35,7 @@ enum ValidationError {
   InvalidEmail = 'Please enter a valid email',
   PasswordMissing = 'Please enter password',
   UsernameTooShort = 'Username must be at least 4 characters long',
+  UsernameTooLong = 'Username is too long',
   PasswordTooShort = 'Password must be at least 6 characters long'
 }
 
@@ -111,6 +113,7 @@ export const Register = () => {
     validations: [
       rule(ifBlank, ValidationError.UsernameMissing),
       rule(ifShorterThan(4), ValidationError.UsernameTooShort),
+      rule(ifLongerThan(99), ValidationError.UsernameTooLong),
       rule(ifRegexFails(/(^[A-Za-z0-9_-]+)$/), ValidationError.InvalidUsername)
     ],
     shouldShowError: _ => registerForm.submitted

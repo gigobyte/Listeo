@@ -25,8 +25,11 @@ export const pass = (validation: (value: string) => boolean) => (
 
 export const ifBlank = (x: string): boolean => !!x
 
-export const ifShorterThan = (maxLenght: number) => (x: string): boolean =>
-  x.length >= maxLenght
+export const ifShorterThan = (minLenght: number) => (x: string): boolean =>
+  x.length >= minLenght
+
+export const ifLongerThan = (maxLength: number) => (x: string): boolean =>
+  x.length <= maxLength
 
 export const ifContains = (char: string) => (x: string): boolean =>
   x.includes(char)

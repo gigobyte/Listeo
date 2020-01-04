@@ -3,8 +3,8 @@
     "strict": true,
     "noImplicitAny": false,
     "baseUrl": "../node_modules",
-    "target": "es5",
-    "lib": ["es5", "dom"],
+    "target": "es6",
+    "lib": ["DOM", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ESnext"],
     "types": ["cypress"]
   },
   "include": ["**/*.ts"]

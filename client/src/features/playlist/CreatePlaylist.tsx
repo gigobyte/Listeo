@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { centered } from '../../ui/Container'
 import { useTitle } from 'react-use'
 import { useInput, Input } from '../../ui/Input'
-import { ifBlank, rule } from '../../ui/validate'
+import { ifBlank, rule, ifLongerThan } from '../../ui/validate'
 import { useForm } from '../../ui/useForm'
 import { TagInput, useTagInput } from '../../ui/TagInput'
 import { Textarea, useTextarea } from '../../ui/Textarea'
@@ -17,7 +17,8 @@ import { routes } from '../../route'
 import { PlaylistPrivacy, PlaylistStyle } from './Playlist'
 
 enum ValidationError {
-  PlaylistNameMissing = 'Please enter the name of the playlist'
+  PlaylistNameMissing = 'Please enter the name of the playlist',
+  PlaylistNameTooLong = 'Please enter a shorter name'
 }
 
 interface CreatePlaylistSuccessResponse {
@@ -98,7 +99,10 @@ export const CreatePlaylist = () => {
 
   const playlistNameInput = useInput({
     trim: false,
-    validations: [rule(ifBlank, ValidationError.PlaylistNameMissing)],
+    validations: [
+      rule(ifBlank, ValidationError.PlaylistNameMissing),
+      rule(ifLongerThan(99), ValidationError.PlaylistNameTooLong)
+    ],
     shouldShowError: _ => createPlaylistForm.submitted
   })
 

@@ -60,6 +60,14 @@ describe('Create playlist', () => {
           .should('have.text', 'Please enter the name of the playlist')
       })
 
+      it('does not accept name longer than 99 characters', () => {
+        cy.dataTest(NAME).type(`${'v'.repeat(100)}`)
+        cy.dataTest(SUBMIT).click()
+        cy.dataTest(NAME + ERROR)
+          .should('be.visible')
+          .should('have.text', 'Please enter a shorter name')
+      })
+
       it('does not show error if its value is not empty', () => {
         cy.dataTest(NAME).type('v{enter}')
         cy.dataTest(NAME + ERROR).should('not.be.visible')
@@ -123,6 +131,13 @@ describe('Create playlist', () => {
         cy.dataTest(TAGS + INPUT + ERROR)
           .should('be.visible')
           .should('have.text', 'Please enter a tag first')
+      })
+
+      it('should show an error when you try to a tag with more than 99 characters', () => {
+        cy.dataTest(TAGS + INPUT).type(`${'v'.repeat(100)}{enter}`)
+        cy.dataTest(TAGS + INPUT + ERROR)
+          .should('be.visible')
+          .should('have.text', 'Please enter a shorter tag')
       })
 
       it('should show an error when you try to add more than 10 tags', () => {

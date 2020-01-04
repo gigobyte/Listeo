@@ -45,6 +45,13 @@ describe('Register', () => {
         .should('have.text', 'Username must be at least 4 characters long')
     })
 
+    it('does not accept usernames with more than 99 characters', () => {
+      cy.dataTest(USERNAME).type(`${'v'.repeat(100)}{enter}`)
+      cy.dataTest(USERNAME + ERROR)
+        .should('be.visible')
+        .should('have.text', 'Username is too long')
+    })
+
     it('does not show error if its value is not empty', () => {
       cy.dataTest(USERNAME).type('sam-_le{enter}')
       cy.dataTest(USERNAME + ERROR).should('not.be.visible')
