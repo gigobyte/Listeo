@@ -24,7 +24,7 @@ toHttpResult
 toHttpResult (Left InvalidRequest) = do
   status status500
   finish
-toHttpResult (error@(Left ValidationFailed)) = do
+toHttpResult (Left ValidationFailed) = do
   status badRequest400
-  json $ ErrorResponse error
+  json $ ErrorResponse ValidationFailed
 toHttpResult (Right id) = json $ CreatePlaylistResponse (show id)

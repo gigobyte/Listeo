@@ -31,7 +31,7 @@ toHttpResult
   :: Monad m
   => Either GetPlaylistError GetPlaylistResponse
   -> ActionT LText m ()
-toHttpResult (error@(Left PlaylistNotFound)) = do
+toHttpResult (Left PlaylistNotFound) = do
   status badRequest400
-  json $ ErrorResponse error
+  json $ ErrorResponse PlaylistNotFound
 toHttpResult (Right res) = json res

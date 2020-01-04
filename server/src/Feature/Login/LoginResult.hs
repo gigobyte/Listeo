@@ -21,7 +21,7 @@ toHttpResult :: Monad m => Either LoginError Text -> ActionT LText m ()
 toHttpResult (Left InvalidRequest) = do
   status status500
   finish
-toHttpResult (error@(Left UserNotFound)) = do
+toHttpResult (Left UserNotFound) = do
   status badRequest400
-  json $ ErrorResponse error
+  json $ ErrorResponse UserNotFound
 toHttpResult (Right jwt) = json $ LoginResponse jwt

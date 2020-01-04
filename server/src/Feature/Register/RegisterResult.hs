@@ -20,9 +20,9 @@ data RegisterResponse
   deriving Generic
 
 toHttpResult :: Monad m => Either RegisterError Text -> ActionT LText m ()
-toHttpResult (error@(Left UserAlreadyExists)) = do
+toHttpResult (Left UserAlreadyExists) = do
   status badRequest400
-  json $ ErrorResponse error
+  json $ ErrorResponse UserAlreadyExists
 toHttpResult (Left InvalidRequest) = do
   status status500
   finish
