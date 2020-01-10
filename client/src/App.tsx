@@ -1,6 +1,6 @@
 import React from 'react'
 import { useMount } from 'react-use'
-import { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider, useDispatch } from 'react-redux'
 import { session, useRoute, useUser } from './session'
@@ -50,11 +50,15 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
+const Content = styled.div`
+  padding: 50px;
+`
+
 const Layout: React.FC = ({ children }) => (
   <>
     <GlobalStyle />
     <Header />
-    {children}
+    <Content>{children}</Content>
   </>
 )
 

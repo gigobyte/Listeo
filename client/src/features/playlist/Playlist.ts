@@ -13,6 +13,7 @@ export enum PlaylistStyle {
 export interface Playlist {
   id: string
   name: string
+  description: string
   style: PlaylistStyle
   privacy: PlaylistPrivacy
   createdOn: string
