@@ -11,4 +11,4 @@ data InsertPlaylistTag = InsertPlaylistTag
 
 class Monad m => PlaylistTagRepo m where
   insertPlaylistTag :: Id Playlist -> InsertPlaylistTag -> m ()
-  findPlaylistTagsByPlaylist :: Text -> m [PlaylistTag]
+  findPlaylistTagsByPlaylist :: Id Playlist -> m [PlaylistTag]

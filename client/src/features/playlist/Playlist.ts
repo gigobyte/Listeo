@@ -1,4 +1,6 @@
 import { PlaylistTag } from './PlaylistTag'
+import { Video } from '../video/Video'
+import { Id } from '../../id'
 
 export enum PlaylistPrivacy {
   Public = 'Public',
@@ -11,11 +13,12 @@ export enum PlaylistStyle {
 }
 
 export interface Playlist {
-  id: string
+  id: Id<Playlist>
   name: string
   description: string
   style: PlaylistStyle
   privacy: PlaylistPrivacy
   createdOn: string
   tags: PlaylistTag[]
+  videos: Video[]
 }

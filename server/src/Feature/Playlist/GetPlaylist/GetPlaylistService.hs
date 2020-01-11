@@ -2,33 +2,37 @@ module Feature.Playlist.GetPlaylist.GetPlaylistService where
 
 import Protolude
 import qualified Data.ByteString.Lazy as B
+import qualified Data.Text as T
 import Feature.Playlist.Playlist
+import Control.Monad.Trans.Maybe
+import Infrastructure.Utils.Maybe (liftMaybe)
 import Feature.PlaylistTag.PlaylistTag (toPublicPlaylistTag)
-import qualified Feature.Playlist.Playlist as Playlist
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
+import Feature.Video.VideoRepoClass (VideoRepo(..))
+import Infrastructure.Utils.Id (Id)
+import Feature.Video.Video (toPublicVideo)
 import Feature.Playlist.GetPlaylist.GetPlaylistResult
   (GetPlaylistError(..), GetPlaylistResponse(..))
 
 getPlaylist
-  :: (PlaylistRepo m, PlaylistTagRepo m)
+  :: (PlaylistRepo m, PlaylistTagRepo m, VideoRepo m)
   => LByteString
   -> m (Either GetPlaylistError GetPlaylistResponse)
-getPlaylist rawPlaylistId = do
-  let playlistId = decodeUtf8 $ B.toStrict rawPlaylistId
-  maybePlaylist <- findPlaylist playlistId
+getPlaylist rawPlaylistId = maybeToEither PlaylistNotFound <$> (runMaybeT $ do
+  reqPlaylistId :: Id Playlist <- liftMaybe $ readMaybe $ T.unpack $ decodeUtf8 $ B.toStrict rawPlaylistId
+  playlist <- MaybeT $ findPlaylist reqPlaylistId
 
-  case maybePlaylist of
-    Just playlist -> do
-      playlistTags <- findPlaylistTagsByPlaylist playlistId
+  playlistTags <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
+  playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
 
-      return $ Right GetPlaylistResponse
-        { id        = Playlist.playlistId playlist
-        , name      = playlistName playlist
-        , style     = playlistStyle playlist
-        , privacy   = playlistPrivacy playlist
-        , createdOn = playlistCreatedOn playlist
-        , tags      = toPublicPlaylistTag <$> playlistTags
-        }
-
-    Nothing -> return $ Left PlaylistNotFound
+  return GetPlaylistResponse
+    { id        = playlistId playlist
+    , name      = playlistName playlist
+    , style     = playlistStyle playlist
+    , privacy   = playlistPrivacy playlist
+    , createdOn = playlistCreatedOn playlist
+    , tags      = toPublicPlaylistTag <$> playlistTags
+    , videos    = toPublicVideo <$> playlistVideos
+    }
+  )

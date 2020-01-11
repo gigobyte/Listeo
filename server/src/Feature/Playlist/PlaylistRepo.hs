@@ -30,7 +30,7 @@ insertPlaylist playlist = withConn $ \conn -> do
     )
   return $ extractReturning result
 
-findPlaylist :: (MonadDB m) => Text -> m (Maybe Playlist)
+findPlaylist :: (MonadDB m) => Id Playlist -> m (Maybe Playlist)
 findPlaylist playlistId = withConn $ \conn -> do
   let
     qry

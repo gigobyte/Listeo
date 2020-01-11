@@ -28,6 +28,8 @@ type App m
 
 routes :: App m => ScottyT LText m ()
 routes = do
+  Middleware.cors
+
   Register.routes
   Login.routes
   User.routes
@@ -53,9 +55,5 @@ main = do
   dbEnv  <- DB.init
 
   if isMock
-    then scottyT 8081 (\app -> runReaderT (AppMock.unAppMockT app) (dbEnv)) $ do
-      Middleware.cors
-      routes
-    else scottyT 8081 (\app -> runReaderT (App.unAppT app) (dbEnv)) $ do
-      Middleware.cors
-      routes
+    then scottyT 8081 (\app -> runReaderT (AppMock.unAppMockT app) (dbEnv)) routes
+    else scottyT 8081 (\app -> runReaderT (App.unAppT app) (dbEnv)) routes

@@ -15,6 +15,7 @@ import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
 import Feature.Playlist.GetPlaylist.GetPlaylistResult (GetPlaylistResponse(..))
+import Feature.Video.VideoRepoClass (VideoRepo(..))
 import Feature.PlaylistTag.PlaylistTag
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
@@ -58,6 +59,9 @@ instance PlaylistTagRepo AppMockT where
   findPlaylistTagsByPlaylist _ =
     pure [PlaylistTag { playlistTagId = 12345, playlistTagName = "" }]
 
+instance VideoRepo AppMockT where
+  findVideosByPlaylist _ = pure []
+
 mockUser :: User
 mockUser = User
   { userId        = 12345
@@ -89,4 +93,5 @@ mockGetPlaylistResponse = GetPlaylistResponse
   , privacy   = playlistPrivacy mockPlaylist
   , createdOn = playlistCreatedOn mockPlaylist
   , tags      = [mockPlaylistTag]
+  , videos    = []
   }

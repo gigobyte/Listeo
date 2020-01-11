@@ -7,6 +7,7 @@ import Data.Time.Clock (UTCTime)
 import Infrastructure.AppError
 import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
 import Feature.PlaylistTag.PlaylistTag (PublicPlaylistTag)
+import Feature.Video.Video (PublicVideo)
 import Network.HTTP.Types.Status (badRequest400)
 import Web.Scotty.Trans
 
@@ -24,6 +25,7 @@ data GetPlaylistResponse
       , privacy :: PlaylistPrivacy
       , createdOn :: UTCTime
       , tags :: [PublicPlaylistTag]
+      , videos :: [PublicVideo]
       }
   deriving Generic
 
