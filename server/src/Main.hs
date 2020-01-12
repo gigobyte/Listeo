@@ -55,5 +55,8 @@ main = do
   dbEnv  <- DB.init
 
   if isMock
-    then scottyT 8081 (\app -> runReaderT (AppMock.unAppMockT app) (dbEnv)) routes
+    then scottyT
+      8081
+      (\app -> runReaderT (AppMock.unAppMockT app) (dbEnv))
+      routes
     else scottyT 8081 (\app -> runReaderT (App.unAppT app) (dbEnv)) routes

@@ -48,12 +48,11 @@ data Video = Video
   } deriving Generic
 
 toPublicVideo :: Video -> PublicVideo
-toPublicVideo dbVideo =
-  PublicVideo
-    { id = videoId dbVideo
-    , name = videoName dbVideo
-    , source = videoSource dbVideo
-    , link = videoLink dbVideo
-    , note = videoNote dbVideo
-    , createdOn = videoCreatedOn dbVideo
-    }
+toPublicVideo dbVideo = PublicVideo
+  { id        = videoId dbVideo
+  , name      = videoName dbVideo
+  , source    = videoSource dbVideo
+  , link      = videoLink dbVideo
+  , note      = videoNote dbVideo
+  , createdOn = videoCreatedOn dbVideo
+  }

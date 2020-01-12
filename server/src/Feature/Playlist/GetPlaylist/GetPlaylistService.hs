@@ -19,20 +19,24 @@ getPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m, VideoRepo m)
   => LByteString
   -> m (Either GetPlaylistError GetPlaylistResponse)
-getPlaylist rawPlaylistId = maybeToEither PlaylistNotFound <$> (runMaybeT $ do
-  reqPlaylistId :: Id Playlist <- liftMaybe $ readMaybe $ T.unpack $ decodeUtf8 $ B.toStrict rawPlaylistId
-  playlist <- MaybeT $ findPlaylist reqPlaylistId
+getPlaylist rawPlaylistId =
+  maybeToEither PlaylistNotFound
+    <$> (runMaybeT $ do
+          reqPlaylistId  <- liftMaybe $ readPlaylistIdFromParam rawPlaylistId
+          playlist       <- MaybeT $ findPlaylist reqPlaylistId
+          playlistTags   <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
+          playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
 
-  playlistTags <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
-  playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
+          return GetPlaylistResponse
+            { id        = playlistId playlist
+            , name      = playlistName playlist
+            , style     = playlistStyle playlist
+            , privacy   = playlistPrivacy playlist
+            , createdOn = playlistCreatedOn playlist
+            , tags      = toPublicPlaylistTag <$> playlistTags
+            , videos    = toPublicVideo <$> playlistVideos
+            }
+        )
 
-  return GetPlaylistResponse
-    { id        = playlistId playlist
-    , name      = playlistName playlist
-    , style     = playlistStyle playlist
-    , privacy   = playlistPrivacy playlist
-    , createdOn = playlistCreatedOn playlist
-    , tags      = toPublicPlaylistTag <$> playlistTags
-    , videos    = toPublicVideo <$> playlistVideos
-    }
-  )
+readPlaylistIdFromParam :: LByteString -> Maybe (Id Playlist)
+readPlaylistIdFromParam = readMaybe . T.unpack . decodeUtf8 . B.toStrict

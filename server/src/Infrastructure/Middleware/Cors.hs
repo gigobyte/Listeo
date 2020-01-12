@@ -8,12 +8,13 @@ policy :: CorsResourcePolicy
 policy = CorsResourcePolicy
   { corsOrigins        = Nothing
   , corsMethods        = simpleMethods
-  , corsRequestHeaders = [ "Accept"
-                         , "Accept-Language"
-                         , "Content-Language"
-                         , "Content-Type"
-                         , "Authorization"
-                         ]
+  , corsRequestHeaders =
+    [ "Accept"
+    , "Accept-Language"
+    , "Content-Language"
+    , "Content-Type"
+    , "Authorization"
+    ]
   , corsExposedHeaders = Nothing
   , corsMaxAge         = Nothing
   , corsVaryOrigin     = False

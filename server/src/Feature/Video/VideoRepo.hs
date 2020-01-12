@@ -9,9 +9,6 @@ import Database.PostgreSQL.Simple
 
 findVideosByPlaylist :: (MonadDB m) => Id Playlist -> m [Video]
 findVideosByPlaylist playlistId = withConn $ \conn -> do
-  let
-    qry
-      = "SELECT * FROM videos \
-        \WHERE playlist_id = ? LIMIT 1"
-  
+  let qry = "SELECT * FROM videos WHERE playlist_id = ? LIMIT 1"
+
   query conn qry (Only playlistId)

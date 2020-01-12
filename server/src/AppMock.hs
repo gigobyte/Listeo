@@ -66,20 +66,20 @@ mockUser :: User
 mockUser = User
   { userId        = 12345
   , userUsername  = "mockUser"
-  , userEmail = "mock@user"
+  , userEmail     = "mock@user"
   , userPassword  = "mockUser"
   , userCreatedOn = unsafePerformIO $ Time.getCurrentTime
   }
 
 mockPlaylist :: Playlist
 mockPlaylist = Playlist
-  { playlistId        = 12345
-  , playlistAuthorId = 123
-  , playlistName      = "My mock playlist"
+  { playlistId          = 12345
+  , playlistAuthorId    = 123
+  , playlistName        = "My mock playlist"
   , playlistDescription = ""
-  , playlistStyle     = Unordered
-  , playlistPrivacy   = Public
-  , playlistCreatedOn = unsafePerformIO $ Time.getCurrentTime
+  , playlistStyle       = Unordered
+  , playlistPrivacy     = Public
+  , playlistCreatedOn   = unsafePerformIO $ Time.getCurrentTime
   }
 
 mockPlaylistTag :: PublicPlaylistTag

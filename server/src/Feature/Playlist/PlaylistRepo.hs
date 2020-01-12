@@ -32,11 +32,7 @@ insertPlaylist playlist = withConn $ \conn -> do
 
 findPlaylist :: (MonadDB m) => Id Playlist -> m (Maybe Playlist)
 findPlaylist playlistId = withConn $ \conn -> do
-  let
-    qry
-      = "SELECT * FROM playlists \
-        \WHERE id = ? \
-        \LIMIT 1"
+  let qry = "SELECT * FROM playlists WHERE id = ? LIMIT 1"
 
   result <- liftIO $ query conn qry (Only playlistId)
   return $ head result
