@@ -1,8 +1,4 @@
-module Feature.User.UserRepo
-  ( findUser
-  , insertUser
-  )
-where
+module Feature.User.UserRepo where
 
 import Protolude
 import Feature.User.User (User)
@@ -20,9 +16,16 @@ insertUser (InsertUser insertUserUsername insertUserEmail insertUserPassword) =
       qry
       (insertUserUsername, insertUserEmail, insertUserPassword)
 
-findUser :: MonadDB m => Text -> m (Maybe User)
-findUser username = withConn $ \conn -> do
+findUserByUsername :: MonadDB m => Text -> m (Maybe User)
+findUserByUsername username = withConn $ \conn -> do
   let qry = "SELECT * FROM users WHERE username = ? LIMIT 1"
 
   results <- liftIO $ query conn qry (Only username)
+  return $ head results
+
+findUserByEmail :: MonadDB m => Text -> m (Maybe User)
+findUserByEmail email = withConn $ \conn -> do
+  let qry = "SELECT * FROM users WHERE email = ? LIMIT 1"
+
+  results <- liftIO $ query conn qry (Only email)
   return $ head results

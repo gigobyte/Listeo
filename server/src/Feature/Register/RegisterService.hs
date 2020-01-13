@@ -37,7 +37,7 @@ parseBody body = maybeToRight InvalidRequest (decode body)
 tryToInsertUser
   :: (UserRepo m, MonadCrypto m) => InsertUser -> m (Either RegisterError ())
 tryToInsertUser user = runExceptT $ do
-  userExists <- lift $ doesUserAlreadyExist (insertUserUsername user)
+  userExists <- lift $ doesUserAlreadyExist user
 
   when userExists $ throwE UserAlreadyExists
 
@@ -45,10 +45,11 @@ tryToInsertUser user = runExceptT $ do
     updatedUser <- MaybeT $ hashPasswordInUser user
     lift $ insertUser updatedUser
 
-doesUserAlreadyExist :: (UserRepo m) => Text -> m Bool
-doesUserAlreadyExist username = do
-  userInDB <- findUser username
-  return $ isJust userInDB
+doesUserAlreadyExist :: (UserRepo m) => InsertUser -> m Bool
+doesUserAlreadyExist user = do
+  userWithSameName  <- findUserByUsername (insertUserUsername user)
+  userWithSameEmail <- findUserByEmail (insertUserEmail user)
+  return $ isJust (userWithSameName <|> userWithSameEmail)
 
 mkInsertUser :: Register -> Either RegisterError InsertUser
 mkInsertUser req =

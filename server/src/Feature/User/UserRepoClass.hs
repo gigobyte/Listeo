@@ -16,4 +16,5 @@ instance ToRow InsertUser where
 
 class Monad m => UserRepo m where
   insertUser :: InsertUser -> m ()
-  findUser :: Text -> m (Maybe User)
+  findUserByUsername :: Text -> m (Maybe User)
+  findUserByEmail :: Text -> m (Maybe User)

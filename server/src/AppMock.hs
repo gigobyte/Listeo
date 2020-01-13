@@ -35,7 +35,8 @@ instance MonadCrypto AppMockT where
 
 instance UserRepo AppMockT where
   insertUser _ = pure ()
-  findUser _ = pure $ Just mockUser
+  findUserByUsername _ = pure $ Just mockUser
+  findUserByEmail _ = pure $ Just mockUser
 
 instance AuthService AppMockT where
   requireUser  = pure mockUser

@@ -35,7 +35,7 @@ parseBody rawBody = maybeToRight InvalidRequest $ Aeson.decode rawBody
 
 findUserByCredentials :: UserRepo m => Login -> m (Either LoginError User)
 findUserByCredentials req = do
-  userInDb <- mfilter isPasswordValid <$> findUser (loginUsername req)
+  userInDb <- mfilter isPasswordValid <$> findUserByUsername (loginUsername req)
 
   return $ maybeToRight UserNotFound $ userInDb
  where

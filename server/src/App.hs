@@ -37,8 +37,9 @@ instance MonadCrypto AppT where
   hash = Crypto.hash
 
 instance UserRepo AppT where
-  insertUser = UserRepo.insertUser
-  findUser   = UserRepo.findUser
+  insertUser         = UserRepo.insertUser
+  findUserByUsername = UserRepo.findUserByUsername
+  findUserByEmail    = UserRepo.findUserByEmail
 
 instance AuthService AppT where
   requireUser  = AuthService.requireUser

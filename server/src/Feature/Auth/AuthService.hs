@@ -4,7 +4,7 @@ import Protolude
 import Web.Scotty.Trans (ActionT, header, status, finish)
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status (status401)
-import Feature.User.UserRepoClass (UserRepo, findUser)
+import Feature.User.UserRepoClass (UserRepo, findUserByUsername)
 import Feature.User.User (User)
 import Infrastructure.Utils.Maybe (liftMaybe)
 import qualified Infrastructure.Utils.JWT as JWT
@@ -16,7 +16,7 @@ optionalUser = do
   lift $ runMaybeT $ do
     authHeader <- liftMaybe maybeAuthHeader
     subject    <- liftMaybe $ JWT.subjectFromHeader authHeader
-    MaybeT $ findUser subject
+    MaybeT $ findUserByUsername subject
 
 requireUser :: (UserRepo m) => ActionT LText m User
 requireUser = do
