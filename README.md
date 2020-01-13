@@ -14,3 +14,4 @@ Maxed out technical spec:
 * Haskell with scotty
 * Tagless Final for API mock mode 
 * PostgreSQL
+* Redis
