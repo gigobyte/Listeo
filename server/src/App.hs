@@ -41,7 +41,8 @@ instance UserRepo AppT where
   findUser   = UserRepo.findUser
 
 instance AuthService AppT where
-  requireUser = AuthService.requireUser
+  requireUser  = AuthService.requireUser
+  optionalUser = AuthService.optionalUser
 
 instance RegisterService AppT where
   register = RegisterService.register

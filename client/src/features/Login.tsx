@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useTitle } from 'react-use'
 import { centered } from '../ui/Container'
-import { Button } from '../ui/Button'
+import { DefaultButton } from '../ui/Button'
 import { Input, useInput } from '../ui/Input'
 import { useForm } from '../ui/useForm'
 import { routes } from '../route'
@@ -48,7 +48,7 @@ const Title = styled.h1`
   font-size: 3rem;
 `
 
-const SubmitButton = styled(Button).attrs({ type: 'submit' })`
+const SubmitButton = styled(DefaultButton).attrs({ type: 'submit' })`
   margin-top: 10px;
   margin-bottom: 15px;
 `

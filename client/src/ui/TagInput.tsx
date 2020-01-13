@@ -5,6 +5,10 @@ import { Input, useInput } from './Input'
 import { Icons } from './Icon'
 import { rule, ifRegexFails, fail, ifBlank, ifLongerThan } from './validate'
 
+interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
+  label: string
+}
+
 interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   'data-test'?: string
   tags: string[]
@@ -40,13 +44,13 @@ const TagsContainer = styled.div`
 
 const TagContainer = styled.div`
   display: flex;
+  margin-right: 7px;
 `
 
 const TagRemoveButton = styled.button`
   background-color: ${colors.blue300};
   border: 0;
   cursor: pointer;
-  margin-right: 7px;
   height: 26px;
   color: ${colors.white};
   border-radius: 0 2px 2px 0;
@@ -54,6 +58,12 @@ const TagRemoveButton = styled.button`
     outline: none;
   }
 `
+
+export const Tag: React.FC<TagProps> = ({ label }) => (
+  <TagContainer>
+    <TagContent>{label}</TagContent>
+  </TagContainer>
+)
 
 export const TagInput: React.FC<TagInputProps> = ({
   tags,

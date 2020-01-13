@@ -6,4 +6,4 @@ import Web.Scotty.Trans (ActionT)
 
 class Monad m => AuthService m where
   requireUser :: ActionT LText m User
-
+  optionalUser :: ActionT LText m (Maybe User)

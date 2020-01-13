@@ -5,4 +5,6 @@ import { App } from './App'
 
 ReactDOM.render(<App />, document.querySelector('main'))
 
-window.onerror = () => window.location.assign('/error')
+if (process.env.NODE_ENV === 'production') {
+  window.onerror = () => window.location.assign('/error')
+}

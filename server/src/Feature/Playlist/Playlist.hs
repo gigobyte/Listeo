@@ -7,14 +7,14 @@ import Database.PostgreSQL.Simple.FromField
 import Database.PostgreSQL.Simple.ToField
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time.Clock (UTCTime)
-import Feature.User.User (User)
+import Feature.User.User (User(..))
 
 instance ToJSON PlaylistPrivacy
 instance FromJSON PlaylistPrivacy
 data PlaylistPrivacy
   = Public
   | Private
-  deriving (Generic, Enum)
+  deriving (Generic, Enum, Eq)
 
 instance FromField PlaylistPrivacy where
   fromField _ mdata = return $ case mdata of
@@ -31,7 +31,7 @@ instance FromJSON PlaylistStyle
 data PlaylistStyle
     = Unordered
     | Ranked
-    deriving (Generic, Enum)
+    deriving (Generic, Enum, Eq)
 
 instance FromField PlaylistStyle where
   fromField _ mdata = return $ case mdata of
@@ -53,4 +53,14 @@ data Playlist = Playlist
   , playlistPrivacy :: PlaylistPrivacy
   , playlistCreatedOn :: UTCTime
   } deriving Generic
+
+isPlaylistViewable :: Maybe User -> Playlist -> Bool
+isPlaylistViewable Nothing playlist = playlistPrivacy playlist == Public
+isPlaylistViewable (Just user) playlist =
+  isPlaylistPublic || (isPlaylistPrivate && isUserAuthorOfPlaylist)
+ where
+  isUserAuthorOfPlaylist = playlistAuthorId playlist == userId user
+  isPlaylistPublic       = playlistPrivacy playlist == Public
+  isPlaylistPrivate      = playlistPrivacy playlist == Private
+
 

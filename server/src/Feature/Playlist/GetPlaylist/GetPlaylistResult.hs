@@ -21,6 +21,7 @@ data GetPlaylistResponse
   = GetPlaylistResponse
       { id :: Id Playlist
       , name :: Text
+      , description :: Text
       , style :: PlaylistStyle
       , privacy :: PlaylistPrivacy
       , createdOn :: UTCTime

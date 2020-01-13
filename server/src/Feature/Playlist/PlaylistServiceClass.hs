@@ -11,5 +11,5 @@ import Feature.User.User (User)
 
 class Monad m => PlaylistService m where
   createPlaylist :: LByteString -> User -> m (Either CreatePlaylistError (Id Playlist))
-  getPlaylist :: LByteString -> m (Either GetPlaylistError GetPlaylistResponse)
+  getPlaylist :: LByteString -> Maybe User -> m (Either GetPlaylistError GetPlaylistResponse)
 

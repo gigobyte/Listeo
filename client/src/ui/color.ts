@@ -12,5 +12,6 @@ export const colors = {
   crimson100: '#f03764',
   crimson200: '#ca2f54',
   crimson300: '#a72746',
-  crimson400: '#7d1e35'
+  crimson400: '#7d1e35',
+  green100: '#00b020'
 }

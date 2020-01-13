@@ -38,7 +38,8 @@ instance UserRepo AppMockT where
   findUser _ = pure $ Just mockUser
 
 instance AuthService AppMockT where
-  requireUser = pure mockUser
+  requireUser  = pure mockUser
+  optionalUser = pure Nothing
 
 instance RegisterService AppMockT where
   register _ = pure $ Right ""
@@ -48,7 +49,7 @@ instance LoginService AppMockT where
 
 instance PlaylistService AppMockT where
   createPlaylist _ _ = pure $ Right 12345
-  getPlaylist _ = pure $ Right mockGetPlaylistResponse
+  getPlaylist _ _ = pure $ Right mockGetPlaylistResponse
 
 instance PlaylistRepo AppMockT where
   insertPlaylist _ = pure 12345
@@ -87,11 +88,12 @@ mockPlaylistTag = PublicPlaylistTag { name = "Test" }
 
 mockGetPlaylistResponse :: GetPlaylistResponse
 mockGetPlaylistResponse = GetPlaylistResponse
-  { id        = playlistId mockPlaylist
-  , name      = playlistName mockPlaylist
-  , style     = playlistStyle mockPlaylist
-  , privacy   = playlistPrivacy mockPlaylist
-  , createdOn = playlistCreatedOn mockPlaylist
-  , tags      = [mockPlaylistTag]
-  , videos    = []
+  { id          = playlistId mockPlaylist
+  , name        = playlistName mockPlaylist
+  , description = playlistDescription mockPlaylist
+  , style       = playlistStyle mockPlaylist
+  , privacy     = playlistPrivacy mockPlaylist
+  , createdOn   = playlistCreatedOn mockPlaylist
+  , tags        = [mockPlaylistTag]
+  , videos      = []
   }

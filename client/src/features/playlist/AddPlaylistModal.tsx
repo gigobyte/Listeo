@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { colors } from '../../ui/color'
 import { Icons } from '../../ui/Icon'
-import { Button } from '../../ui/Button'
+import { DefaultButton } from '../../ui/Button'
 import { useDispatch } from 'react-redux'
 import { session } from '../../session'
 import { routes } from '../../route'
@@ -89,7 +89,7 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
           <OptionCard>
             <NewPlaylistIcon />
             <OptionDescription>Start with an empty playlist.</OptionDescription>
-            <Button
+            <DefaultButton
               data-test="add-playlist--create"
               onClick={() => {
                 onClose()
@@ -97,14 +97,14 @@ export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
               }}
             >
               Create new
-            </Button>
+            </DefaultButton>
           </OptionCard>
           <OptionCard>
             <ImportPlaylistIcon />
             <OptionDescription>
               Import your existing playlist.
             </OptionDescription>
-            <Button disabled>Import</Button>
+            <DefaultButton disabled>Import</DefaultButton>
           </OptionCard>
         </OptionsContainer>
       </Container>

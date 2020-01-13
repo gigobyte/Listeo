@@ -6,7 +6,6 @@ where
 
 import Protolude
 import Data.Aeson
-import Control.Monad (mfilter)
 import Control.Monad.Except (liftEither)
 import Feature.User.User (User(..))
 import Feature.User.UserRepoClass (UserRepo(..))

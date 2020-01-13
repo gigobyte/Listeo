@@ -8,7 +8,7 @@ import { useForm } from '../../ui/useForm'
 import { TagInput, useTagInput } from '../../ui/TagInput'
 import { Textarea, useTextarea } from '../../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../../ui/RadioButton'
-import { Button } from '../../ui/Button'
+import { DefaultButton } from '../../ui/Button'
 import { remoteData, RemoteData, DataStatus, http } from '../../http'
 import { createEndpoint } from '../../endpoint'
 import { session } from '../../session'
@@ -167,13 +167,13 @@ export const CreatePlaylist = () => {
           <RadioButton {...unorderedRadioButton} label="Unordered" />
         </SettingsColumn>
       </Settings>
-      <Button
+      <DefaultButton
         data-test="create-playlist--submit"
         onClick={createPlaylistForm.onSubmit}
         disabled={isSubmitButtonDisabled}
       >
         Create
-      </Button>
+      </DefaultButton>
     </Container>
   )
 }
