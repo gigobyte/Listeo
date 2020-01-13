@@ -40,8 +40,13 @@ const ButtonWrapper = styled.button<{ styling: string }>`
   }
 `
 
-export const Button: React.FC<ButtonProps> = ({ children, icon, styling }) => (
-  <ButtonWrapper styling={buttonStyle[styling]}>
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  icon,
+  styling,
+  ...props
+}) => (
+  <ButtonWrapper {...props} styling={buttonStyle[styling]}>
     {icon} {children}
   </ButtonWrapper>
 )

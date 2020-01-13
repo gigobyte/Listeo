@@ -7,70 +7,65 @@ export enum HttpStatus {
   Unauthorized = 401
 }
 
+export type PromiseWithError<T, E> = Promise<T>
+
 export interface FailedRequest {
   statusCode: HttpStatus
+}
+
+const handleRequest = async <T>(
+  request: () => Promise<Response>
+): Promise<T> => {
+  let rawRes: Response
+
+  try {
+    rawRes = await request()
+  } catch {
+    window.location.assign('/error')
+    throw {}
+  }
+
+  if (rawRes.status === 500) {
+    window.location.assign('/error')
+    throw {}
+  }
+
+  const res = await rawRes.json()
+
+  if (!rawRes.ok) {
+    const fail: FailedRequest = { statusCode: res.status }
+    throw { ...fail, ...res }
+  }
+
+  return res
 }
 
 export const http = {
   async get<T>(url: Endpoint<T>): Promise<T> {
     const jwt = localStorage.getItem('jwt')
-    let rawRes
 
-    try {
-      rawRes = await window.fetch(url, {
+    return handleRequest(() =>
+      window.fetch(url, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + jwt
         }
       })
-    } catch {
-      window.location.assign('/error')
-      throw {}
-    }
-
-    if (rawRes.status === 500) {
-      window.location.assign('/error')
-      throw {}
-    }
-
-    if (!rawRes.ok) {
-      const fail: FailedRequest = { statusCode: rawRes.status }
-      throw fail
-    }
-
-    return rawRes.json()
+    )
   },
 
   async post<T>(url: Endpoint<T>, body: unknown): Promise<T> {
     const jwt = localStorage.getItem('jwt')
-    let rawRes
 
-    try {
-      rawRes = await window.fetch(url, {
+    return handleRequest(() =>
+      window.fetch(url, {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
           Authorization: 'Bearer ' + jwt
         }
       })
-    } catch {
-      window.location.assign('/error')
-      throw {}
-    }
-
-    if (rawRes.status === 500) {
-      window.location.assign('/error')
-      throw {}
-    }
-
-    const res = await rawRes.json()
-
-    if (!rawRes.ok) {
-      const fail: FailedRequest = { statusCode: res.status }
-      throw { ...fail, ...res }
-    }
-
-    return res
+    )
   }
 }
 
@@ -112,11 +107,11 @@ export const remoteData = {
   }
 } as const
 
-export const useAsync = <TArgs extends unknown[], TRes>(
-  promiseFn: (...args: TArgs) => Promise<TRes>,
+export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
+  promiseFn: (...args: TArgs) => PromiseWithError<TRes, TErr>,
   args: TArgs
-): RemoteData<TRes> => {
-  const [data, setData] = useState<RemoteData<TRes>>(remoteData.loading)
+): RemoteData<TRes, TErr> => {
+  const [data, setData] = useState<RemoteData<TRes, TErr>>(remoteData.loading)
 
   useEffect(() => {
     promiseFn(...args)

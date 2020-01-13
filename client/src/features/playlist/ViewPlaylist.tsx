@@ -2,7 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import useTitle from 'react-use/esm/useTitle'
 import { Playlist, PlaylistPrivacy } from './Playlist'
-import { http, useAsync, DataStatus } from '../../http'
+import {
+  http,
+  useAsync,
+  DataStatus,
+  FailedRequest,
+  PromiseWithError
+} from '../../http'
 import { createEndpoint } from '../../endpoint'
 import { Spinner } from '../../ui/Spinner'
 import { Icons } from '../../ui/Icon'
@@ -15,7 +21,17 @@ interface ViewPlaylistProps {
   playlistId: string
 }
 
-const fetchPlaylist = (playlistId: string): Promise<Playlist> =>
+enum PlaylistResponseError {
+  PlaylistNotFound = 'PlaylistNotFound'
+}
+
+interface PlaylistFailResponse extends FailedRequest {
+  error: PlaylistResponseError
+}
+
+const fetchPlaylist = (
+  playlistId: string
+): PromiseWithError<Playlist, PlaylistFailResponse> =>
   http.get(createEndpoint<Playlist>('/playlist/' + playlistId))
 
 const PlaylistHeader = styled.div`
@@ -101,6 +117,11 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           </Button>
         </div>
       )
+
+    case DataStatus.Fail:
+      if (playlist.error === PlaylistResponseError.PlaylistNotFound)
+        return <div>You do not have access to this playlist</div>
+      else return null
 
     default:
       return <Spinner />

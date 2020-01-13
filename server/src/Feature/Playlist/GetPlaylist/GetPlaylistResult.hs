@@ -1,7 +1,7 @@
 module Feature.Playlist.GetPlaylist.GetPlaylistResult where
 
 import Protolude
-import Data.Aeson (ToJSON)
+import Data.Aeson (ToJSON(..))
 import Infrastructure.Utils.Id (Id)
 import Data.Time.Clock (UTCTime)
 import Infrastructure.AppError
@@ -11,7 +11,8 @@ import Feature.Video.Video (PublicVideo)
 import Network.HTTP.Types.Status (badRequest400)
 import Web.Scotty.Trans
 
-instance ToJSON GetPlaylistError
+instance ToJSON GetPlaylistError where
+  toJSON PlaylistNotFound = "PlaylistNotFound"
 data GetPlaylistError
   = PlaylistNotFound
   deriving Generic
