@@ -4,6 +4,7 @@ import Protolude
 import Feature.User.User (User)
 import Database.PostgreSQL.Simple
 import Feature.User.UserRepoClass (InsertUser(..))
+import Infrastructure.Utils.Id (Id)
 import Infrastructure.DB (MonadDB, withConn)
 
 insertUser :: (MonadDB m) => InsertUser -> m ()
@@ -15,6 +16,12 @@ insertUser (InsertUser insertUserUsername insertUserEmail insertUserPassword) =
       conn
       qry
       (insertUserUsername, insertUserEmail, insertUserPassword)
+
+deleteUser :: (MonadDB m) => Id User -> m ()
+deleteUser userId = withConn $ \conn -> do
+  let qry = "DELETE FROM users WHERE id = ?"
+
+  void $ execute conn qry (Only userId)
 
 findUserByUsername :: MonadDB m => Text -> m (Maybe User)
 findUserByUsername username = withConn $ \conn -> do

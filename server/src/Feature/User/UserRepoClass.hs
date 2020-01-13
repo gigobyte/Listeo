@@ -2,6 +2,7 @@ module Feature.User.UserRepoClass where
 
 import Protolude
 import Feature.User.User (User)
+import Infrastructure.Utils.Id (Id)
 import Database.PostgreSQL.Simple.ToField
 import Database.PostgreSQL.Simple.ToRow
 
@@ -16,5 +17,6 @@ instance ToRow InsertUser where
 
 class Monad m => UserRepo m where
   insertUser :: InsertUser -> m ()
+  deleteUser :: Id User -> m ()
   findUserByUsername :: Text -> m (Maybe User)
   findUserByEmail :: Text -> m (Maybe User)

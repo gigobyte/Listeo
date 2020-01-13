@@ -1,10 +1,22 @@
 describe('Create playlist', () => {
-  beforeEach(() => {
-    cy.login()
+  let credentials
 
+  before(() => {
+    cy.registerUser().then(creds => {
+      credentials = creds
+    })
+  })
+
+  beforeEach(() => {
     Cypress.on('window:before:load', win => {
       delete win.fetch
     })
+
+    cy.login(credentials)
+  })
+
+  after(() => {
+    cy.deleteCurrentUser()
   })
 
   describe('Entering the page', () => {

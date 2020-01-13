@@ -1,16 +1,28 @@
 describe('Header', () => {
   describe('Logged in', () => {
+    let credentials
+
     const USERNAME = 'header--username'
     const LOGOUT = 'header--logout'
     const ADD_PLAYLIST = 'header--add-playlist'
 
+    before(() => {
+      cy.registerUser().then(creds => {
+        credentials = creds
+      })
+    })
+
     beforeEach(() => {
-      cy.login()
+      cy.login(credentials)
       cy.visit('/')
     })
 
+    after(() => {
+      cy.deleteCurrentUser()
+    })
+
     it('shows the username', () => {
-      cy.dataTest(USERNAME).should('have.text', 'testuser')
+      cy.dataTest(USERNAME).should('have.text', credentials.username)
     })
 
     it('shows a logout button', () => {

@@ -8,8 +8,8 @@ CREATE TABLE users (
 
 CREATE TABLE user_follows (
   PRIMARY KEY (user_id, follower_id),
-  user_id bigserial REFERENCES users (id),
-  follower_id bigserial REFERENCES users (id),
+  user_id bigserial REFERENCES users (id) ON DELETE CASCADE,
+  follower_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   followed_on timestamptz NOT NULL DEFAULT now()
 );
 
@@ -25,7 +25,7 @@ CREATE TYPE playlist_privacy AS enum (
 
 CREATE TABLE playlists (
   id bigserial PRIMARY KEY,
-  author_id bigserial REFERENCES users (id),
+  author_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   "name" text NOT NULL,
   "description" text NOT NULL,
   style playlist_style NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE playlists_playlist_tags (
 CREATE TABLE playlist_likes (
   PRIMARY KEY (playlist_id, user_id),
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
-  user_id bigserial REFERENCES users (id),
+  user_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   liked_on timestamptz NOT NULL DEFAULT now()
 );
 
@@ -55,14 +55,14 @@ CREATE TABLE playlist_comments (
   id bigserial PRIMARY KEY,
   content text NOT NULL,
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
-  user_id bigserial REFERENCES users (id),
+  user_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   created_on timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TABLE playlist_subscriptions (
   PRIMARY KEY (playlist_id, user_id),
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
-  user_id bigserial REFERENCES users (id),
+  user_id bigserial REFERENCES users (id) ON DELETE CASCADE,
   subscribed_on timestamptz NOT NULL DEFAULT now()
 );
 

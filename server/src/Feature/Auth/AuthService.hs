@@ -4,8 +4,8 @@ import Protolude
 import Web.Scotty.Trans (ActionT, header, status, finish)
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status (status401)
-import Feature.User.UserRepoClass (UserRepo, findUserByUsername)
-import Feature.User.User (User)
+import Feature.User.UserRepoClass (UserRepo(..))
+import Feature.User.User (User(..))
 import Infrastructure.Utils.Maybe (liftMaybe)
 import qualified Infrastructure.Utils.JWT as JWT
 
@@ -27,3 +27,6 @@ requireUser = do
     Nothing -> do
       status status401
       finish
+
+deleteCurrentUser :: (UserRepo m) => User -> m ()
+deleteCurrentUser user = deleteUser (userId user)

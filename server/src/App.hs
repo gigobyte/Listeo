@@ -38,12 +38,14 @@ instance MonadCrypto AppT where
 
 instance UserRepo AppT where
   insertUser         = UserRepo.insertUser
+  deleteUser         = UserRepo.deleteUser
   findUserByUsername = UserRepo.findUserByUsername
   findUserByEmail    = UserRepo.findUserByEmail
 
 instance AuthService AppT where
-  requireUser  = AuthService.requireUser
-  optionalUser = AuthService.optionalUser
+  requireUser       = AuthService.requireUser
+  optionalUser      = AuthService.optionalUser
+  deleteCurrentUser = AuthService.deleteCurrentUser
 
 instance RegisterService AppT where
   register = RegisterService.register
