@@ -3,7 +3,7 @@ Platform for sharing and creating video playlists from multiple sources (Haskell
 
 Maxed out technical spec:
 #### Front-end
-* React with TypeScript, purify-ts, hooks and a little bit of redux for context
+* React with TypeScript, hooks and a little bit of redux for context
 * Webpack for builds, Babel 7 with progressive polyfilling
 * E2E tests with cypress
 * i18n tests with keyboard navigation
@@ -14,3 +14,4 @@ Maxed out technical spec:
 * Haskell with scotty
 * Tagless Final for API mock mode 
 * PostgreSQL
+* Redis
