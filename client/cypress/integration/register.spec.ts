@@ -201,23 +201,20 @@ describe('Register', () => {
       })
     })
 
-    it('should show server error on submit', () => {
-      cy.server()
-      cy.route({
-        method: 'POST',
-        url: 'http://localhost:8081/register',
-        status: 401,
-        response: {
-          error: 'UserAlreadyExists'
-        }
-      }).as('register')
-      cy.dataTest(USERNAME).type('validnow')
-      cy.dataTest(PASSWORD).type('validnow')
-      cy.dataTest(EMAIL).type('v@n')
-      cy.dataTest(SUBMIT).click()
+    it('should show error if user already exists on submit', () => {
+      cy.registerUser().then(({ username, password }) => {
+        cy.server()
+        cy.route('POST', 'http://localhost:8081/register').as('register')
 
-      cy.wait('@register').then(() => {
-        cy.dataTest(API_ERROR).should('have.text', 'User already exists')
+        cy.dataTest(USERNAME).type(username)
+        cy.dataTest(PASSWORD).type(password)
+        cy.dataTest(EMAIL).type('v@n')
+        cy.dataTest(SUBMIT).click()
+
+        cy.wait('@register').then(() => {
+          cy.dataTest(API_ERROR).should('have.text', 'User already exists')
+          cy.deleteCurrentUser()
+        })
       })
     })
 

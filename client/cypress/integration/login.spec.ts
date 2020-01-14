@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4')
+
 describe('Login', () => {
   const USERNAME = 'login--username'
   const PASSWORD = 'login--password'
@@ -118,18 +120,11 @@ describe('Login', () => {
       })
     })
 
-    it('should show server error on submit', () => {
+    it('should show error if credentials are not valid on submit', () => {
       cy.server()
-      cy.route({
-        method: 'POST',
-        url: 'http://localhost:8081/login',
-        status: 401,
-        response: {
-          error: 'UserNotFound'
-        }
-      }).as('login')
-      cy.dataTest(USERNAME).type('v')
-      cy.dataTest(PASSWORD).type('v')
+      cy.route('POST', 'http://localhost:8081/login').as('login')
+      cy.dataTest(USERNAME).type(uuid())
+      cy.dataTest(PASSWORD).type(uuid())
       cy.dataTest(SUBMIT).click()
 
       cy.wait('@login').then(() => {
@@ -138,28 +133,18 @@ describe('Login', () => {
     })
 
     it('should redirect to home after successful login', () => {
-      cy.server()
-      cy.route({
-        method: 'POST',
-        url: 'http://localhost:8081/login',
-        status: 200,
-        response: {
-          jwt: ''
-        }
-      }).as('login')
-      cy.route({
-        method: 'GET',
-        url: 'http://localhost:8081/me',
-        status: 200,
-        response: {}
-      })
+      cy.registerUser().then(({ username, password }) => {
+        cy.server()
+        cy.route('POST', 'http://localhost:8081/login').as('login')
 
-      cy.dataTest(USERNAME).type('v')
-      cy.dataTest(PASSWORD).type('v')
-      cy.dataTest(SUBMIT).click()
+        cy.dataTest(USERNAME).type(username)
+        cy.dataTest(PASSWORD).type(password)
+        cy.dataTest(SUBMIT).click()
 
-      cy.wait('@login').then(() => {
-        cy.url().should('eq', Cypress.config().baseUrl + '/')
+        cy.wait('@login').then(() => {
+          cy.url().should('eq', Cypress.config().baseUrl + '/')
+          cy.deleteCurrentUser()
+        })
       })
     })
   })

@@ -41,7 +41,11 @@ Cypress.Commands.add('registerUser', () => {
         password: username
       }
     })
-    .then(() => ({ username, password: username }))
+    .then(res => {
+      window.localStorage.setItem('jwt', res.body.jwt)
+
+      return { username, password: username }
+    })
 })
 
 Cypress.Commands.add('login', ({ username, password }) => {
