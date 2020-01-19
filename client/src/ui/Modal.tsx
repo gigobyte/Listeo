@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { colors } from './color'
 import { Icons } from './Icon'
 
-interface ModalProps {
+export interface ModalProps {
   onClose: () => void
 }
 

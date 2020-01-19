@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import useTitle from 'react-use/esm/useTitle'
 import { Playlist, PlaylistPrivacy } from './Playlist'
@@ -16,6 +16,7 @@ import { colors } from '../../ui/color'
 import { Tooltip } from '../../ui/Tooltip'
 import { Tag } from '../../ui/TagInput'
 import { Button, ButtonStyle } from '../../ui/Button'
+import { AddVideoModal } from '../video/AddVideoModal'
 
 interface ViewPlaylistProps {
   playlistId: string
@@ -68,6 +69,7 @@ const PlaylistTags = styled.div`
 
 export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
   const playlist = useAsync(fetchPlaylist, [playlistId])
+  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false)
 
   useTitle(
     (() => {
@@ -106,7 +108,11 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
               <Tag key={tag.name} label={tag.name} />
             ))}
           </PlaylistTags>
-          <Button styling={ButtonStyle.Primary} icon={<Icons.plusCircle />}>
+          <Button
+            styling={ButtonStyle.Primary}
+            icon={<Icons.plusCircle />}
+            onClick={() => setIsAddVideoModalOpen(true)}
+          >
             Add
           </Button>
           <Button styling={ButtonStyle.Default} icon={<Icons.play />}>
@@ -115,6 +121,9 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           <Button styling={ButtonStyle.Default} icon={<Icons.edit />}>
             Edit
           </Button>
+          {isAddVideoModalOpen && (
+            <AddVideoModal onClose={() => setIsAddVideoModalOpen(false)} />
+          )}
         </div>
       )
 

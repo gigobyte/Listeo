@@ -6,7 +6,7 @@ import { DefaultButton } from '../../ui/Button'
 import { useDispatch } from 'react-redux'
 import { session } from '../../session'
 import { routes } from '../../route'
-import { Modal } from '../../ui/Modal'
+import { Modal, ModalProps } from '../../ui/Modal'
 
 const Container = styled.div`
   height: 100%;
@@ -65,13 +65,7 @@ const OptionDescription = styled.div`
   text-align: center;
 `
 
-interface AddPlaylistModalProps {
-  onClose: () => void
-}
-
-export const AddPlaylistModal: React.FC<AddPlaylistModalProps> = ({
-  onClose
-}) => {
+export const AddPlaylistModal: React.FC<ModalProps> = ({ onClose }) => {
   const dispatch = useDispatch()
 
   return (
