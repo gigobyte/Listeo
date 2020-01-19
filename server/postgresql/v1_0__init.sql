@@ -73,7 +73,6 @@ CREATE TYPE video_source AS enum (
 
 CREATE TABLE videos (
   id bigserial PRIMARY KEY,
-  "name" text NOT NULL,
   source video_source NOT NULL,
   link text NOT NULL,
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,

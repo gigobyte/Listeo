@@ -110,14 +110,20 @@ export const remoteData = {
 export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
   promiseFn: (...args: TArgs) => PromiseWithError<TRes, TErr>,
   args: TArgs
-): RemoteData<TRes, TErr> => {
+): { data: RemoteData<TRes, TErr>; refetch: () => void } => {
   const [data, setData] = useState<RemoteData<TRes, TErr>>(remoteData.loading)
 
-  useEffect(() => {
+  const startFetch = () =>
     promiseFn(...args)
       .then(res => setData(remoteData.success(res)))
       .catch(err => setData(remoteData.fail(err)))
+
+  useEffect(() => {
+    startFetch()
   }, args)
 
-  return data
+  return {
+    data,
+    refetch: startFetch
+  }
 }

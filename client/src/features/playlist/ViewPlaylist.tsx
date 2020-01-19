@@ -23,7 +23,8 @@ interface ViewPlaylistProps {
 }
 
 enum PlaylistResponseError {
-  PlaylistNotFound = 'PlaylistNotFound'
+  PlaylistNotFound = 'PlaylistNotFound',
+  PlaylistIsPrivate = 'PlaylistIsPrivate'
 }
 
 interface PlaylistFailResponse extends FailedRequest {
@@ -68,7 +69,9 @@ const PlaylistTags = styled.div`
 `
 
 export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
-  const playlist = useAsync(fetchPlaylist, [playlistId])
+  const { data: playlist, refetch: refetchPlaylist } = useAsync(fetchPlaylist, [
+    playlistId
+  ])
   const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false)
 
   useTitle(
@@ -122,13 +125,17 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
             Edit
           </Button>
           {isAddVideoModalOpen && (
-            <AddVideoModal onClose={() => setIsAddVideoModalOpen(false)} />
+            <AddVideoModal
+              playlistId={playlistId}
+              onClose={() => setIsAddVideoModalOpen(false)}
+              onRefetchPlaylist={refetchPlaylist}
+            />
           )}
         </div>
       )
 
     case DataStatus.Fail:
-      if (playlist.error === PlaylistResponseError.PlaylistNotFound)
+      if (playlist.error === PlaylistResponseError.PlaylistIsPrivate)
         return <div>You do not have access to this playlist</div>
       else return null
 

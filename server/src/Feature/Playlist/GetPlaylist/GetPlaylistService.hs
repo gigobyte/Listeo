@@ -1,17 +1,14 @@
 module Feature.Playlist.GetPlaylist.GetPlaylistService where
 
 import Protolude
-import qualified Data.ByteString.Lazy as B
-import qualified Data.Text as T
 import Feature.Playlist.Playlist
-import Control.Monad.Trans.Maybe
+import Control.Monad.Except (liftEither)
 import Feature.User.User (User(..))
-import Infrastructure.Utils.Maybe (liftMaybe)
 import Feature.PlaylistTag.PlaylistTag (toPublicPlaylistTag)
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
 import Feature.Video.VideoRepoClass (VideoRepo(..))
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id (getIdFromParam)
 import Feature.Video.Video (toPublicVideo)
 import Feature.Playlist.GetPlaylist.GetPlaylistResult
   (GetPlaylistError(..), GetPlaylistResponse(..))
@@ -21,29 +18,24 @@ getPlaylist
   => LByteString
   -> Maybe User
   -> m (Either GetPlaylistError GetPlaylistResponse)
-getPlaylist rawPlaylistId user =
-  maybeToEither PlaylistNotFound
-    <$> (runMaybeT $ do
-          reqPlaylistId <- liftMaybe $ readPlaylistIdFromParam rawPlaylistId
-          playlist      <-
-            MaybeT
-            $   mfilter (isPlaylistViewable user)
-            <$> findPlaylist reqPlaylistId
+getPlaylist rawPlaylistId user = runExceptT $ do
+  reqPlaylistId <- liftEither $ maybeToRight InvalidRequest $ getIdFromParam
+    rawPlaylistId
+  playlist <-
+    ExceptT $ maybeToRight PlaylistNotFound <$> findPlaylist reqPlaylistId
 
-          playlistTags   <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
-          playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
+  when (not $ isPlaylistViewable user playlist) $ throwE PlaylistIsPrivate
 
-          return GetPlaylistResponse
-            { id          = playlistId playlist
-            , name        = playlistName playlist
-            , description = playlistDescription playlist
-            , style       = playlistStyle playlist
-            , privacy     = playlistPrivacy playlist
-            , createdOn   = playlistCreatedOn playlist
-            , tags        = toPublicPlaylistTag <$> playlistTags
-            , videos      = toPublicVideo <$> playlistVideos
-            }
-        )
+  playlistTags   <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
+  playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
 
-readPlaylistIdFromParam :: LByteString -> Maybe (Id Playlist)
-readPlaylistIdFromParam = readMaybe . T.unpack . decodeUtf8 . B.toStrict
+  return GetPlaylistResponse
+    { id          = playlistId playlist
+    , name        = playlistName playlist
+    , description = playlistDescription playlist
+    , style       = playlistStyle playlist
+    , privacy     = playlistPrivacy playlist
+    , createdOn   = playlistCreatedOn playlist
+    , tags        = toPublicPlaylistTag <$> playlistTags
+    , videos      = toPublicVideo <$> playlistVideos
+    }
