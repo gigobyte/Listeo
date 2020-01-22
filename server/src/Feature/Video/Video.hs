@@ -1,8 +1,8 @@
 module Feature.Video.Video where
 
 import Protolude
-import Infrastructure.Utils.Id (Id)
-import Feature.Playlist.Playlist (Playlist)
+import Infrastructure.Utils.Id
+import Feature.Playlist.Playlist
 import Data.Aeson (ToJSON)
 import Data.Time.Clock (UTCTime)
 import Database.PostgreSQL.Simple

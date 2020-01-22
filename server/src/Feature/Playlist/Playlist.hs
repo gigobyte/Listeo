@@ -1,13 +1,13 @@
 module Feature.Playlist.Playlist where
 
 import Protolude
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromField
 import Database.PostgreSQL.Simple.ToField
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time.Clock (UTCTime)
-import Feature.User.User (User(..))
+import Feature.User.User
 
 instance ToJSON PlaylistPrivacy
 instance FromJSON PlaylistPrivacy

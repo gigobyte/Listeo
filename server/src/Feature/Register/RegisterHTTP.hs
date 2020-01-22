@@ -1,11 +1,8 @@
-module Feature.Register.RegisterHTTP
-  ( routes
-  )
-where
+module Feature.Register.RegisterHTTP where
 
 import Protolude
 import Web.Scotty.Trans
-import Feature.Register.RegisterServiceClass (RegisterService(..))
+import Feature.Register.RegisterServiceClass
 import qualified Feature.Register.RegisterResult as RegisterResult
 
 routes :: (RegisterService m, MonadIO m) => ScottyT LText m ()

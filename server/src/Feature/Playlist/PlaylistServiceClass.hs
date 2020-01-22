@@ -1,13 +1,11 @@
 module Feature.Playlist.PlaylistServiceClass where
 
 import Protolude
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Feature.Playlist.CreatePlaylist.CreatePlaylistResult
-  (CreatePlaylistError)
 import Feature.Playlist.GetPlaylist.GetPlaylistResult
-  (GetPlaylistError, GetPlaylistResponse)
-import Feature.Playlist.Playlist (Playlist)
-import Feature.User.User (User)
+import Feature.Playlist.Playlist
+import Feature.User.User
 
 class Monad m => PlaylistService m where
   createPlaylist :: LByteString -> User -> m (Either CreatePlaylistError (Id Playlist))

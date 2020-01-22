@@ -1,4 +1,7 @@
-module Infrastructure.Utils.Maybe where
+module Infrastructure.Utils.Maybe
+  ( liftMaybe
+  )
+where
 
 import Protolude
 

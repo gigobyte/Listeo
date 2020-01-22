@@ -2,7 +2,7 @@ module Feature.User.User where
 
 import Protolude
 import Data.Aeson
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Database.PostgreSQL.Simple
 import Data.Time.Clock (UTCTime)
 

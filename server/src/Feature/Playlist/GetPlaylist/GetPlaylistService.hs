@@ -2,16 +2,15 @@ module Feature.Playlist.GetPlaylist.GetPlaylistService where
 
 import Protolude
 import Feature.Playlist.Playlist
-import Control.Monad.Except (liftEither)
-import Feature.User.User (User(..))
-import Feature.PlaylistTag.PlaylistTag (toPublicPlaylistTag)
-import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
-import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
-import Feature.Video.VideoRepoClass (VideoRepo(..))
-import Infrastructure.Utils.Id (getIdFromParam)
-import Feature.Video.Video (toPublicVideo)
+import Control.Monad.Except
+import Feature.User.User
+import Feature.PlaylistTag.PlaylistTag
+import Feature.Playlist.PlaylistRepoClass
+import Feature.PlaylistTag.PlaylistTagRepoClass
+import Feature.Video.VideoRepoClass
+import Infrastructure.Utils.Id
+import Feature.Video.Video
 import Feature.Playlist.GetPlaylist.GetPlaylistResult
-  (GetPlaylistError(..), GetPlaylistResponse(..))
 
 getPlaylist
   :: (PlaylistRepo m, PlaylistTagRepo m, VideoRepo m)

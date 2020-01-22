@@ -3,9 +3,9 @@ module Feature.Video.AddVideo.AddVideoResult where
 import Protolude
 import Data.Aeson (ToJSON)
 import Web.Scotty.Trans
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Infrastructure.AppError
-import Feature.Video.Video (Video)
+import Feature.Video.Video
 import Network.HTTP.Types.Status (badRequest400, status401, status500)
 
 instance ToJSON AddVideoError

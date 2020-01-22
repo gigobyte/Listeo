@@ -3,14 +3,12 @@ module Feature.Playlist.CreatePlaylist.CreatePlaylistService where
 import Protolude
 import Data.Aeson
 import Control.Monad.Except (liftEither)
-import Infrastructure.Utils.Id (Id)
-import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
+import Infrastructure.Utils.Id
+import Feature.Playlist.Playlist
 import Feature.Playlist.CreatePlaylist.CreatePlaylistResult
-  (CreatePlaylistError(..))
-import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..), InsertPlaylist(..))
+import Feature.Playlist.PlaylistRepoClass
 import Feature.PlaylistTag.PlaylistTagRepoClass
-  (PlaylistTagRepo(..), InsertPlaylistTag(..))
-import Feature.User.User (User(..))
+import Feature.User.User
 import qualified Data.Text as T
 
 data CreatePlaylist = CreatePlaylist

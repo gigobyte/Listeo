@@ -1,11 +1,11 @@
 module Feature.PlaylistTag.PlaylistTagRepo where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist)
-import Feature.PlaylistTag.PlaylistTag (PlaylistTag(..))
-import Feature.PlaylistTag.PlaylistTagRepoClass (InsertPlaylistTag(..))
-import Infrastructure.DB (MonadDB, withConn, extractReturning)
-import Infrastructure.Utils.Id (Id)
+import Feature.Playlist.Playlist
+import Feature.PlaylistTag.PlaylistTag
+import Feature.PlaylistTag.PlaylistTagRepoClass
+import Infrastructure.DB
+import Infrastructure.Utils.Id
 import Database.PostgreSQL.Simple
 
 insertPlaylistTag :: (MonadDB m) => InsertPlaylistTag -> m ()

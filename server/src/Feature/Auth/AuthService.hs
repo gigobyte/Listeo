@@ -1,11 +1,11 @@
 module Feature.Auth.AuthService where
 
 import Protolude
-import Web.Scotty.Trans (ActionT, header, status, finish)
+import Web.Scotty.Trans
 import Control.Monad.Trans.Maybe
 import Network.HTTP.Types.Status (status401)
-import Feature.User.UserRepoClass (UserRepo(..))
-import Feature.User.User (User(..))
+import Feature.User.UserRepoClass
+import Feature.User.User
 import Infrastructure.Utils.Maybe (liftMaybe)
 import qualified Infrastructure.Utils.JWT as JWT
 

@@ -6,10 +6,10 @@ import Feature.Video.VideoRepoClass
 import Feature.Playlist.Playlist
 import Feature.Playlist.PlaylistRepoClass
 import Feature.Video.AddVideo.AddVideoResult
-import Control.Monad.Except (liftEither)
-import Feature.User.User (User(..))
-import Infrastructure.Utils.Id (Id, getIdFromParam)
-import Feature.Video.Video (Video)
+import Control.Monad.Except
+import Feature.User.User
+import Infrastructure.Utils.Id
+import Feature.Video.Video
 
 data AddVideo = AddVideo
   { addVideoUrl :: Text

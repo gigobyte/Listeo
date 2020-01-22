@@ -1,9 +1,9 @@
 module Feature.Playlist.PlaylistRepoClass where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
-import Feature.User.User (User)
-import Infrastructure.Utils.Id (Id)
+import Feature.Playlist.Playlist
+import Feature.User.User
+import Infrastructure.Utils.Id
 
 data InsertPlaylist = InsertPlaylist
   { insertPlaylistName :: Text

@@ -1,10 +1,7 @@
-module Feature.User.UserHTTP
-  ( routes
-  )
-where
+module Feature.User.UserHTTP where
 
 import Protolude hiding (get)
-import Feature.Auth.AuthServiceClass (AuthService(..))
+import Feature.Auth.AuthServiceClass
 import Network.HTTP.Types.Status (ok200)
 import Web.Scotty.Trans
 import Feature.User.User

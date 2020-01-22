@@ -1,11 +1,11 @@
 module Feature.Video.VideoRepo where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist)
+import Feature.Playlist.Playlist
 import Feature.Video.VideoRepoClass
 import Infrastructure.DB
-import Infrastructure.Utils.Id (Id)
-import Feature.Video.Video (Video)
+import Infrastructure.Utils.Id
+import Feature.Video.Video
 import Database.PostgreSQL.Simple
 
 findVideosByPlaylist :: (MonadDB m) => Id Playlist -> m [Video]

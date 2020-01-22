@@ -1,9 +1,9 @@
 module Feature.Video.VideoRepoClass where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist)
-import Feature.Video.Video (Video)
-import Infrastructure.Utils.Id (Id)
+import Feature.Playlist.Playlist
+import Feature.Video.Video
+import Infrastructure.Utils.Id
 
 data InsertVideo = InsertVideo
   { insertVideoUrl :: Text

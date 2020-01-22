@@ -1,15 +1,11 @@
-module Feature.Playlist.PlaylistRepo
-  ( insertPlaylist
-  , findPlaylist
-  )
-where
+module Feature.Playlist.PlaylistRepo where
 
 import Protolude
-import Infrastructure.DB (MonadDB, withConn, extractReturning)
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.DB
+import Infrastructure.Utils.Id
 import Database.PostgreSQL.Simple
-import Feature.Playlist.Playlist (Playlist)
-import Feature.Playlist.PlaylistRepoClass (InsertPlaylist(..))
+import Feature.Playlist.Playlist
+import Feature.Playlist.PlaylistRepoClass
 
 insertPlaylist :: (MonadDB m) => InsertPlaylist -> m (Id Playlist)
 insertPlaylist playlist = withConn $ \conn -> do

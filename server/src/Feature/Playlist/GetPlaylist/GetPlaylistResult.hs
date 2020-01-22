@@ -2,12 +2,12 @@ module Feature.Playlist.GetPlaylist.GetPlaylistResult where
 
 import Protolude
 import Data.Aeson (ToJSON)
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Data.Time.Clock (UTCTime)
 import Infrastructure.AppError
-import Feature.Playlist.Playlist (Playlist, PlaylistStyle, PlaylistPrivacy)
-import Feature.PlaylistTag.PlaylistTag (PublicPlaylistTag)
-import Feature.Video.Video (PublicVideo)
+import Feature.Playlist.Playlist
+import Feature.PlaylistTag.PlaylistTag
+import Feature.Video.Video
 import Network.HTTP.Types.Status (badRequest400, status500)
 import Web.Scotty.Trans
 

@@ -1,9 +1,9 @@
 module Feature.PlaylistTag.PlaylistTagRepoClass where
 
 import Protolude
-import Feature.Playlist.Playlist (Playlist)
-import Feature.PlaylistTag.PlaylistTag (PlaylistTag)
-import Infrastructure.Utils.Id (Id)
+import Feature.Playlist.Playlist
+import Feature.PlaylistTag.PlaylistTag
+import Infrastructure.Utils.Id
 
 data InsertPlaylistTag = InsertPlaylistTag
   { insertPlaylistTagName :: Text

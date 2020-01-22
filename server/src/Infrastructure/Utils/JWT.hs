@@ -1,4 +1,7 @@
-module Infrastructure.Utils.JWT where
+module Infrastructure.Utils.JWT
+  ( subjectFromHeader
+  )
+where
 
 import Protolude hiding (drop)
 import Data.Text.Lazy (drop)

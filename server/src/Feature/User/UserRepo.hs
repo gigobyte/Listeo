@@ -1,11 +1,11 @@
 module Feature.User.UserRepo where
 
 import Protolude
-import Feature.User.User (User)
+import Feature.User.User
 import Database.PostgreSQL.Simple
-import Feature.User.UserRepoClass (InsertUser(..))
-import Infrastructure.Utils.Id (Id)
-import Infrastructure.DB (MonadDB, withConn)
+import Feature.User.UserRepoClass
+import Infrastructure.Utils.Id
+import Infrastructure.DB
 
 insertUser :: (MonadDB m) => InsertUser -> m ()
 insertUser (InsertUser insertUserUsername insertUserEmail insertUserPassword) =

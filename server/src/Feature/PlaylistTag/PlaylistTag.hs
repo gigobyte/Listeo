@@ -1,7 +1,7 @@
 module Feature.PlaylistTag.PlaylistTag where
 
 import Protolude
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Data.Aeson (ToJSON)
 import Database.PostgreSQL.Simple
 

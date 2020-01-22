@@ -2,10 +2,10 @@ module Feature.Playlist.CreatePlaylist.CreatePlaylistResult where
 
 import Protolude
 import Data.Aeson (ToJSON)
-import Infrastructure.Utils.Id (Id)
+import Infrastructure.Utils.Id
 import Infrastructure.AppError
 import Network.HTTP.Types.Status (badRequest400, status500)
-import Feature.Playlist.Playlist (Playlist)
+import Feature.Playlist.Playlist
 import Web.Scotty.Trans
 
 instance ToJSON CreatePlaylistError

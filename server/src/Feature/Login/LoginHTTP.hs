@@ -5,7 +5,7 @@ where
 
 import Protolude
 import qualified Feature.Login.LoginResult as LoginResult
-import Feature.Login.LoginServiceClass (LoginService(..))
+import Feature.Login.LoginServiceClass
 import Web.Scotty.Trans
 
 routes :: (LoginService m, MonadIO m) => ScottyT LText m ()

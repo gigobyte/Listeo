@@ -1,17 +1,14 @@
-module Feature.Register.RegisterService
-  ( register
-  )
-where
+module Feature.Register.RegisterService where
 
 import Protolude hiding (hash)
-import Control.Monad.Trans.Maybe
-import Control.Monad.Except (liftEither)
-import Infrastructure.MonadCrypto
-import Feature.Login.LoginService (generateJwtToken)
-import Feature.Register.RegisterResult (RegisterError(..))
-import Feature.User.UserRepoClass (InsertUser(..), UserRepo(..))
-import qualified Data.Text as T
 import Data.Aeson
+import Control.Monad.Trans.Maybe
+import Control.Monad.Except
+import Infrastructure.MonadCrypto
+import Feature.Login.LoginService
+import Feature.Register.RegisterResult
+import Feature.User.UserRepoClass
+import qualified Data.Text as T
 
 data Register = Register
   { registerUsername :: Text

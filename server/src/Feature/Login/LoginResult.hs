@@ -4,7 +4,7 @@ import Protolude
 import Data.Aeson (ToJSON)
 import Web.Scotty.Trans
 import Network.HTTP.Types.Status (badRequest400, status500)
-import Infrastructure.AppError (ErrorResponse(..))
+import Infrastructure.AppError
 
 instance ToJSON LoginError
 data LoginError
