@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { HttpStatus, FailedRequest, RemoteData, remoteData, http } from './http'
 import { createEndpoint } from './endpoint'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   Route,
   parseUrl,
@@ -12,6 +12,7 @@ import {
 } from './route'
 import { createBrowserHistory } from 'history'
 import { AppDispatch } from './App'
+import { useEffect } from 'react'
 
 interface User {
   username: string
@@ -31,6 +32,19 @@ const initialState: SessionState = {
   user: remoteData.notAsked,
   route: parseUrl(window.location.pathname),
   jwt: localStorage.getItem('jwt')
+}
+
+export const useHistory = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const unlisten = history.listen(location => {
+      const route = parseUrl(location.pathname)
+      dispatch(session.actions.locationChanged(route))
+    })
+
+    return unlisten
+  }, [])
 }
 
 export const session = {
