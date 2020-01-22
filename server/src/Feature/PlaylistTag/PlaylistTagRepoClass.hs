@@ -7,8 +7,9 @@ import Infrastructure.Utils.Id (Id)
 
 data InsertPlaylistTag = InsertPlaylistTag
   { insertPlaylistTagName :: Text
+  , insertPlaylistTagPlaylistId :: Id Playlist
   }
 
 class Monad m => PlaylistTagRepo m where
-  insertPlaylistTag :: Id Playlist -> InsertPlaylistTag -> m ()
+  insertPlaylistTag :: InsertPlaylistTag -> m ()
   findPlaylistTagsByPlaylist :: Id Playlist -> m [PlaylistTag]

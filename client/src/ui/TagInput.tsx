@@ -47,7 +47,7 @@ const TagContainer = styled.div`
   margin-right: 7px;
 `
 
-const TagRemoveButton = styled.button`
+const TagRemoveButton = styled.button.attrs({ type: 'button' })`
   background-color: ${colors.blue300};
   border: 0;
   cursor: pointer;
@@ -103,6 +103,8 @@ export const TagInput: React.FC<TagInputProps> = ({
         placeholder={placeholder}
         onKeyDown={e => {
           if (e.key === 'Enter') {
+            e.preventDefault()
+
             if (input.isValid) {
               onAddTag(input.value)
               input.setValue('')

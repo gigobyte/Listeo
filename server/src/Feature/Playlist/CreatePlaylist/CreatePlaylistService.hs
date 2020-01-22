@@ -44,9 +44,9 @@ createPlaylist rawBody user = runExceptT $ do
   body               <- liftEither $ parseBody rawBody
   playlist           <- liftEither $ mkInsertPlaylist body user
   insertedPlaylistId <- lift $ insertPlaylist playlist
-  tags               <- liftEither $ mkInsertPlaylistTags body
+  tags <- liftEither $ mkInsertPlaylistTags body insertedPlaylistId
 
-  lift $ forM_ tags (insertPlaylistTag insertedPlaylistId)
+  lift $ forM_ tags insertPlaylistTag
 
   return insertedPlaylistId
 
@@ -65,15 +65,19 @@ mkInsertPlaylist req user =
     <*> pure (userId user)
 
 mkInsertPlaylistTags
-  :: CreatePlaylist -> Either CreatePlaylistError [InsertPlaylistTag]
-mkInsertPlaylistTags body =
-  sequence $ mkInsertPlaylistTag <$> (createPlaylistTags body)
+  :: CreatePlaylist
+  -> Id Playlist
+  -> Either CreatePlaylistError [InsertPlaylistTag]
+mkInsertPlaylistTags body playlistId =
+  sequence $ (mkInsertPlaylistTag playlistId) <$> (createPlaylistTags body)
 
-mkInsertPlaylistTag :: Text -> Either CreatePlaylistError InsertPlaylistTag
-mkInsertPlaylistTag tagName =
+mkInsertPlaylistTag
+  :: Id Playlist -> Text -> Either CreatePlaylistError InsertPlaylistTag
+mkInsertPlaylistTag playlistId tagName =
   maybeToRight ValidationFailed
     $   InsertPlaylistTag
     <$> (validatePlaylistTag tagName)
+    <*> (pure playlistId)
 
 validatePlaylistName :: Text -> Maybe Text
 validatePlaylistName str

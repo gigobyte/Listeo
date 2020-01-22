@@ -11,6 +11,7 @@ import Feature.Playlist.PlaylistServiceClass (PlaylistService(..))
 import Feature.Playlist.PlaylistRepoClass (PlaylistRepo(..))
 import Feature.PlaylistTag.PlaylistTagRepoClass (PlaylistTagRepo(..))
 import Feature.Video.VideoRepoClass (VideoRepo(..))
+import Feature.Video.VideoServiceClass (VideoService(..))
 import qualified Feature.Login.LoginService as LoginService
 import qualified Feature.Register.RegisterService as RegisterService
 import qualified Feature.Auth.AuthService as AuthService
@@ -20,6 +21,7 @@ import qualified Feature.Playlist.GetPlaylist.GetPlaylistService as PlaylistServ
 import qualified Feature.Playlist.PlaylistRepo as PlaylistRepo
 import qualified Feature.PlaylistTag.PlaylistTagRepo as PlaylistTagRepo
 import qualified Feature.Video.VideoRepo as VideoRepo
+import qualified Feature.Video.AddVideo.AddVideoService as VideoService
 import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
@@ -67,3 +69,8 @@ instance PlaylistTagRepo AppT where
 
 instance VideoRepo AppT where
   findVideosByPlaylist = VideoRepo.findVideosByPlaylist
+  insertVideo          = VideoRepo.insertVideo
+  insertVideoTag       = VideoRepo.insertVideoTag
+
+instance VideoService AppT where
+  addVideoToPlaylist = VideoService.addVideoToPlaylist

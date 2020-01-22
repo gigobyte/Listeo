@@ -66,15 +66,9 @@ CREATE TABLE playlist_subscriptions (
   subscribed_on timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TYPE video_source AS enum (
-  'youtube',
-  'vimeo'
-);
-
 CREATE TABLE videos (
   id bigserial PRIMARY KEY,
-  source video_source NOT NULL,
-  link text NOT NULL,
+  "url" text NOT NULL,
   playlist_id bigserial REFERENCES playlists (id) ON DELETE CASCADE,
   note text NOT NULL,
   created_on timestamptz NOT NULL DEFAULT now()
