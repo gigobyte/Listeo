@@ -7,3 +7,6 @@ jwtSecret = ""
 
 dbPassword :: Text
 dbPassword = ""
+
+youtubeAPIKey :: Text
+youtubeAPIKey = ""
