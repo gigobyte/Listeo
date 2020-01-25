@@ -1,6 +1,7 @@
 module AppMock where
 
 import Protolude hiding (get)
+import Env
 import System.IO.Unsafe (unsafePerformIO)
 import Infrastructure.MonadTime
 import Infrastructure.MonadCrypto
@@ -18,11 +19,8 @@ import Feature.Playlist.GetPlaylist.GetPlaylistResult (GetPlaylistResponse(..))
 import Feature.Video.VideoRepoClass (VideoRepo(..))
 import Feature.Video.VideoServiceClass (VideoService(..))
 import Feature.PlaylistTag.PlaylistTag
-import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
-
-type Env = (DB.Env)
 
 newtype AppMockT a = AppMockT
     { unAppMockT :: ReaderT Env IO a

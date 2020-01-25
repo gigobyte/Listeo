@@ -1,6 +1,7 @@
 module App where
 
 import Protolude hiding (get)
+import Env
 import Infrastructure.MonadTime
 import Infrastructure.MonadCrypto
 import Feature.Login.LoginServiceClass (LoginService(..))
@@ -22,11 +23,9 @@ import qualified Feature.Playlist.PlaylistRepo as PlaylistRepo
 import qualified Feature.PlaylistTag.PlaylistTagRepo as PlaylistTagRepo
 import qualified Feature.Video.VideoRepo as VideoRepo
 import qualified Feature.Video.AddVideo.AddVideoService as VideoService
-import qualified Infrastructure.DB as DB
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
 
-type Env = (DB.Env)
 
 newtype AppT a = AppT
   { unAppT :: ReaderT Env IO a

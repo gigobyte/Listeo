@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3e3e35f27b86308ba17736cebb22ad8dc5e2406469fcda37a8d90f0327fda6c9
+-- hash: ca8b8eef409140bcbd8be0101aed8c138e05e00b465e6679658f973154a9d789
 
 name:           listeo
 version:        0.1.0.0
@@ -25,6 +25,7 @@ executable listeo-exe
   other-modules:
       App
       AppMock
+      Env
       Feature.Auth.AuthService
       Feature.Auth.AuthServiceClass
       Feature.Login.LoginHTTP
