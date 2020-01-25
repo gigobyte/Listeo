@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4')
+
 describe('Register', () => {
   const USERNAME = 'register--username'
   const EMAIL = 'register--email'
@@ -220,29 +222,19 @@ describe('Register', () => {
 
     it('should redirect to home after successful registration', () => {
       cy.server()
-      cy.route({
-        method: 'POST',
-        url: 'http://localhost:8081/register',
-        status: 200,
-        response: {
-          jwt: ''
-        }
-      }).as('register')
-      cy.route({
-        method: 'GET',
-        url: 'http://localhost:8081/me',
-        status: 200,
-        response: {}
-      })
+      cy.route('POST', 'http://localhost:8081/register').as('register')
 
-      cy.dataTest(USERNAME).type('validnow')
-      cy.dataTest(PASSWORD).type('validnow')
-      cy.dataTest(EMAIL).type('v@n')
+      cy.dataTest(USERNAME).type(uuid())
+      cy.dataTest(PASSWORD).type(uuid())
+      cy.dataTest(EMAIL).type(`${uuid()}@gmail.com`)
       cy.dataTest(SUBMIT).click()
 
       cy.wait('@register').then(() => {
         cy.url().should('eq', Cypress.config().baseUrl + '/')
+        cy.deleteCurrentUser()
       })
     })
   })
 })
+
+export {}
