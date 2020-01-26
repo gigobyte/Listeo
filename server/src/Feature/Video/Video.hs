@@ -6,6 +6,13 @@ import Feature.Playlist.Playlist
 import Data.Aeson (ToJSON)
 import Data.Time.Clock (UTCTime)
 import Database.PostgreSQL.Simple
+import Network.URI
+import Infrastructure.Utils.URI
+import qualified Data.Text as T
+
+data VideoSource
+  = YouTube Text
+  | Vimeo Text
 
 instance ToJSON PublicVideo
 data PublicVideo = PublicVideo
@@ -46,3 +53,19 @@ toPublicVideo dbVideo = PublicVideo
 
 toPublicVideoTag :: VideoTag -> PublicVideoTag
 toPublicVideoTag dbTag = PublicVideoTag { name = videoTagName dbTag }
+
+getVideoSource :: Video -> Maybe VideoSource
+getVideoSource video =
+  toSource =<< T.pack <$> uriRegName <$> (uriAuthority parsedURI)
+ where
+  parsedURI   = fromMaybe nullURI (parseURI $ T.unpack $ videoUrl video)
+  queryParams = parseQueryString $ T.pack $ uriQuery parsedURI
+  parsedPath  = T.pack $ uriPath parsedURI
+  toSource :: Text -> Maybe VideoSource
+  toSource regName
+    | T.isInfixOf "youtube" regName
+    = YouTube <$> snd <$> ((find (\(k, _) -> k == "v")) queryParams)
+    | T.isInfixOf "vimeo" regName
+    = Vimeo <$> (head $ T.splitOn "/" parsedPath)
+    | otherwise
+    = Nothing
