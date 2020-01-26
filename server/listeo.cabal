@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ca8b8eef409140bcbd8be0101aed8c138e05e00b465e6679658f973154a9d789
+-- hash: 725b9174048a9b202d557624055f69d8e43b0bd28437af458231980a8050ea83
 
 name:           listeo
 version:        0.1.0.0
@@ -69,10 +69,11 @@ executable listeo-exe
       Infrastructure.Utils.Id
       Infrastructure.Utils.JWT
       Infrastructure.Utils.Maybe
+      Infrastructure.Utils.URI
       Paths_listeo
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields ConstraintKinds FlexibleContexts GeneralizedNewtypeDeriving ScopedTypeVariables
+  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields ConstraintKinds FlexibleContexts GeneralizedNewtypeDeriving ScopedTypeVariables MultiWayIf
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       aeson
@@ -84,6 +85,7 @@ executable listeo-exe
     , http-types
     , jwt
     , mtl
+    , network-uri
     , postgresql-simple
     , postgresql-simple-migration
     , protolude

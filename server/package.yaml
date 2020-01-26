@@ -25,6 +25,7 @@ dependencies:
   - bson
   - mtl
   - transformers
+  - network-uri
 
 executables:
   listeo-exe:
@@ -46,3 +47,4 @@ default-extensions:
   - FlexibleContexts
   - GeneralizedNewtypeDeriving
   - ScopedTypeVariables
+  - MultiWayIf
