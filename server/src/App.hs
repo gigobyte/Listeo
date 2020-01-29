@@ -70,6 +70,7 @@ instance VideoRepo AppT where
   findVideosByPlaylist = VideoRepo.findVideosByPlaylist
   insertVideo          = VideoRepo.insertVideo
   insertVideoTag       = VideoRepo.insertVideoTag
+  getVideoMetadata     = VideoRepo.getVideoMetadata
 
 instance VideoService AppT where
   addVideoToPlaylist = VideoService.addVideoToPlaylist

@@ -124,6 +124,12 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           <Button styling={ButtonStyle.Default} icon={<Icons.edit />}>
             Edit
           </Button>
+          {playlist.videos.map(video => (
+            <div>
+              <img style={{ width: 100, height: 100 }} src={video.thumbnail} />
+              {video.title}
+            </div>
+          ))}
           {isAddVideoModalOpen && (
             <AddVideoModal
               playlistId={playlistId}

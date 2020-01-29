@@ -18,5 +18,6 @@ data InsertVideoTag = InsertVideoTag
 
 class Monad m => VideoRepo m where
   findVideosByPlaylist :: Id Playlist -> m [Video]
+  getVideoMetadata :: Video -> m (Maybe VideoMetadata)
   insertVideo :: InsertVideo -> m (Id Video)
   insertVideoTag :: InsertVideoTag -> m ()

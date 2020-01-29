@@ -28,6 +28,8 @@ getPlaylist rawPlaylistId user = runExceptT $ do
   playlistTags   <- lift $ findPlaylistTagsByPlaylist reqPlaylistId
   playlistVideos <- lift $ findVideosByPlaylist reqPlaylistId
 
+  publicVideos   <- lift $ sequence $ getPublicVideo <$> playlistVideos
+
   return GetPlaylistResponse
     { id          = playlistId playlist
     , name        = playlistName playlist
@@ -36,5 +38,13 @@ getPlaylist rawPlaylistId user = runExceptT $ do
     , privacy     = playlistPrivacy playlist
     , createdOn   = playlistCreatedOn playlist
     , tags        = toPublicPlaylistTag <$> playlistTags
-    , videos      = toPublicVideo <$> playlistVideos
+    , videos      = publicVideos
     }
+
+getPublicVideo
+  :: (PlaylistRepo m, PlaylistTagRepo m, VideoRepo m)
+  => Video
+  -> m (Maybe PublicVideo)
+getPublicVideo video = do
+  videoMetadata <- getVideoMetadata video
+  return $ (toPublicVideo video) <$> videoMetadata

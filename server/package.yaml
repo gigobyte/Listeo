@@ -26,6 +26,7 @@ dependencies:
   - mtl
   - transformers
   - network-uri
+  - http-conduit
 
 executables:
   listeo-exe:
@@ -48,3 +49,4 @@ default-extensions:
   - GeneralizedNewtypeDeriving
   - ScopedTypeVariables
   - MultiWayIf
+  - BangPatterns

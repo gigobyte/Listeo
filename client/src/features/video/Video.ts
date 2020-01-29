@@ -7,9 +7,10 @@ export enum VideoSource {
 
 export interface Video {
   id: Id<Video>
-  name: string
+  title: string
   source: VideoSource
-  link: string
+  url: string
   note: string
+  thumbnail: string
   createdOn: string
 }

@@ -10,9 +10,11 @@ import Network.URI
 import Infrastructure.Utils.URI
 import qualified Data.Text as T
 
+instance ToJSON VideoSource
 data VideoSource
   = YouTube Text
   | Vimeo Text
+  deriving Generic
 
 instance ToJSON PublicVideo
 data PublicVideo = PublicVideo
@@ -20,6 +22,9 @@ data PublicVideo = PublicVideo
   , url :: Text
   , note :: Text
   , createdOn :: UTCTime
+  , thumbnail :: Text
+  , title :: Text
+  , source :: VideoSource
   } deriving Generic
 
 instance FromRow Video
@@ -30,6 +35,12 @@ data Video = Video
   , videoNote :: Text
   , videoCreatedOn :: UTCTime
   } deriving Generic
+
+data VideoMetadata = VideoMetadata
+  { videoMetadataTitle :: Text
+  , videoMetadataThumbnail :: Text
+  , videoMetadataSource :: VideoSource
+  }
 
 instance ToJSON PublicVideoTag
 data PublicVideoTag = PublicVideoTag
@@ -42,14 +53,6 @@ data VideoTag = VideoTag
   , videoTagName :: Text
   , videoTagVideoId :: Id Video
   } deriving Generic
-
-toPublicVideo :: Video -> PublicVideo
-toPublicVideo dbVideo = PublicVideo
-  { id        = videoId dbVideo
-  , url       = videoUrl dbVideo
-  , note      = videoNote dbVideo
-  , createdOn = videoCreatedOn dbVideo
-  }
 
 toPublicVideoTag :: VideoTag -> PublicVideoTag
 toPublicVideoTag dbTag = PublicVideoTag { name = videoTagName dbTag }
@@ -69,3 +72,14 @@ getVideoSource video =
     = Vimeo <$> (head $ T.splitOn "/" parsedPath)
     | otherwise
     = Nothing
+
+toPublicVideo :: Video -> VideoMetadata -> PublicVideo
+toPublicVideo dbVideo meta = PublicVideo
+  { id        = videoId dbVideo
+  , url       = videoUrl dbVideo
+  , note      = videoNote dbVideo
+  , createdOn = videoCreatedOn dbVideo
+  , thumbnail = videoMetadataThumbnail meta
+  , title     = videoMetadataTitle meta
+  , source    = videoMetadataSource meta
+  }

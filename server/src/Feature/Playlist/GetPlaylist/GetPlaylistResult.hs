@@ -28,7 +28,7 @@ data GetPlaylistResponse
       , privacy :: PlaylistPrivacy
       , createdOn :: UTCTime
       , tags :: [PublicPlaylistTag]
-      , videos :: [PublicVideo]
+      , videos :: [Maybe PublicVideo]
       }
   deriving Generic
 
