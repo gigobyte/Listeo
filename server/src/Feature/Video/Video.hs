@@ -25,6 +25,7 @@ data PublicVideo = PublicVideo
   , thumbnail :: Text
   , title :: Text
   , source :: VideoSource
+  , duration :: Text
   } deriving Generic
 
 instance FromRow Video
@@ -40,6 +41,7 @@ data VideoMetadata = VideoMetadata
   { videoMetadataTitle :: Text
   , videoMetadataThumbnail :: Text
   , videoMetadataSource :: VideoSource
+  , videoMetadataDuration :: Text
   }
 
 instance ToJSON PublicVideoTag
@@ -82,4 +84,5 @@ toPublicVideo dbVideo meta = PublicVideo
   , thumbnail = videoMetadataThumbnail meta
   , title     = videoMetadataTitle meta
   , source    = videoMetadataSource meta
+  , duration  = videoMetadataDuration meta
   }

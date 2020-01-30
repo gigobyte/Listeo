@@ -5,12 +5,13 @@ import Data.Aeson
 import Feature.Playlist.Playlist
 import Feature.Video.VideoRepoClass
 import Infrastructure.DB
+import Infrastructure.HTTP
 import Infrastructure.Utils.Id
+import Network.HTTP.Simple
 import Feature.Video.Video
   (getVideoSource, Video, VideoMetadata(..), VideoSource(..))
 import Database.PostgreSQL.Simple
-import Network.HTTP.Simple
-import qualified Data.Text as T
+import qualified Infrastructure.Secrets as Secrets
 
 findVideosByPlaylist :: (MonadDB m) => Id Playlist -> m [Video]
 findVideosByPlaylist playlistId = withConn $ \conn -> do
@@ -45,7 +46,13 @@ data YoutubeResponse = YoutubeResponse
 
 instance FromJSON YoutubeResponseItem
 data YoutubeResponseItem = YoutubeResponseItem
-  {  snippet :: YoutubeResponseSnippet
+  { snippet :: YoutubeResponseSnippet
+  , contentDetails :: YoutubeResponseContentDetails
+  } deriving Generic
+
+instance FromJSON YoutubeResponseContentDetails
+data YoutubeResponseContentDetails = YoutubeResponseContentDetails
+  { duration :: Text
   } deriving Generic
 
 instance FromJSON YoutubeResponseSnippet
@@ -69,26 +76,25 @@ data YoutubeResponseThumbnail = YoutubeResponseThumbnail
   , height :: Int
   } deriving Generic
 
-getVideoMetadata :: (MonadIO m) => Video -> m (Maybe VideoMetadata)
+getVideoMetadata :: (MonadHTTP m) => Video -> m (Maybe VideoMetadata)
 getVideoMetadata video = case (getVideoSource video) of
-  Just (YouTube vidId) -> do
-    let
-      apiUrl =
-        "https://www.googleapis.com/youtube/v3/videos?id="
-          <> vidId
-          <> "&key=AIzaSyCkvj6w56Wc4l663k9jy5ehkFSlGY-qkk4&part=snippet"
+  Just source@(YouTube vidId) -> do
+    rawRes <- httpGet
+      (  "https://www.googleapis.com/youtube/v3/videos?id="
+      <> vidId
+      <> "&key="
+      <> Secrets.youtubeAPIKey
+      <> "&part=snippet,contentDetails"
+      )
 
-    rawRes <- httpLBS (parseRequest_ $ T.unpack $ apiUrl)
-
-    let
-      resSnippet :: Maybe YoutubeResponseSnippet =
-        snippet <$> (head =<< items <$> (decode $ getResponseBody rawRes))
+    let item = head =<< items <$> (decode $ getResponseBody rawRes)
 
     return
       $   VideoMetadata
-      <$> (title <$> resSnippet)
-      <*> (url <$> maxres <$> thumbnails <$> resSnippet)
-      <*> (pure $ YouTube vidId)
+      <$> (title <$> snippet <$> item)
+      <*> (url <$> maxres <$> thumbnails <$> snippet <$> item)
+      <*> (pure source)
+      <*> (duration <$> contentDetails <$> item)
 
-  Just (Vimeo _) -> undefined
-  Nothing        -> undefined
+  Just (Vimeo _) -> pure Nothing
+  Nothing        -> pure Nothing
