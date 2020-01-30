@@ -76,6 +76,11 @@ export const session = {
 
       storeJwt(state, action: PayloadAction<string>) {
         state.jwt = action.payload
+      },
+
+      removeUser(state) {
+        state.jwt = null
+        state.user = remoteData.notAsked
       }
     }
   }),
@@ -119,6 +124,14 @@ export const session = {
         dispatch(session.actions.storeJwt(token))
         dispatch(session.effects.fetchUser())
         dispatch(session.effects.redirect(routes.home))
+      }
+    },
+
+    logout() {
+      return (dispatch: AppDispatch) => {
+        localStorage.removeItem('jwt')
+        dispatch(session.actions.removeUser())
+        dispatch(session.effects.fetchUser())
       }
     }
   }

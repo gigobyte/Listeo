@@ -5,7 +5,7 @@ import { colors } from './color'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
 
-interface LinkProps {
+interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: Route
 }
 
@@ -14,11 +14,16 @@ const LinkWrapper = styled.a`
   color: ${colors.blue200};
 `
 
-export const Link: React.FC<LinkProps> = ({ to, children }) => {
+export const Link: React.FC<LinkProps> = ({ to, onClick, children }) => {
   const dispatch = useDispatch()
   const handleClick = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       e.preventDefault()
+
+      if (onClick) {
+        onClick(e)
+      }
+
       dispatch(session.effects.redirect(to))
     },
     [to]
