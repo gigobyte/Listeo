@@ -8,8 +8,8 @@ import {
   DataStatus,
   FailedRequest,
   PromiseWithError
-} from '../../http'
-import { createEndpoint } from '../../endpoint'
+} from '../../infrastructure/http'
+import { createEndpoint } from '../../infrastructure/endpoint'
 import { Spinner } from '../../ui/Spinner'
 import { Icons } from '../../ui/Icon'
 import { colors } from '../../ui/color'
@@ -20,6 +20,7 @@ import { AddVideoModal } from '../video/AddVideoModal'
 import youtubeLogo from '../../assets/source_logos/youtube.jpg'
 import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
 import { VideoSource, getDuration } from '../video/Video'
+import { formatDate } from '../../infrastructure/formatting'
 
 interface ViewPlaylistProps {
   playlistId: string
@@ -72,16 +73,37 @@ const PlaylistTags = styled.div`
 `
 
 const VideoWrapper = styled.div`
-  width: 100px;
   display: flex;
+  padding: 5px 0;
 `
 
 const VideoThumbnail = styled.img`
   width: 200px;
+  height: 113px;
 `
 
 const VideoDetails = styled.div`
-  flex: 1;
+  padding-left: 10px;
+`
+
+const VideoHeader = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+`
+
+const VideoTitle = styled.span`
+  font-size: 1.2rem;
+  padding-left: 5px;
+`
+
+const VideoSourceImage = styled.img`
+  width: 24px;
+`
+
+const VideoTags = styled.div`
+  display: flex;
+  padding-top: 17px;
 `
 
 const sourceToLogo = {
@@ -153,12 +175,17 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
             <VideoWrapper key={video.id}>
               <VideoThumbnail src={video.thumbnail} />
               <VideoDetails>
-                <img src={sourceToLogo[video.source]} />
-                {video.title}
-                {video.tags.map(tag => (
-                  <Tag key={tag.name} label={tag.name} />
-                ))}
-                {getDuration(video.duration)}
+                <VideoHeader>
+                  <VideoSourceImage src={sourceToLogo[video.source]} />
+                  <VideoTitle>{video.title}</VideoTitle>
+                </VideoHeader>
+                <div>Running time: {getDuration(video.duration)}</div>
+                <div>Date added: {formatDate(video.createdOn)}</div>
+                <VideoTags>
+                  {video.tags.map(tag => (
+                    <Tag key={tag.name} label={tag.name} />
+                  ))}
+                </VideoTags>
               </VideoDetails>
             </VideoWrapper>
           ))}

@@ -6,8 +6,8 @@ import {
   remoteData,
   RemoteData,
   DataStatus
-} from '../http'
-import { createEndpoint } from '../endpoint'
+} from '../infrastructure/http'
+import { createEndpoint } from '../infrastructure/endpoint'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
 import { Error } from '../ui/Error'

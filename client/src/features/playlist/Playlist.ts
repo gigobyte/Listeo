@@ -1,6 +1,6 @@
 import { PlaylistTag } from './PlaylistTag'
 import { Video } from '../video/Video'
-import { Id } from '../../id'
+import { Id } from '../../infrastructure/id'
 
 export enum PlaylistPrivacy {
   Public = 'Public',

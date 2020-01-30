@@ -1,4 +1,4 @@
-import { Id } from '../../id'
+import { Id } from '../../infrastructure/id'
 import { parse } from 'iso8601-duration'
 
 export enum VideoSource {

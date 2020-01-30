@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { HttpStatus, FailedRequest, RemoteData, remoteData, http } from './http'
-import { createEndpoint } from './endpoint'
+import {
+  HttpStatus,
+  FailedRequest,
+  RemoteData,
+  remoteData,
+  http
+} from './infrastructure/http'
+import { createEndpoint } from './infrastructure/endpoint'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   Route,

@@ -9,8 +9,13 @@ import { TagInput, useTagInput } from '../../ui/TagInput'
 import { Textarea, useTextarea } from '../../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../../ui/RadioButton'
 import { DefaultButton } from '../../ui/Button'
-import { remoteData, RemoteData, DataStatus, http } from '../../http'
-import { createEndpoint } from '../../endpoint'
+import {
+  remoteData,
+  RemoteData,
+  DataStatus,
+  http
+} from '../../infrastructure/http'
+import { createEndpoint } from '../../infrastructure/endpoint'
 import { session } from '../../session'
 import { useDispatch } from 'react-redux'
 import { routes } from '../../route'

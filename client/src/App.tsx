@@ -8,12 +8,13 @@ import { RouteTag } from './route'
 import { colors } from './ui/color'
 import { Header } from './ui/Header'
 import MuseoSans from './assets/MuseoSans-100.ttf'
+import MuseoSansCyrillic from './assets/MuseoSansCyrl-100.ttf'
 import { Login } from './features/Login'
 import { Register } from './features/Register'
 import { CreatePlaylist } from './features/playlist/CreatePlaylist'
 import { ErrorPage } from './features/ErrorPage'
 import { ViewPlaylist } from './features/playlist/ViewPlaylist'
-import { DataStatus } from './http'
+import { DataStatus } from './infrastructure/http'
 import { Spinner } from './ui/Spinner'
 
 const store = configureStore({
@@ -36,10 +37,15 @@ const GlobalStyle = createGlobalStyle`
     src: url(${MuseoSans});
   }
 
+  @font-face {
+    font-family: Museo-SansCyrillic;
+    src: url(${MuseoSansCyrillic});
+  }
+
   html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Museo-Sans';
+    font-family: 'Museo-Sans', 'Museo-SansCyrillic';
     background-color: ${colors.gray200};
   }
 
