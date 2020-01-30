@@ -29,9 +29,9 @@ instance ToField PlaylistPrivacy where
 instance ToJSON PlaylistStyle
 instance FromJSON PlaylistStyle
 data PlaylistStyle
-    = Unordered
-    | Ranked
-    deriving (Generic, Enum, Eq)
+  = Unordered
+  | Ranked
+  deriving (Generic, Enum, Eq)
 
 instance FromField PlaylistStyle where
   fromField _ mdata = return $ case mdata of

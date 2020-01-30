@@ -1,1 +1,1 @@
-export type Id<T> = unknown & { __brand: 'Id' & T }
+export type Id<T> = number & { __brand: 'Id' & T }

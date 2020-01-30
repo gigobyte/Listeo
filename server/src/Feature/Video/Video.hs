@@ -3,14 +3,16 @@ module Feature.Video.Video where
 import Protolude
 import Infrastructure.Utils.Id
 import Feature.Playlist.Playlist
-import Data.Aeson (ToJSON)
+import Data.Aeson (ToJSON(..))
 import Data.Time.Clock (UTCTime)
 import Database.PostgreSQL.Simple
 import Network.URI
 import Infrastructure.Utils.URI
 import qualified Data.Text as T
 
-instance ToJSON VideoSource
+instance ToJSON VideoSource where
+  toJSON (YouTube _) = "YouTube"
+  toJSON (Vimeo   _) = "Vimeo"
 data VideoSource
   = YouTube Text
   | Vimeo Text
@@ -26,6 +28,7 @@ data PublicVideo = PublicVideo
   , title :: Text
   , source :: VideoSource
   , duration :: Text
+  , tags :: [PublicVideoTag]
   } deriving Generic
 
 instance FromRow Video
@@ -75,8 +78,8 @@ getVideoSource video =
     | otherwise
     = Nothing
 
-toPublicVideo :: Video -> VideoMetadata -> PublicVideo
-toPublicVideo dbVideo meta = PublicVideo
+toPublicVideo :: Video -> [PublicVideoTag] -> VideoMetadata -> PublicVideo
+toPublicVideo dbVideo tags meta = PublicVideo
   { id        = videoId dbVideo
   , url       = videoUrl dbVideo
   , note      = videoNote dbVideo
@@ -85,4 +88,5 @@ toPublicVideo dbVideo meta = PublicVideo
   , title     = videoMetadataTitle meta
   , source    = videoMetadataSource meta
   , duration  = videoMetadataDuration meta
+  , tags      = tags
   }

@@ -16,7 +16,7 @@ module.exports = {
     rules: [
       { test: /\.(ts|js)x?$/, exclude: /node_modules/, loader: 'babel-loader' },
       { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-      { test: /\.(woff|woff2|ttf)$/, loader: 'url-loader' }
+      { test: /\.(woff|woff2|ttf|jpg)$/, loader: 'url-loader' }
     ]
   },
   plugins: [

@@ -68,6 +68,7 @@ instance PlaylistTagRepo AppT where
 
 instance VideoRepo AppT where
   findVideosByPlaylist = VideoRepo.findVideosByPlaylist
+  findTagsByVideo      = VideoRepo.findTagsByVideo
   insertVideo          = VideoRepo.insertVideo
   insertVideoTag       = VideoRepo.insertVideoTag
   getVideoMetadata     = VideoRepo.getVideoMetadata

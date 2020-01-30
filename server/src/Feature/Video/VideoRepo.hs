@@ -9,7 +9,7 @@ import Infrastructure.HTTP
 import Infrastructure.Utils.Id
 import Network.HTTP.Simple
 import Feature.Video.Video
-  (getVideoSource, Video, VideoMetadata(..), VideoSource(..))
+  (getVideoSource, Video, VideoMetadata(..), VideoSource(..), VideoTag)
 import Database.PostgreSQL.Simple
 import qualified Infrastructure.Secrets as Secrets
 
@@ -18,6 +18,12 @@ findVideosByPlaylist playlistId = withConn $ \conn -> do
   let qry = "SELECT * FROM videos WHERE playlist_id = ?"
 
   query conn qry (Only playlistId)
+
+findTagsByVideo :: (MonadDB m) => Id Video -> m [VideoTag]
+findTagsByVideo videoId = withConn $ \conn -> do
+  let qry = "SELECT * FROM video_tags WHERE video_id = ?"
+
+  query conn qry (Only videoId)
 
 insertVideo :: (MonadDB m) => InsertVideo -> m (Id Video)
 insertVideo video = withConn $ \conn -> do

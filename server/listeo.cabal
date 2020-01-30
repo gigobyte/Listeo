@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 60f4c0bff4c5c44ef390ac1f4df2cce9a8244f2992311b2db2551caf71c50463
+-- hash: 20bc47efbf54b89577dd344fd9b1ccc1131aeb858406e791a3daf3bd469c005f
 
 name:           listeo
 version:        0.1.0.0
@@ -74,7 +74,7 @@ executable listeo-exe
       Paths_listeo
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields ConstraintKinds FlexibleContexts GeneralizedNewtypeDeriving ScopedTypeVariables MultiWayIf BangPatterns
+  default-extensions: NoImplicitPrelude OverloadedStrings DeriveGeneric NamedFieldPuns DuplicateRecordFields ConstraintKinds FlexibleContexts GeneralizedNewtypeDeriving ScopedTypeVariables MultiWayIf BangPatterns StrictData
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns
   build-depends:
       aeson

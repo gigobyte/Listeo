@@ -47,4 +47,8 @@ getPublicVideo
   -> m (Maybe PublicVideo)
 getPublicVideo video = do
   videoMetadata <- getVideoMetadata video
-  return $ (toPublicVideo video) <$> videoMetadata
+  videoTags     <- findTagsByVideo (videoId video)
+
+  return
+    $   (toPublicVideo video (toPublicVideoTag <$> videoTags))
+    <$> videoMetadata

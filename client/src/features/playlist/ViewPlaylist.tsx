@@ -17,6 +17,9 @@ import { Tooltip } from '../../ui/Tooltip'
 import { Tag } from '../../ui/TagInput'
 import { Button, ButtonStyle } from '../../ui/Button'
 import { AddVideoModal } from '../video/AddVideoModal'
+import youtubeLogo from '../../assets/source_logos/youtube.jpg'
+import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
+import { VideoSource, getDuration } from '../video/Video'
 
 interface ViewPlaylistProps {
   playlistId: string
@@ -68,6 +71,24 @@ const PlaylistTags = styled.div`
   padding: 20px 0;
 `
 
+const VideoWrapper = styled.div`
+  width: 100px;
+  display: flex;
+`
+
+const VideoThumbnail = styled.img`
+  width: 200px;
+`
+
+const VideoDetails = styled.div`
+  flex: 1;
+`
+
+const sourceToLogo = {
+  [VideoSource.YouTube]: youtubeLogo,
+  [VideoSource.Vimeo]: vimeoLogo
+}
+
 export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
   const { data: playlist, refetch: refetchPlaylist } = useAsync(fetchPlaylist, [
     playlistId
@@ -105,12 +126,16 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
               )}
             </PlaylistActions>
           </PlaylistHeader>
-          <PlaylistDescription>{playlist.description}</PlaylistDescription>
-          <PlaylistTags>
-            {playlist.tags.map(tag => (
-              <Tag key={tag.name} label={tag.name} />
-            ))}
-          </PlaylistTags>
+          {playlist.description && (
+            <PlaylistDescription>{playlist.description}</PlaylistDescription>
+          )}
+          {playlist.tags.length > 0 && (
+            <PlaylistTags>
+              {playlist.tags.map(tag => (
+                <Tag key={tag.name} label={tag.name} />
+              ))}
+            </PlaylistTags>
+          )}
           <Button
             styling={ButtonStyle.Primary}
             icon={<Icons.plusCircle />}
@@ -125,10 +150,17 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
             Edit
           </Button>
           {playlist.videos.map(video => (
-            <div>
-              <img style={{ width: 100, height: 100 }} src={video.thumbnail} />
-              {video.title}
-            </div>
+            <VideoWrapper key={video.id}>
+              <VideoThumbnail src={video.thumbnail} />
+              <VideoDetails>
+                <img src={sourceToLogo[video.source]} />
+                {video.title}
+                {video.tags.map(tag => (
+                  <Tag key={tag.name} label={tag.name} />
+                ))}
+                {getDuration(video.duration)}
+              </VideoDetails>
+            </VideoWrapper>
           ))}
           {isAddVideoModalOpen && (
             <AddVideoModal

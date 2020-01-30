@@ -64,6 +64,7 @@ instance PlaylistTagRepo AppMockT where
 
 instance VideoRepo AppMockT where
   findVideosByPlaylist _ = pure []
+  findTagsByVideo _ = pure []
   insertVideo _ = pure 12345
   insertVideoTag _ = pure ()
   getVideoMetadata _ = pure Nothing
