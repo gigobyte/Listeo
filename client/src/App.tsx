@@ -3,7 +3,7 @@ import { useMount } from 'react-use'
 import styled, { createGlobalStyle } from 'styled-components'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider, useDispatch } from 'react-redux'
-import { session, useRoute, useUser, useHistory } from './session'
+import { session, useRoute, useUser, useHistoryListener } from './session'
 import { RouteTag } from './route'
 import { colors } from './ui/color'
 import { Header } from './ui/Header'
@@ -72,7 +72,7 @@ export const Main = () => {
   const dispatch = useDispatch()
   const route = useRoute()
   const user = useUser()
-  useHistory()
+  useHistoryListener()
 
   useMount(() => {
     if (route.tag !== RouteTag.Error) {

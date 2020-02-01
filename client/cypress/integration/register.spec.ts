@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const uuidv4 = require('uuid/v4')
 
 describe('Register', () => {
   const USERNAME = 'register--username'
@@ -224,9 +224,9 @@ describe('Register', () => {
       cy.server()
       cy.route('POST', 'http://localhost:8081/register').as('register')
 
-      cy.dataTest(USERNAME).type(uuid())
-      cy.dataTest(PASSWORD).type(uuid())
-      cy.dataTest(EMAIL).type(`${uuid()}@gmail.com`)
+      cy.dataTest(USERNAME).type(uuidv4())
+      cy.dataTest(PASSWORD).type(uuidv4())
+      cy.dataTest(EMAIL).type(`${uuidv4()}@gmail.com`)
       cy.dataTest(SUBMIT).click()
 
       cy.wait('@register').then(() => {
@@ -236,5 +236,3 @@ describe('Register', () => {
     })
   })
 })
-
-export {}

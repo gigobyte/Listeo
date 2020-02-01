@@ -40,13 +40,14 @@ const initialState: SessionState = {
   jwt: localStorage.getItem('jwt')
 }
 
-export const useHistory = () => {
+export const useHistoryListener = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
     const unlisten = history.listen(location => {
-      const route = parseUrl(location.pathname)
-      dispatch(session.actions.locationChanged(route))
+      const newRoute = parseUrl(location.pathname)
+
+      dispatch(session.actions.locationChanged(newRoute))
     })
 
     return unlisten
@@ -112,8 +113,7 @@ export const session = {
     },
 
     redirect(route: Route) {
-      return (dispatch: AppDispatch) => {
-        dispatch(session.actions.locationChanged(route))
+      return (_: AppDispatch) => {
         history.push(routeToString(route))
       }
     },

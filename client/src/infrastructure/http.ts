@@ -17,9 +17,10 @@ export interface FailedRequest {
 const handleErrors = (err: AxiosError) => {
   if (err.response?.status === 500) {
     window.location.assign('/error')
+    throw {}
   }
 
-  return err
+  throw { ...err.response?.data, statusCode: err.response?.status }
 }
 
 export const http = {
@@ -40,8 +41,7 @@ export const http = {
     const jwt = localStorage.getItem('jwt')
 
     return axios
-      .post(url, {
-        body,
+      .post(url, body, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }
