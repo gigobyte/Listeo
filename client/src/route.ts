@@ -1,3 +1,6 @@
+import { Playlist } from './features/playlist/Playlist'
+import { Id } from './infrastructure/id'
+
 /**
  * Temporary implementation until I figure out url parsing
  */
@@ -19,13 +22,14 @@ export type Route = (
   | { tag: RouteTag.Register }
   | { tag: RouteTag.About }
   | { tag: RouteTag.CreatePlaylist }
-  | { tag: RouteTag.ViewPlaylist; params: { playlistId: string } }
+  | { tag: RouteTag.ViewPlaylist; params: { playlistId: Id<Playlist> } }
   | { tag: RouteTag.NotFound404 }
-  | { tag: RouteTag.Error }) & {
+  | { tag: RouteTag.Error }
+) & {
   __brand: 'Route'
 }
 
-const createRoute = (tag: RouteTag, params?: Record<string, string>): Route =>
+const createRoute = (tag: RouteTag, params?: Record<string, unknown>): Route =>
   ({ tag, params } as Route)
 
 export const routes = {
@@ -35,7 +39,7 @@ export const routes = {
   about: createRoute(RouteTag.About),
   createPlaylist: createRoute(RouteTag.CreatePlaylist),
   viewPlaylist: (playlistId: string) =>
-    createRoute(RouteTag.ViewPlaylist, { playlistId }),
+    createRoute(RouteTag.ViewPlaylist, { playlistId: Number(playlistId) }),
   notFound404: createRoute(RouteTag.NotFound404),
   error: createRoute(RouteTag.Error)
 }

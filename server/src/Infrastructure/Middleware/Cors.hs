@@ -3,11 +3,12 @@ module Infrastructure.Middleware.Cors where
 import Protolude
 import Web.Scotty.Trans
 import Network.Wai.Middleware.Cors
+import Network.HTTP.Types.Method
 
 policy :: CorsResourcePolicy
 policy = CorsResourcePolicy
   { corsOrigins        = Nothing
-  , corsMethods        = simpleMethods
+  , corsMethods        = methodDelete : simpleMethods
   , corsRequestHeaders =
     [ "Accept"
     , "Accept-Language"

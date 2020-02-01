@@ -42,7 +42,6 @@ const AddButton = styled(Icons.plusCircle)`
   font-size: 25px;
   padding-right: 10px;
   color: ${colors.crimson100};
-  cursor: pointer;
 `
 
 export const Header: React.FC = () => {
@@ -69,6 +68,7 @@ export const Header: React.FC = () => {
                   <>
                     {shouldShowAddPlaylistButton && (
                       <AddButton
+                        clickable
                         data-test="header--add-playlist"
                         onClick={() => setIsAddPlaylistOverlayShown(true)}
                       />

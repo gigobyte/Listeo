@@ -23,6 +23,7 @@ import qualified Feature.Playlist.PlaylistRepo as PlaylistRepo
 import qualified Feature.PlaylistTag.PlaylistTagRepo as PlaylistTagRepo
 import qualified Feature.Video.VideoRepo as VideoRepo
 import qualified Feature.Video.AddVideo.AddVideoService as VideoService
+import qualified Feature.Video.DeleteVideo.DeleteVideoService as VideoService
 import qualified Infrastructure.Utils.Crypto as Crypto
 import qualified Data.Time.Clock as Time
 
@@ -72,6 +73,9 @@ instance VideoRepo AppT where
   insertVideo          = VideoRepo.insertVideo
   insertVideoTag       = VideoRepo.insertVideoTag
   getVideoMetadata     = VideoRepo.getVideoMetadata
+  findVideo            = VideoRepo.findVideo
+  deleteVideo          = VideoRepo.deleteVideo
 
 instance VideoService AppT where
-  addVideoToPlaylist = VideoService.addVideoToPlaylist
+  addVideoToPlaylist  = VideoService.addVideoToPlaylist
+  deletePlaylistVideo = VideoService.deletePlaylistVideo

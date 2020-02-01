@@ -66,6 +66,19 @@ export const http = {
         }
       })
     )
+  },
+
+  async delete<T>(url: Endpoint<T>): Promise<T> {
+    const jwt = localStorage.getItem('jwt')
+
+    return handleRequest(() =>
+      window.fetch(url, {
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + jwt
+        }
+      })
+    )
   }
 }
 

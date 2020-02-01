@@ -49,20 +49,19 @@ const Backdrop = styled.div`
   background-color: ${colors.black};
 `
 
-const CloseIcon = styled(Icons.times)`
+const CloseButton = styled(Icons.times)`
   position: absolute;
   top: 10px;
   right: 10px;
   text-align: right;
   color: ${colors.blue200};
-  cursor: pointer;
 `
 
 export const Modal: React.FC<ModalProps> = ({ onClose, children }) => (
   <>
     <Overlay>
       <Container>
-        <CloseIcon onClick={onClose} />
+        <CloseButton clickable onClick={onClose} />
         {children}
       </Container>
     </Overlay>

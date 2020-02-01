@@ -9,6 +9,8 @@ import { useForm } from '../../ui/useForm'
 import { useTagInput, TagInput } from '../../ui/TagInput'
 import { useTextarea, Textarea } from '../../ui/Textarea'
 import { centered } from '../../ui/Container'
+import { Playlist } from '../playlist/Playlist'
+import { Id } from '../../infrastructure/id'
 
 interface AddVideoRequest {
   url: string
@@ -17,7 +19,7 @@ interface AddVideoRequest {
 }
 
 interface AddVideoModalProps extends ModalProps {
-  playlistId: string
+  playlistId: Id<Playlist>
   onRefetchPlaylist: () => void
 }
 
@@ -30,7 +32,7 @@ const AddVideoForm = styled.form`
 `
 
 const addVideo = (
-  playlistId: string,
+  playlistId: Id<Playlist>,
   request: AddVideoRequest
 ): Promise<void> =>
   http.post(createEndpoint<void>('/playlist/' + playlistId + '/video'), request)

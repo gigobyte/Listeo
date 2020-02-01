@@ -68,9 +68,12 @@ instance VideoRepo AppMockT where
   insertVideo _ = pure 12345
   insertVideoTag _ = pure ()
   getVideoMetadata _ = pure Nothing
+  findVideo _ = pure Nothing
+  deleteVideo _ = pure ()
 
 instance VideoService AppMockT where
   addVideoToPlaylist _ _ _ = pure $ Right 12345
+  deletePlaylistVideo _ _ _ = pure $ Right ()
 
 mockUser :: User
 mockUser = User

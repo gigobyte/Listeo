@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import useTitle from 'react-use/esm/useTitle'
 import { Playlist, PlaylistPrivacy } from './Playlist'
@@ -19,11 +19,12 @@ import { Button, ButtonStyle } from '../../ui/Button'
 import { AddVideoModal } from '../video/AddVideoModal'
 import youtubeLogo from '../../assets/source_logos/youtube.jpg'
 import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
-import { VideoSource, getDuration } from '../video/Video'
+import { VideoSource, getDuration, Video } from '../video/Video'
 import { formatDate } from '../../infrastructure/formatting'
+import { Id } from '../../infrastructure/id'
 
 interface ViewPlaylistProps {
-  playlistId: string
+  playlistId: Id<Playlist>
 }
 
 enum PlaylistResponseError {
@@ -36,9 +37,17 @@ interface PlaylistFailResponse extends FailedRequest {
 }
 
 const fetchPlaylist = (
-  playlistId: string
+  playlistId: Id<Playlist>
 ): PromiseWithError<Playlist, PlaylistFailResponse> =>
   http.get(createEndpoint<Playlist>('/playlist/' + playlistId))
+
+const deleteVideo = (
+  playlistId: Id<Playlist>,
+  videoId: Id<Video>
+): Promise<void> =>
+  http.delete(
+    createEndpoint<void>('/playlist/' + playlistId + '/video/' + videoId)
+  )
 
 const PlaylistHeader = styled.div`
   display: flex;
@@ -106,6 +115,14 @@ const VideoTags = styled.div`
   padding-top: 17px;
 `
 
+const DeleteButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  font-size: 1.8rem;
+  padding-right: 20px;
+`
+
 const sourceToLogo = {
   [VideoSource.YouTube]: youtubeLogo,
   [VideoSource.Vimeo]: vimeoLogo
@@ -115,7 +132,15 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
   const { data: playlist, refetch: refetchPlaylist } = useAsync(fetchPlaylist, [
     playlistId
   ])
+
   const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false)
+
+  const deletePlaylistVideo = useCallback(
+    (videoId: Id<Video>) => {
+      deleteVideo(playlistId, videoId).then(refetchPlaylist)
+    },
+    [playlistId]
+  )
 
   useTitle(
     (() => {
@@ -187,6 +212,12 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
                   ))}
                 </VideoTags>
               </VideoDetails>
+              <DeleteButtonWrapper>
+                <Icons.trash
+                  clickable
+                  onClick={() => deletePlaylistVideo(video.id)}
+                />
+              </DeleteButtonWrapper>
             </VideoWrapper>
           ))}
           {isAddVideoModalOpen && (

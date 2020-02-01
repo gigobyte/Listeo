@@ -13,6 +13,19 @@ import Feature.Video.Video
 import Database.PostgreSQL.Simple
 import qualified Infrastructure.Secrets as Secrets
 
+findVideo :: (MonadDB m) => Id Video -> m (Maybe Video)
+findVideo videoId = withConn $ \conn -> do
+  let qry = "SELECT * FROM videos WHERE id = ? LIMIT 1"
+
+  result <- liftIO $ query conn qry (Only videoId)
+  return $ head result
+
+deleteVideo :: (MonadDB m) => Id Video -> m ()
+deleteVideo videoId = withConn $ \conn -> do
+  let qry = "DELETE FROM videos WHERE id = ?"
+
+  void $ execute conn qry (Only videoId)
+
 findVideosByPlaylist :: (MonadDB m) => Id Playlist -> m [Video]
 findVideosByPlaylist playlistId = withConn $ \conn -> do
   let qry = "SELECT * FROM videos WHERE playlist_id = ?"

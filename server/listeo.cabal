@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 20bc47efbf54b89577dd344fd9b1ccc1131aeb858406e791a3daf3bd469c005f
+-- hash: 5908a665eb3a2145ce222a806cb561a14775db8e3dfa40a5eecdd1dbdcfc2591
 
 name:           listeo
 version:        0.1.0.0
@@ -54,6 +54,8 @@ executable listeo-exe
       Feature.User.UserRepoClass
       Feature.Video.AddVideo.AddVideoResult
       Feature.Video.AddVideo.AddVideoService
+      Feature.Video.DeleteVideo.DeleteVideoResult
+      Feature.Video.DeleteVideo.DeleteVideoService
       Feature.Video.Video
       Feature.Video.VideoHTTP
       Feature.Video.VideoRepo
