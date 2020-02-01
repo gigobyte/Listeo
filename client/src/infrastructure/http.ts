@@ -1,5 +1,6 @@
 import { Endpoint } from './endpoint'
 import { useState, useEffect } from 'react'
+import axios, { AxiosError } from 'axios'
 
 // These are the only status codes the back-end can return that can be handled
 export enum HttpStatus {
@@ -13,72 +14,53 @@ export interface FailedRequest {
   statusCode: HttpStatus
 }
 
-const handleRequest = async <T>(
-  request: () => Promise<Response>
-): Promise<T> => {
-  let rawRes: Response
-
-  try {
-    rawRes = await request()
-  } catch {
+const handleErrors = (err: AxiosError) => {
+  if (err.response?.status === 500) {
     window.location.assign('/error')
-    throw {}
   }
 
-  if (rawRes.status === 500) {
-    window.location.assign('/error')
-    throw {}
-  }
-
-  const res = await rawRes.json()
-
-  if (!rawRes.ok) {
-    const fail: FailedRequest = { statusCode: res.status }
-    throw { ...fail, ...res }
-  }
-
-  return res
+  return err
 }
 
 export const http = {
   async get<T>(url: Endpoint<T>): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
-    return handleRequest(() =>
-      window.fetch(url, {
-        method: 'GET',
+    return axios
+      .get(url, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }
       })
-    )
+      .then(res => res.data)
+      .catch(handleErrors)
   },
 
   async post<T>(url: Endpoint<T>, body: unknown): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
-    return handleRequest(() =>
-      window.fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(body),
+    return axios
+      .post(url, {
+        body,
         headers: {
           Authorization: 'Bearer ' + jwt
         }
       })
-    )
+      .then(res => res.data)
+      .catch(handleErrors)
   },
 
   async delete<T>(url: Endpoint<T>): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
-    return handleRequest(() =>
-      window.fetch(url, {
-        method: 'DELETE',
+    return axios
+      .delete(url, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }
       })
-    )
+      .then(res => res.data)
+      .catch(handleErrors)
   }
 }
 

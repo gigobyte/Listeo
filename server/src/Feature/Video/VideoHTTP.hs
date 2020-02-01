@@ -20,5 +20,5 @@ routes = do
     user       <- requireUser
     playlistId <- param "playlistId"
     videoId    <- param "videoId"
-    result     <- lift $ deletePlaylistVideo videoId playlistId user
+    result     <- lift $ deletePlaylistVideo playlistId videoId user
     DeleteVideoResult.toHttpResult result
