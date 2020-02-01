@@ -3,14 +3,14 @@ import styled from 'styled-components'
 import { ModalProps, Modal } from '../../ui/Modal'
 import { useInput, Input } from '../../ui/Input'
 import { DefaultButton } from '../../ui/Button'
-import { http } from '../../infrastructure/http'
-import { createEndpoint } from '../../infrastructure/endpoint'
+import { http } from '../../utils/http'
+import { createEndpoint } from '../../utils/endpoint'
 import { useForm } from '../../ui/Form'
 import { useTagInput, TagInput } from '../../ui/TagInput'
 import { useTextarea, Textarea } from '../../ui/Textarea'
 import { centered } from '../../ui/Container'
 import { Playlist } from '../playlist/Playlist'
-import { Id } from '../../infrastructure/id'
+import { Id } from '../../utils/id'
 
 interface AddVideoRequest {
   url: string

@@ -14,7 +14,7 @@ import { Register } from './features/Register'
 import { CreatePlaylist } from './features/playlist/CreatePlaylist'
 import { ErrorPage } from './features/ErrorPage'
 import { ViewPlaylist } from './features/playlist/ViewPlaylist'
-import { DataStatus } from './infrastructure/http'
+import { DataStatus } from './utils/http'
 import { Spinner } from './ui/Spinner'
 
 const store = configureStore({

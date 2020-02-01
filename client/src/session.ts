@@ -5,8 +5,8 @@ import {
   RemoteData,
   remoteData,
   http
-} from './infrastructure/http'
-import { createEndpoint } from './infrastructure/endpoint'
+} from './utils/http'
+import { createEndpoint } from './utils/endpoint'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   Route,

@@ -8,8 +8,8 @@ import {
   DataStatus,
   FailedRequest,
   PromiseWithError
-} from '../../infrastructure/http'
-import { createEndpoint } from '../../infrastructure/endpoint'
+} from '../../utils/http'
+import { createEndpoint } from '../../utils/endpoint'
 import { Spinner } from '../../ui/Spinner'
 import { Icons } from '../../ui/Icon'
 import { colors } from '../../ui/color'
@@ -20,8 +20,8 @@ import { AddVideoModal } from '../video/AddVideoModal'
 import youtubeLogo from '../../assets/source_logos/youtube.jpg'
 import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
 import { VideoSource, getDuration, Video } from '../video/Video'
-import { formatDate } from '../../infrastructure/formatting'
-import { Id } from '../../infrastructure/id'
+import { formatDate } from '../../utils/formatting'
+import { Id } from '../../utils/id'
 
 interface ViewPlaylistProps {
   playlistId: Id<Playlist>

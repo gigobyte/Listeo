@@ -8,14 +8,14 @@ import { useForm } from '../ui/Form'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
 import { Error } from '../ui/Error'
-import { createEndpoint } from '../infrastructure/endpoint'
+import { createEndpoint } from '../utils/endpoint'
 import {
   FailedRequest,
   http,
   DataStatus,
   remoteData,
   RemoteData
-} from '../infrastructure/http'
+} from '../utils/http'
 import { useDispatch } from 'react-redux'
 import { session } from '../session'
 import { rule, ifBlank } from '../ui/validate'

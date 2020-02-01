@@ -1,5 +1,5 @@
 import { Playlist } from './features/playlist/Playlist'
-import { Id } from './infrastructure/id'
+import { Id } from './utils/id'
 
 /**
  * Temporary implementation until I figure out url parsing
