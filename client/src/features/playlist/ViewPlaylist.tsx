@@ -118,9 +118,15 @@ const VideoTags = styled.div`
 const DeleteButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   flex: 1;
   font-size: 1.8rem;
   padding-right: 20px;
+`
+
+const Separator = styled.hr`
+  border-top: 1px solid ${colors.gray300};
+  border-left: 0;
 `
 
 const sourceToLogo = {
@@ -197,28 +203,31 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
             Edit
           </Button>
           {playlist.videos.map(video => (
-            <VideoWrapper key={video.id}>
-              <VideoThumbnail src={video.thumbnail} />
-              <VideoDetails>
-                <VideoHeader>
-                  <VideoSourceImage src={sourceToLogo[video.source]} />
-                  <VideoTitle>{video.title}</VideoTitle>
-                </VideoHeader>
-                <div>Running time: {getDuration(video.duration)}</div>
-                <div>Date added: {formatDate(video.createdOn)}</div>
-                <VideoTags>
-                  {video.tags.map(tag => (
-                    <Tag key={tag.name} label={tag.name} />
-                  ))}
-                </VideoTags>
-              </VideoDetails>
-              <DeleteButtonWrapper>
-                <Icons.trash
-                  clickable
-                  onClick={() => deletePlaylistVideo(video.id)}
-                />
-              </DeleteButtonWrapper>
-            </VideoWrapper>
+            <>
+              <VideoWrapper key={video.id}>
+                <VideoThumbnail src={video.thumbnail} />
+                <VideoDetails>
+                  <VideoHeader>
+                    <VideoSourceImage src={sourceToLogo[video.source]} />
+                    <VideoTitle>{video.title}</VideoTitle>
+                  </VideoHeader>
+                  <div>Running time: {getDuration(video.duration)}</div>
+                  <div>Date added: {formatDate(video.createdOn)}</div>
+                  <VideoTags>
+                    {video.tags.map(tag => (
+                      <Tag key={tag.name} label={tag.name} />
+                    ))}
+                  </VideoTags>
+                </VideoDetails>
+                <DeleteButtonWrapper>
+                  <Icons.trash
+                    clickable
+                    onClick={() => deletePlaylistVideo(video.id)}
+                  />
+                </DeleteButtonWrapper>
+              </VideoWrapper>
+              <Separator />
+            </>
           ))}
           {isAddVideoModalOpen && (
             <AddVideoModal
