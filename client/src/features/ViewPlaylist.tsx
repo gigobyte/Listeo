@@ -1,27 +1,27 @@
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import useTitle from 'react-use/esm/useTitle'
-import { Playlist, PlaylistPrivacy } from './Playlist'
+import { Playlist, PlaylistPrivacy } from './playlist/Playlist'
 import {
   http,
   useAsync,
   DataStatus,
   FailedRequest,
   PromiseWithError
-} from '../../utils/http'
-import { createEndpoint } from '../../utils/endpoint'
-import { Spinner } from '../../ui/Spinner'
-import { Icons } from '../../ui/Icon'
-import { colors } from '../../ui/color'
-import { Tooltip } from '../../ui/Tooltip'
-import { Tag } from '../../ui/TagInput'
-import { Button, ButtonStyle } from '../../ui/Button'
-import { AddVideoModal } from '../video/AddVideoModal'
+} from '../utils/http'
+import { createEndpoint } from '../utils/endpoint'
+import { Spinner } from '../ui/Spinner'
+import { Icons } from '../ui/Icon'
+import { colors } from '../ui/color'
+import { Tooltip } from '../ui/Tooltip'
+import { Tag } from '../ui/TagInput'
+import { Button, ButtonStyle } from '../ui/Button'
+import { AddVideoModal } from './video/AddVideoModal'
 import youtubeLogo from '../../assets/source_logos/youtube.jpg'
 import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
-import { VideoSource, getDuration, Video } from '../video/Video'
-import { formatDate } from '../../utils/formatting'
-import { Id } from '../../utils/id'
+import { VideoSource, getDuration, Video } from './video/Video'
+import { formatDate } from '../utils/formatting'
+import { Id } from '../utils/id'
 
 interface ViewPlaylistProps {
   playlistId: Id<Playlist>
