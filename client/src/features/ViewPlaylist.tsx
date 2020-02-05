@@ -17,8 +17,8 @@ import { Tooltip } from '../ui/Tooltip'
 import { Tag } from '../ui/TagInput'
 import { Button, ButtonStyle } from '../ui/Button'
 import { AddVideoModal } from './video/AddVideoModal'
-import youtubeLogo from '../../assets/source_logos/youtube.jpg'
-import vimeoLogo from '../../assets/source_logos/vimeo.jpg'
+import youtubeLogo from '../assets/source_logos/youtube.jpg'
+import vimeoLogo from '../assets/source_logos/vimeo.jpg'
 import { VideoSource, getDuration, Video } from './video/Video'
 import { formatDate } from '../utils/formatting'
 import { Id } from '../utils/id'
@@ -91,6 +91,10 @@ const VideoThumbnail = styled.img`
   height: 113px;
 `
 
+const VideoThumbnailWrapper = styled.div`
+  position: relative;
+`
+
 const VideoDetails = styled.div`
   padding-left: 10px;
 `
@@ -127,6 +131,16 @@ const DeleteButtonWrapper = styled.div`
 const Separator = styled.hr`
   border-top: 1px solid ${colors.gray300};
   border-left: 0;
+`
+
+const VideoDuration = styled.span`
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  padding: 2px 3px 0px 3px;
+  color: ${colors.white};
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: 0.9rem;
 `
 
 const sourceToLogo = {
@@ -205,13 +219,15 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           {playlist.videos.map(video => (
             <>
               <VideoWrapper key={video.id}>
-                <VideoThumbnail src={video.thumbnail} />
+                <VideoThumbnailWrapper>
+                  <VideoThumbnail src={video.thumbnail} />
+                  <VideoDuration>{getDuration(video.duration)}</VideoDuration>
+                </VideoThumbnailWrapper>
                 <VideoDetails>
                   <VideoHeader>
                     <VideoSourceImage src={sourceToLogo[video.source]} />
                     <VideoTitle>{video.title}</VideoTitle>
                   </VideoHeader>
-                  <div>Running time: {getDuration(video.duration)}</div>
                   <div>Date added: {formatDate(video.createdOn)}</div>
                   <VideoTags>
                     {video.tags.map(tag => (
