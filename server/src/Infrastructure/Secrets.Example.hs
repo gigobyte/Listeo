@@ -10,3 +10,6 @@ dbPassword = ""
 
 youtubeAPIKey :: Text
 youtubeAPIKey = ""
+
+vimeoAPIKey :: Text
+vimeoAPIKey = ""
