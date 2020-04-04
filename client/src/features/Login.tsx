@@ -4,7 +4,7 @@ import { useTitle } from 'react-use'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
 import { Input, useInput } from '../ui/Input'
-import { useForm } from '../ui/Form'
+import { useForm, Form } from '../ui/Form'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
 import { Error } from '../ui/Error'
@@ -42,7 +42,7 @@ const login = (
 ): PromiseWithError<LoginSuccessResponse, LoginFailResponse> =>
   http.post('/login', { username, password })
 
-const LoginForm = styled.form`
+const LoginForm = styled(Form)`
   ${centered};
   height: 66%;
 `
@@ -74,13 +74,7 @@ export const Login = () => {
     }
   }, [loginEndpoint.response])
 
-  const loginForm = useForm({
-    onSubmit: () => {
-      if (usernameInput.isValid && passwordInput.isValid) {
-        loginEndpoint.fetch(usernameInput.value, passwordInput.value)
-      }
-    }
-  })
+  const loginForm = useForm()
 
   const usernameInput = useInput({
     trim: true,
@@ -104,8 +98,14 @@ export const Login = () => {
     usernameInput.isShowingError ||
     passwordInput.isShowingError
 
+  const submitLogin = () => {
+    if (usernameInput.isValid && passwordInput.isValid) {
+      loginEndpoint.fetch(usernameInput.value, passwordInput.value)
+    }
+  }
+
   return (
-    <LoginForm {...loginForm}>
+    <LoginForm {...loginForm} onSubmit={submitLogin}>
       <Title>Sign In</Title>
       <Input
         {...usernameInput}

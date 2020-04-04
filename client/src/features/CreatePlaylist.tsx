@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { centered } from '../ui/Container'
 import { useTitle } from 'react-use'
@@ -9,15 +9,7 @@ import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
-import {
-  RemoteData,
-  DataStatus,
-  http,
-  notAsked,
-  loading,
-  success,
-  fail
-} from '../utils/http'
+import { DataStatus, http, useCallableAsync } from '../utils/http'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -66,35 +58,35 @@ const Separator = styled.div`
   height: 8px;
 `
 
+const createPlaylist = (
+  name: string,
+  description: string,
+  tags: string[],
+  privacy: PlaylistPrivacy,
+  style: PlaylistStyle
+) =>
+  http.post<CreatePlaylistSuccessResponse>('/playlist', {
+    name,
+    description,
+    tags,
+    privacy,
+    style
+  })
+
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
-    RemoteData<CreatePlaylistSuccessResponse>
-  >(notAsked)
+  const createPlaylistEndpoint = useCallableAsync(createPlaylist)
 
-  const createPlaylistForm = useForm({
-    onSubmit: () => {
-      if (playlistNameInput.isValid) {
-        setCreatePlaylistResponse(loading)
-        http
-          .post<CreatePlaylistSuccessResponse>('/playlist', {
-            name: playlistNameInput.value,
-            description: descriptionInput.value,
-            tags: tagsInput.tags,
-            privacy: playlistPrivacy.value,
-            style: playlistStyle.value
-          })
-          .then(response => {
-            setCreatePlaylistResponse(success(response))
-            redirect(routes.viewPlaylist(response.playlistId))
-          })
-          .catch(response => {
-            setCreatePlaylistResponse(fail(response))
-          })
-      }
+  useEffect(() => {
+    if (createPlaylistEndpoint.response.status === DataStatus.Success) {
+      redirect(
+        routes.viewPlaylist(createPlaylistEndpoint.response.data.playlistId)
+      )
     }
-  })
+  }, [createPlaylistEndpoint.response])
+
+  const createPlaylistForm = useForm()
 
   const playlistNameInput = useInput({
     trim: false,
@@ -128,8 +120,20 @@ export const CreatePlaylist = () => {
   const [rankedRadioButton, unorderedRadioButton] = playlistStyle.radioButtons
 
   const isSubmitButtonDisabled =
-    createPlaylistResponse.status === DataStatus.Loading ||
+    createPlaylistEndpoint.response.status === DataStatus.Loading ||
     playlistNameInput.isShowingError
+
+  const submitPlaylist = () => {
+    if (playlistNameInput.isValid) {
+      createPlaylistEndpoint.fetch(
+        playlistNameInput.value,
+        descriptionInput.value,
+        tagsInput.tags,
+        playlistPrivacy.value,
+        playlistStyle.value
+      )
+    }
+  }
 
   return (
     <Container>
@@ -168,7 +172,7 @@ export const CreatePlaylist = () => {
       </Settings>
       <DefaultButton
         data-test="create-playlist--submit"
-        onClick={createPlaylistForm.onSubmit}
+        onClick={submitPlaylist}
         disabled={isSubmitButtonDisabled}
       >
         Create

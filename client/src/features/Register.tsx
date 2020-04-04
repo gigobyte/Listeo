@@ -13,7 +13,7 @@ import { DefaultButton } from '../ui/Button'
 import { Error } from '../ui/Error'
 import { useTitle } from 'react-use'
 import { useInput, Input } from '../ui/Input'
-import { useForm } from '../ui/Form'
+import { useForm, Form } from '../ui/Form'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
 import {
@@ -57,7 +57,7 @@ const register = (
 ): PromiseWithError<RegisterSuccessResponse, RegisterFailResponse> =>
   http.post('/register', { username, email, password })
 
-const RegisterForm = styled.form`
+const RegisterForm = styled(Form)`
   ${centered};
   height: 66%;
 `
@@ -90,21 +90,7 @@ export const Register = () => {
     }
   }, [registerEndpoint.response])
 
-  const registerForm = useForm({
-    onSubmit: () => {
-      if (
-        usernameInput.isValid &&
-        emailInput.isValid &&
-        passwordInput.isValid
-      ) {
-        registerEndpoint.fetch(
-          usernameInput.value,
-          emailInput.value,
-          passwordInput.value
-        )
-      }
-    }
-  })
+  const registerForm = useForm()
 
   const usernameInput = useInput({
     trim: true,
@@ -146,8 +132,18 @@ export const Register = () => {
     emailInput.isShowingError ||
     passwordInput.isShowingError
 
+  const submitRegister = () => {
+    if (usernameInput.isValid && emailInput.isValid && passwordInput.isValid) {
+      registerEndpoint.fetch(
+        usernameInput.value,
+        emailInput.value,
+        passwordInput.value
+      )
+    }
+  }
+
   return (
-    <RegisterForm {...registerForm}>
+    <RegisterForm {...registerForm} onSubmit={submitRegister}>
       <Title>Register</Title>
       <Input
         data-test="register--username"

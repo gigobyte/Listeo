@@ -4,7 +4,7 @@ import { ModalProps, Modal } from '../../ui/Modal'
 import { useInput, Input } from '../../ui/Input'
 import { DefaultButton } from '../../ui/Button'
 import { http } from '../../utils/http'
-import { useForm } from '../../ui/Form'
+import { useForm, Form } from '../../ui/Form'
 import { useTagInput, TagInput } from '../../ui/TagInput'
 import { useTextarea, Textarea } from '../../ui/Textarea'
 import { centered } from '../../ui/Container'
@@ -26,7 +26,7 @@ const Title = styled.h1`
   font-size: 2rem;
 `
 
-const AddVideoForm = styled.form`
+const AddVideoForm = styled(Form)`
   ${centered};
 `
 
@@ -41,19 +41,7 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
   onRefetchPlaylist,
   playlistId
 }) => {
-  const videoForm = useForm({
-    onSubmit: () => {
-      addVideo(playlistId, {
-        url: urlInput.value,
-        note: noteInput.value,
-        tags: tagsInput.tags
-      }).then(() => {
-        onClose()
-        onRefetchPlaylist()
-      })
-    }
-  })
-
+  const videoForm = useForm()
   const tagsInput = useTagInput()
 
   const urlInput = useInput({
@@ -68,9 +56,20 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
     shouldShowError: _ => false
   })
 
+  const submitVideo = () => {
+    addVideo(playlistId, {
+      url: urlInput.value,
+      note: noteInput.value,
+      tags: tagsInput.tags
+    }).then(() => {
+      onClose()
+      onRefetchPlaylist()
+    })
+  }
+
   return (
     <Modal onClose={onClose}>
-      <AddVideoForm {...videoForm}>
+      <AddVideoForm {...videoForm} onSubmit={submitVideo}>
         <Title>Add Video</Title>
         <Input {...urlInput} placeholder="Url" />
         <Textarea {...noteInput} placeholder="Note (optional)" />
