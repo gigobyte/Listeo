@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 describe('Login', () => {
   const USERNAME = 'login--username'
@@ -9,17 +9,11 @@ describe('Login', () => {
 
   beforeEach(() => {
     cy.visit('/login')
-
-    Cypress.on('window:before:load', win => {
-      delete win.fetch
-    })
   })
 
   describe('Username field', () => {
     it('works', () => {
-      cy.dataTest(USERNAME)
-        .type('v')
-        .should('have.value', 'v')
+      cy.dataTest(USERNAME).type('v').should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -35,24 +29,18 @@ describe('Login', () => {
     })
 
     it('should trim input', () => {
-      cy.dataTest(USERNAME)
-        .type('    ')
-        .should('have.value', '')
+      cy.dataTest(USERNAME).type('    ').should('have.value', '')
     })
 
     it('should only show validation error if the form is submitted', () => {
-      cy.dataTest(USERNAME)
-        .focus()
-        .blur()
+      cy.dataTest(USERNAME).focus().blur()
       cy.dataTest(USERNAME + ERROR).should('not.be.visible')
     })
   })
 
   describe('Password field', () => {
     it('works', () => {
-      cy.dataTest(PASSWORD)
-        .type('v')
-        .should('have.value', 'v')
+      cy.dataTest(PASSWORD).type('v').should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -68,15 +56,11 @@ describe('Login', () => {
     })
 
     it('should trim input', () => {
-      cy.dataTest(PASSWORD)
-        .type('    ')
-        .should('have.value', '')
+      cy.dataTest(PASSWORD).type('    ').should('have.value', '')
     })
 
     it('should only show validation error if the form is submitted', () => {
-      cy.dataTest(PASSWORD)
-        .focus()
-        .blur()
+      cy.dataTest(PASSWORD).focus().blur()
       cy.dataTest(PASSWORD + ERROR).should('not.be.visible')
     })
   })

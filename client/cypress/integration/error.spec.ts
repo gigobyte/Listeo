@@ -1,10 +1,4 @@
 describe('Default error handling', () => {
-  beforeEach(() => {
-    Cypress.on('window:before:load', win => {
-      delete win.fetch
-    })
-  })
-
   it('should redirect to /error if any of the request fail with 500', () => {
     cy.server()
     cy.route({

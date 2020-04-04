@@ -8,10 +8,6 @@ describe('Create playlist', () => {
   })
 
   beforeEach(() => {
-    Cypress.on('window:before:load', win => {
-      delete win.fetch
-    })
-
     cy.login(credentials)
   })
 
@@ -55,9 +51,7 @@ describe('Create playlist', () => {
 
     describe('Name field', () => {
       it('works', () => {
-        cy.dataTest(NAME)
-          .type('v')
-          .should('have.value', 'v')
+        cy.dataTest(NAME).type('v').should('have.value', 'v')
       })
 
       it('does not trigger submit on enter', () => {
@@ -86,9 +80,7 @@ describe('Create playlist', () => {
       })
 
       it('should only show validation error if the form is submitted', () => {
-        cy.dataTest(NAME)
-          .focus()
-          .blur()
+        cy.dataTest(NAME).focus().blur()
         cy.dataTest(NAME + ERROR).should('not.be.visible')
       })
     })
@@ -173,9 +165,7 @@ describe('Create playlist', () => {
 
     describe('Description field', () => {
       it('works', () => {
-        cy.dataTest(DESCRIPTION)
-          .type('v')
-          .should('have.value', 'v')
+        cy.dataTest(DESCRIPTION).type('v').should('have.value', 'v')
       })
     })
 

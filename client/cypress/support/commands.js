@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -67,7 +67,7 @@ Cypress.Commands.add('deleteCurrentUser', () =>
       method: 'POST',
       url: 'http://localhost:8081/delete-me',
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('jwt')
+        Authorization: 'Bearer ' + window.localStorage.getItem('jwt')
       }
     })
     .then(() => {

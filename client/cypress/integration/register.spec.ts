@@ -1,4 +1,4 @@
-const uuidv4 = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 
 describe('Register', () => {
   const USERNAME = 'register--username'
@@ -10,17 +10,11 @@ describe('Register', () => {
 
   beforeEach(() => {
     cy.visit('/register')
-
-    Cypress.on('window:before:load', win => {
-      delete win.fetch
-    })
   })
 
   describe('Username field', () => {
     it('works', () => {
-      cy.dataTest(USERNAME)
-        .type('v')
-        .should('have.value', 'v')
+      cy.dataTest(USERNAME).type('v').should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -60,24 +54,18 @@ describe('Register', () => {
     })
 
     it('should only show validation error if the form is submitted', () => {
-      cy.dataTest(USERNAME)
-        .focus()
-        .blur()
+      cy.dataTest(USERNAME).focus().blur()
       cy.dataTest(USERNAME + ERROR).should('not.be.visible')
     })
 
     it('should trim input', () => {
-      cy.dataTest(USERNAME)
-        .type('    ')
-        .should('have.value', '')
+      cy.dataTest(USERNAME).type('    ').should('have.value', '')
     })
   })
 
   describe('Email field', () => {
     it('works', () => {
-      cy.dataTest(EMAIL)
-        .type('v')
-        .should('have.value', 'v')
+      cy.dataTest(EMAIL).type('v').should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -100,24 +88,18 @@ describe('Register', () => {
     })
 
     it('should only show validation error if the form is submitted', () => {
-      cy.dataTest(EMAIL)
-        .focus()
-        .blur()
+      cy.dataTest(EMAIL).focus().blur()
       cy.dataTest(EMAIL + ERROR).should('not.be.visible')
     })
 
     it('should trim input', () => {
-      cy.dataTest(EMAIL)
-        .type('    ')
-        .should('have.value', '')
+      cy.dataTest(EMAIL).type('    ').should('have.value', '')
     })
   })
 
   describe('Password field', () => {
     it('works', () => {
-      cy.dataTest(PASSWORD)
-        .type('v')
-        .should('have.value', 'v')
+      cy.dataTest(PASSWORD).type('v').should('have.value', 'v')
     })
 
     it('triggers submit on enter', () => {
@@ -140,16 +122,12 @@ describe('Register', () => {
     })
 
     it('should only show validation error if the form is submitted', () => {
-      cy.dataTest(PASSWORD)
-        .focus()
-        .blur()
+      cy.dataTest(PASSWORD).focus().blur()
       cy.dataTest(PASSWORD + ERROR).should('not.be.visible')
     })
 
     it('should trim input', () => {
-      cy.dataTest(PASSWORD)
-        .type('    ')
-        .should('have.value', '')
+      cy.dataTest(PASSWORD).type('    ').should('have.value', '')
     })
   })
 
