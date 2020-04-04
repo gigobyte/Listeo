@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import {
   FailedRequest,
   http,
-  DataStatus,
   showError,
   useCallableAsync,
   PromiseWithError,
-  isSuccess
+  isSuccess,
+  isLoading
 } from '../utils/http'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
@@ -83,13 +83,13 @@ export const Register = () => {
   useTitle('Register - Listeo')
 
   const session = useSessionContext()
-  const registerEndpoint = useCallableAsync(register)
+  const [registerResponse, registerEndpoint] = useCallableAsync(register)
 
   useEffect(() => {
-    if (isSuccess(registerEndpoint.response)) {
-      session.login(registerEndpoint.response.data.jwt)
+    if (isSuccess(registerResponse)) {
+      session.login(registerResponse.data.jwt)
     }
-  }, [registerEndpoint.response])
+  }, [registerResponse])
 
   const registerForm = useForm()
 
@@ -123,19 +123,19 @@ export const Register = () => {
   })
 
   const registerRequestErrorText = showError(
-    registerEndpoint.response,
+    registerResponse,
     showRegisterResponseError
   )
 
   const isSubmitButtonDisabled =
-    registerEndpoint.response.status === DataStatus.Loading ||
+    isLoading(registerResponse) ||
     usernameInput.isShowingError ||
     emailInput.isShowingError ||
     passwordInput.isShowingError
 
   const submitRegister = () => {
     if (usernameInput.isValid && emailInput.isValid && passwordInput.isValid) {
-      registerEndpoint.fetch(
+      registerEndpoint(
         usernameInput.value,
         emailInput.value,
         passwordInput.value

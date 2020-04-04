@@ -9,7 +9,7 @@ import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
-import { DataStatus, http, useCallableAsync, isSuccess } from '../utils/http'
+import { http, useCallableAsync, isSuccess, isLoading } from '../utils/http'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -76,15 +76,15 @@ const createPlaylist = (
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const createPlaylistEndpoint = useCallableAsync(createPlaylist)
+  const [createPlaylistResponse, createPlaylistEndpoint] = useCallableAsync(
+    createPlaylist
+  )
 
   useEffect(() => {
-    if (isSuccess(createPlaylistEndpoint.response)) {
-      redirect(
-        routes.viewPlaylist(createPlaylistEndpoint.response.data.playlistId)
-      )
+    if (isSuccess(createPlaylistResponse)) {
+      redirect(routes.viewPlaylist(createPlaylistResponse.data.playlistId))
     }
-  }, [createPlaylistEndpoint.response])
+  }, [createPlaylistResponse])
 
   const createPlaylistForm = useForm()
 
@@ -120,12 +120,11 @@ export const CreatePlaylist = () => {
   const [rankedRadioButton, unorderedRadioButton] = playlistStyle.radioButtons
 
   const isSubmitButtonDisabled =
-    createPlaylistEndpoint.response.status === DataStatus.Loading ||
-    playlistNameInput.isShowingError
+    isLoading(createPlaylistResponse) || playlistNameInput.isShowingError
 
   const submitPlaylist = () => {
     if (playlistNameInput.isValid) {
-      createPlaylistEndpoint.fetch(
+      createPlaylistEndpoint(
         playlistNameInput.value,
         descriptionInput.value,
         tagsInput.tags,

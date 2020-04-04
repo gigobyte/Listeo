@@ -8,7 +8,7 @@ import Infrastructure.AppError
 import Feature.Playlist.Playlist
 import Feature.PlaylistTag.PlaylistTag
 import Feature.Video.Video
-import Network.HTTP.Types.Status (badRequest400, status500)
+import Network.HTTP.Types.Status (badRequest400, status500, status401)
 import Web.Scotty.Trans
 
 instance ToJSON GetPlaylistError
@@ -40,7 +40,7 @@ toHttpResult (Left PlaylistNotFound) = do
   status badRequest400
   json $ ErrorResponse PlaylistNotFound
 toHttpResult (Left PlaylistIsPrivate) = do
-  status badRequest400
+  status status401
   json $ ErrorResponse PlaylistIsPrivate
 toHttpResult (Left InvalidRequest) = do
   status status500

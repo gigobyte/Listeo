@@ -44,7 +44,7 @@ export const redirect = (route: Route): void => {
 }
 
 export const SessionProvider: React.FC = ({ children }) => {
-  const user = useAsync(fetchUser, [])
+  const [user, refetchUser] = useAsync(fetchUser, [])
   const [route, setRoute] = useState(parseUrl(window.location.pathname))
 
   useEffect(() => {
@@ -56,13 +56,13 @@ export const SessionProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (isSuccess(user.response) && isAuthDisallowedRoute(route)) {
+    if (isSuccess(user) && isAuthDisallowedRoute(route)) {
       redirect(routes.home)
     }
 
     if (
-      isFail(user.response) &&
-      user.response.error.statusCode === HttpStatus.Unauthorized &&
+      isFail(user) &&
+      user.error.statusCode === HttpStatus.Unauthorized &&
       isAuthProtectedRoute(route)
     ) {
       redirect(routes.login)
@@ -72,16 +72,16 @@ export const SessionProvider: React.FC = ({ children }) => {
   return (
     <SessionContext.Provider
       value={{
-        user: user.response,
+        user,
         route,
         login: (jwt: string) => {
           localStorage.setItem('jwt', jwt)
-          user.refetch()
+          refetchUser()
           redirect(routes.home)
         },
         logout: () => {
           localStorage.removeItem('jwt')
-          user.refetch()
+          refetchUser()
         }
       }}
     >

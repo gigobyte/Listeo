@@ -99,6 +99,10 @@ export const isFail = <T, E>(
 ): remoteData is { status: DataStatus.Fail; error: E } =>
   remoteData.status === DataStatus.Fail
 
+export const isLoading = <T, E>(
+  remoteData: RemoteData<T, E>
+): remoteData is typeof loading => remoteData.status === DataStatus.Loading
+
 export const showError = <T, E>(
   error: RemoteData<T, E>,
   show: (error: E) => string
@@ -115,7 +119,7 @@ export const showError = <T, E>(
 export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
   promiseFn: (...args: TArgs) => PromiseWithError<TRes, TErr>,
   args: TArgs
-): { response: RemoteData<TRes, TErr>; refetch: () => void } => {
+): [RemoteData<TRes, TErr>, () => void] => {
   const [data, setData] = useState<RemoteData<TRes, TErr>>(loading)
 
   const startFetch = () =>
@@ -127,10 +131,7 @@ export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
     startFetch()
   }, args)
 
-  return {
-    response: data,
-    refetch: startFetch
-  }
+  return [data, startFetch]
 }
 
 export const useCallableAsync = <
@@ -139,7 +140,7 @@ export const useCallableAsync = <
   TErr = FailedRequest
 >(
   promiseFn: (...args: TArgs) => PromiseWithError<TRes, TErr>
-): { response: RemoteData<TRes, TErr>; fetch: (...args: TArgs) => void } => {
+): [RemoteData<TRes, TErr>, (...args: TArgs) => void] => {
   const [data, setData] = useState<RemoteData<TRes, TErr>>(notAsked)
 
   const startFetch = (...args: TArgs) => {
@@ -150,8 +151,5 @@ export const useCallableAsync = <
       .catch(err => setData(fail(err)))
   }
 
-  return {
-    response: data,
-    fetch: startFetch
-  }
+  return [data, startFetch]
 }

@@ -11,11 +11,11 @@ import { Error } from '../ui/Error'
 import {
   FailedRequest,
   http,
-  DataStatus,
   showError,
   useCallableAsync,
   PromiseWithError,
-  isSuccess
+  isSuccess,
+  isLoading
 } from '../utils/http'
 import { rule, ifBlank } from '../ui/validate'
 import { useSessionContext } from '../session'
@@ -67,13 +67,13 @@ export const Login = () => {
   useTitle('Login - Listeo')
 
   const session = useSessionContext()
-  const loginEndpoint = useCallableAsync(login)
+  const [loginResponse, loginEndpoint] = useCallableAsync(login)
 
   useEffect(() => {
-    if (isSuccess(loginEndpoint.response)) {
-      session.login(loginEndpoint.response.data.jwt)
+    if (isSuccess(loginResponse)) {
+      session.login(loginResponse.data.jwt)
     }
-  }, [loginEndpoint.response])
+  }, [loginResponse])
 
   const loginForm = useForm()
 
@@ -89,19 +89,16 @@ export const Login = () => {
     shouldShowError: _ => loginForm.submitted
   })
 
-  const loginRequestErrorText = showError(
-    loginEndpoint.response,
-    showLoginResponseError
-  )
+  const loginRequestErrorText = showError(loginResponse, showLoginResponseError)
 
   const isSubmitButtonDisabled =
-    loginEndpoint.response.status === DataStatus.Loading ||
+    isLoading(loginResponse) ||
     usernameInput.isShowingError ||
     passwordInput.isShowingError
 
   const submitLogin = () => {
     if (usernameInput.isValid && passwordInput.isValid) {
-      loginEndpoint.fetch(usernameInput.value, passwordInput.value)
+      loginEndpoint(usernameInput.value, passwordInput.value)
     }
   }
 
