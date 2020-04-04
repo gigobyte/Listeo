@@ -7,7 +7,8 @@ import {
   useAsync,
   DataStatus,
   FailedRequest,
-  PromiseWithError
+  PromiseWithError,
+  isSuccess
 } from '../utils/http'
 import { Spinner } from '../ui/Spinner'
 import { Icons } from '../ui/Icon'
@@ -158,15 +159,9 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
   )
 
   useTitle(
-    (() => {
-      switch (playlist.response.status) {
-        case DataStatus.Success:
-          return `${playlist.response.data.name} - Listeo`
-
-        default:
-          return 'Playlist - Listeo'
-      }
-    })()
+    isSuccess(playlist.response)
+      ? `${playlist.response.data.name} - Listeo`
+      : 'Playlist - Listeo'
   )
 
   switch (playlist.response.status) {

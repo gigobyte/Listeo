@@ -9,7 +9,7 @@ import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
-import { DataStatus, http, useCallableAsync } from '../utils/http'
+import { DataStatus, http, useCallableAsync, isSuccess } from '../utils/http'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -79,7 +79,7 @@ export const CreatePlaylist = () => {
   const createPlaylistEndpoint = useCallableAsync(createPlaylist)
 
   useEffect(() => {
-    if (createPlaylistEndpoint.response.status === DataStatus.Success) {
+    if (isSuccess(createPlaylistEndpoint.response)) {
       redirect(
         routes.viewPlaylist(createPlaylistEndpoint.response.data.playlistId)
       )

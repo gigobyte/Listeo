@@ -89,6 +89,16 @@ export const fail = <E>(error: E) =>
     error
   } as const)
 
+export const isSuccess = <T, E>(
+  remoteData: RemoteData<T, E>
+): remoteData is { status: DataStatus.Success; data: T } =>
+  remoteData.status === DataStatus.Success
+
+export const isFail = <T, E>(
+  remoteData: RemoteData<T, E>
+): remoteData is { status: DataStatus.Fail; error: E } =>
+  remoteData.status === DataStatus.Fail
+
 export const showError = <T, E>(
   error: RemoteData<T, E>,
   show: (error: E) => string

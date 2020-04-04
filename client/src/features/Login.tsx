@@ -14,7 +14,8 @@ import {
   DataStatus,
   showError,
   useCallableAsync,
-  PromiseWithError
+  PromiseWithError,
+  isSuccess
 } from '../utils/http'
 import { rule, ifBlank } from '../ui/validate'
 import { useSessionContext } from '../session'
@@ -69,7 +70,7 @@ export const Login = () => {
   const loginEndpoint = useCallableAsync(login)
 
   useEffect(() => {
-    if (loginEndpoint.response.status === DataStatus.Success) {
+    if (isSuccess(loginEndpoint.response)) {
       session.login(loginEndpoint.response.data.jwt)
     }
   }, [loginEndpoint.response])

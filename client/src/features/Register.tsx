@@ -6,7 +6,8 @@ import {
   DataStatus,
   showError,
   useCallableAsync,
-  PromiseWithError
+  PromiseWithError,
+  isSuccess
 } from '../utils/http'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
@@ -85,7 +86,7 @@ export const Register = () => {
   const registerEndpoint = useCallableAsync(register)
 
   useEffect(() => {
-    if (registerEndpoint.response.status === DataStatus.Success) {
+    if (isSuccess(registerEndpoint.response)) {
       session.login(registerEndpoint.response.data.jwt)
     }
   }, [registerEndpoint.response])

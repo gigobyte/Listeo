@@ -5,8 +5,9 @@ import {
   http,
   useAsync,
   PromiseWithError,
-  DataStatus,
-  notAsked
+  notAsked,
+  isSuccess,
+  isFail
 } from './utils/http'
 import {
   Route,
@@ -55,15 +56,12 @@ export const SessionProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (
-      user.response.status === DataStatus.Success &&
-      isAuthDisallowedRoute(route)
-    ) {
+    if (isSuccess(user.response) && isAuthDisallowedRoute(route)) {
       redirect(routes.home)
     }
 
     if (
-      user.response.status === DataStatus.Fail &&
+      isFail(user.response) &&
       user.response.error.statusCode === HttpStatus.Unauthorized &&
       isAuthProtectedRoute(route)
     ) {
