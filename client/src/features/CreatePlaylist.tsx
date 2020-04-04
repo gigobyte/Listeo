@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { centered } from '../ui/Container'
 import { useTitle } from 'react-use'
 import { useInput, Input } from '../ui/Input'
 import { ifBlank, rule, ifLongerThan } from '../ui/validate'
-import { useForm } from '../ui/Form'
 import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
@@ -22,6 +21,21 @@ enum ValidationError {
 interface CreatePlaylistSuccessResponse {
   playlistId: string
 }
+
+const createPlaylistEndpoint = (
+  name: string,
+  description: string,
+  tags: string[],
+  privacy: PlaylistPrivacy,
+  style: PlaylistStyle
+) =>
+  http.post<CreatePlaylistSuccessResponse>('/playlist', {
+    name,
+    description,
+    tags,
+    privacy,
+    style
+  })
 
 const Container = styled.div`
   ${centered};
@@ -58,35 +72,18 @@ const Separator = styled.div`
   height: 8px;
 `
 
-const createPlaylist = (
-  name: string,
-  description: string,
-  tags: string[],
-  privacy: PlaylistPrivacy,
-  style: PlaylistStyle
-) =>
-  http.post<CreatePlaylistSuccessResponse>('/playlist', {
-    name,
-    description,
-    tags,
-    privacy,
-    style
-  })
-
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const [createPlaylistResponse, createPlaylistEndpoint] = useCallableAsync(
-    createPlaylist
-  )
+  const [response, createPlaylist] = useCallableAsync(createPlaylistEndpoint)
 
   useEffect(() => {
-    if (isSuccess(createPlaylistResponse)) {
-      redirect(routes.viewPlaylist(createPlaylistResponse.data.playlistId))
+    if (isSuccess(response)) {
+      redirect(routes.viewPlaylist(response.data.playlistId))
     }
-  }, [createPlaylistResponse])
+  }, [response])
 
-  const createPlaylistForm = useForm()
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false)
 
   const playlistNameInput = useInput({
     trim: false,
@@ -94,7 +91,7 @@ export const CreatePlaylist = () => {
       rule(ifBlank, ValidationError.PlaylistNameMissing),
       rule(ifLongerThan(99), ValidationError.PlaylistNameTooLong)
     ],
-    shouldShowError: _ => createPlaylistForm.submitted
+    shouldShowError: _ => isFormSubmitted
   })
 
   const tagsInput = useTagInput()
@@ -120,11 +117,12 @@ export const CreatePlaylist = () => {
   const [rankedRadioButton, unorderedRadioButton] = playlistStyle.radioButtons
 
   const isSubmitButtonDisabled =
-    isLoading(createPlaylistResponse) || playlistNameInput.isShowingError
+    isLoading(response) || playlistNameInput.isShowingError
 
   const submitPlaylist = () => {
+    setIsFormSubmitted(true)
     if (playlistNameInput.isValid) {
-      createPlaylistEndpoint(
+      createPlaylist(
         playlistNameInput.value,
         descriptionInput.value,
         tagsInput.tags,

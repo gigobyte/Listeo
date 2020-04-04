@@ -51,7 +51,7 @@ interface RegisterFailResponse extends FailedRequest {
   error: RegisterResponseError
 }
 
-const register = (
+const registerEndpoint = (
   username: string,
   email: string,
   password: string
@@ -83,7 +83,7 @@ export const Register = () => {
   useTitle('Register - Listeo')
 
   const session = useSessionContext()
-  const [registerResponse, registerEndpoint] = useCallableAsync(register)
+  const [registerResponse, register] = useCallableAsync(registerEndpoint)
 
   useEffect(() => {
     if (isSuccess(registerResponse)) {
@@ -135,11 +135,7 @@ export const Register = () => {
 
   const submitRegister = () => {
     if (usernameInput.isValid && emailInput.isValid && passwordInput.isValid) {
-      registerEndpoint(
-        usernameInput.value,
-        emailInput.value,
-        passwordInput.value
-      )
+      register(usernameInput.value, emailInput.value, passwordInput.value)
     }
   }
 

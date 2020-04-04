@@ -37,7 +37,7 @@ interface LoginFailResponse extends FailedRequest {
   error: LoginResponseError
 }
 
-const login = (
+const loginEndpoint = (
   username: string,
   password: string
 ): PromiseWithError<LoginSuccessResponse, LoginFailResponse> =>
@@ -67,7 +67,7 @@ export const Login = () => {
   useTitle('Login - Listeo')
 
   const session = useSessionContext()
-  const [loginResponse, loginEndpoint] = useCallableAsync(login)
+  const [loginResponse, login] = useCallableAsync(loginEndpoint)
 
   useEffect(() => {
     if (isSuccess(loginResponse)) {
@@ -98,7 +98,7 @@ export const Login = () => {
 
   const submitLogin = () => {
     if (usernameInput.isValid && passwordInput.isValid) {
-      loginEndpoint(usernameInput.value, passwordInput.value)
+      login(usernameInput.value, passwordInput.value)
     }
   }
 
