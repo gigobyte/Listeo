@@ -146,24 +146,22 @@ const sourceToLogo = {
 }
 
 export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
-  const { data: playlist, refetch: refetchPlaylist } = useAsync(fetchPlaylist, [
-    playlistId
-  ])
+  const playlist = useAsync(fetchPlaylist, [playlistId])
 
   const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false)
 
   const deletePlaylistVideo = useCallback(
     (videoId: Id<Video>) => {
-      deleteVideo(playlistId, videoId).then(refetchPlaylist)
+      deleteVideo(playlistId, videoId).then(playlist.refetch)
     },
     [playlistId]
   )
 
   useTitle(
     (() => {
-      switch (playlist.status) {
+      switch (playlist.response.status) {
         case DataStatus.Success:
-          return `${playlist.data.name} - Listeo`
+          return `${playlist.response.data.name} - Listeo`
 
         default:
           return 'Playlist - Listeo'
@@ -171,33 +169,35 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
     })()
   )
 
-  switch (playlist.status) {
-    case DataStatus.Success:
+  switch (playlist.response.status) {
+    case DataStatus.Success: {
+      const playlistData = playlist.response.data
+
       return (
         <div>
           <PlaylistHeader>
-            <PlaylistTitle>{playlist.data.name}</PlaylistTitle>
+            <PlaylistTitle>{playlistData.name}</PlaylistTitle>
             <PlaylistActions>
-              {playlist.data.privacy === PlaylistPrivacy.Private && (
+              {playlistData.privacy === PlaylistPrivacy.Private && (
                 <Tooltip label="This playlist is private">
                   <PrivateIcon />
                 </Tooltip>
               )}
-              {playlist.data.privacy === PlaylistPrivacy.Public && (
+              {playlistData.privacy === PlaylistPrivacy.Public && (
                 <Tooltip label="This playlist is public">
                   <PublicIcon />
                 </Tooltip>
               )}
             </PlaylistActions>
           </PlaylistHeader>
-          {playlist.data.description && (
+          {playlistData.description && (
             <PlaylistDescription>
-              {playlist.data.description}
+              {playlistData.description}
             </PlaylistDescription>
           )}
-          {playlist.data.tags.length > 0 && (
+          {playlistData.tags.length > 0 && (
             <PlaylistTags>
-              {playlist.data.tags.map(tag => (
+              {playlistData.tags.map(tag => (
                 <Tag key={tag.name} label={tag.name} />
               ))}
             </PlaylistTags>
@@ -215,7 +215,7 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           <Button styling={ButtonStyle.Default} icon={<Icons.edit />}>
             Edit
           </Button>
-          {playlist.data.videos.map(video => (
+          {playlistData.videos.map(video => (
             <>
               <VideoWrapper key={video.id}>
                 <VideoThumbnailWrapper>
@@ -248,14 +248,18 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
             <AddVideoModal
               playlistId={playlistId}
               onClose={() => setIsAddVideoModalOpen(false)}
-              onRefetchPlaylist={refetchPlaylist}
+              onRefetchPlaylist={playlist.refetch}
             />
           )}
         </div>
       )
+    }
 
     case DataStatus.Fail:
-      if (playlist.error.error === PlaylistResponseError.PlaylistIsPrivate)
+      if (
+        playlist.response.error.error ===
+        PlaylistResponseError.PlaylistIsPrivate
+      )
         return <div>You do not have access to this playlist</div>
       else return null
 

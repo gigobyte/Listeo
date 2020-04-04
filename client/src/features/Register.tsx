@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import {
   FailedRequest,
   http,
-  RemoteData,
   DataStatus,
-  notAsked,
-  loading,
-  fail,
-  success,
-  showError
+  showError,
+  useCallableAsync,
+  PromiseWithError
 } from '../utils/http'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
@@ -53,6 +50,13 @@ interface RegisterFailResponse extends FailedRequest {
   error: RegisterResponseError
 }
 
+const register = (
+  username: string,
+  email: string,
+  password: string
+): PromiseWithError<RegisterSuccessResponse, RegisterFailResponse> =>
+  http.post('/register', { username, email, password })
+
 const RegisterForm = styled.form`
   ${centered};
   height: 66%;
@@ -78,9 +82,13 @@ export const Register = () => {
   useTitle('Register - Listeo')
 
   const session = useSessionContext()
-  const [registerResponse, setRegisterResponse] = useState<
-    RemoteData<RegisterSuccessResponse, RegisterFailResponse>
-  >(notAsked)
+  const registerEndpoint = useCallableAsync(register)
+
+  useEffect(() => {
+    if (registerEndpoint.response.status === DataStatus.Success) {
+      session.login(registerEndpoint.response.data.jwt)
+    }
+  }, [registerEndpoint.response])
 
   const registerForm = useForm({
     onSubmit: () => {
@@ -89,21 +97,11 @@ export const Register = () => {
         emailInput.isValid &&
         passwordInput.isValid
       ) {
-        setRegisterResponse(loading)
-
-        http
-          .post<RegisterSuccessResponse>('/register', {
-            username: usernameInput.value,
-            email: emailInput.value,
-            password: passwordInput.value
-          })
-          .then((response: RegisterSuccessResponse) => {
-            session.login(response.jwt)
-            setRegisterResponse(success(response))
-          })
-          .catch((response: RegisterFailResponse) => {
-            setRegisterResponse(fail(response))
-          })
+        registerEndpoint.fetch(
+          usernameInput.value,
+          emailInput.value,
+          passwordInput.value
+        )
       }
     }
   })
@@ -138,12 +136,12 @@ export const Register = () => {
   })
 
   const registerRequestErrorText = showError(
-    registerResponse,
+    registerEndpoint.response,
     showRegisterResponseError
   )
 
   const isSubmitButtonDisabled =
-    registerResponse.status === DataStatus.Loading ||
+    registerEndpoint.response.status === DataStatus.Loading ||
     usernameInput.isShowingError ||
     emailInput.isShowingError ||
     passwordInput.isShowingError

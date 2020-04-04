@@ -56,15 +56,15 @@ export const SessionProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (
-      user.data.status === DataStatus.Success &&
+      user.response.status === DataStatus.Success &&
       isAuthDisallowedRoute(route)
     ) {
       redirect(routes.home)
     }
 
     if (
-      user.data.status === DataStatus.Fail &&
-      user.data.error.statusCode === HttpStatus.Unauthorized &&
+      user.response.status === DataStatus.Fail &&
+      user.response.error.statusCode === HttpStatus.Unauthorized &&
       isAuthProtectedRoute(route)
     ) {
       redirect(routes.login)
@@ -74,7 +74,7 @@ export const SessionProvider: React.FC = ({ children }) => {
   return (
     <SessionContext.Provider
       value={{
-        user: user.data,
+        user: user.response,
         route,
         login: (jwt: string) => {
           localStorage.setItem('jwt', jwt)

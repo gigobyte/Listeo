@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useTitle } from 'react-use'
 import { centered } from '../ui/Container'
@@ -12,12 +12,9 @@ import {
   FailedRequest,
   http,
   DataStatus,
-  RemoteData,
-  notAsked,
-  loading,
-  success,
-  fail,
-  showError
+  showError,
+  useCallableAsync,
+  PromiseWithError
 } from '../utils/http'
 import { rule, ifBlank } from '../ui/validate'
 import { useSessionContext } from '../session'
@@ -38,6 +35,12 @@ interface LoginSuccessResponse {
 interface LoginFailResponse extends FailedRequest {
   error: LoginResponseError
 }
+
+const login = (
+  username: string,
+  password: string
+): PromiseWithError<LoginSuccessResponse, LoginFailResponse> =>
+  http.post('/login', { username, password })
 
 const LoginForm = styled.form`
   ${centered};
@@ -63,26 +66,18 @@ export const Login = () => {
   useTitle('Login - Listeo')
 
   const session = useSessionContext()
-  const [loginResponse, setLoginResponse] = useState<
-    RemoteData<LoginSuccessResponse, LoginFailResponse>
-  >(notAsked)
+  const loginEndpoint = useCallableAsync(login)
+
+  useEffect(() => {
+    if (loginEndpoint.response.status === DataStatus.Success) {
+      session.login(loginEndpoint.response.data.jwt)
+    }
+  }, [loginEndpoint.response])
 
   const loginForm = useForm({
     onSubmit: () => {
       if (usernameInput.isValid && passwordInput.isValid) {
-        setLoginResponse(loading)
-        http
-          .post<LoginSuccessResponse>('/login', {
-            username: usernameInput.value,
-            password: passwordInput.value
-          })
-          .then(response => {
-            session.login(response.jwt)
-            setLoginResponse(success(response))
-          })
-          .catch((response: LoginFailResponse) => {
-            setLoginResponse(fail(response))
-          })
+        loginEndpoint.fetch(usernameInput.value, passwordInput.value)
       }
     }
   })
@@ -99,10 +94,13 @@ export const Login = () => {
     shouldShowError: _ => loginForm.submitted
   })
 
-  const loginRequestErrorText = showError(loginResponse, showLoginResponseError)
+  const loginRequestErrorText = showError(
+    loginEndpoint.response,
+    showLoginResponseError
+  )
 
   const isSubmitButtonDisabled =
-    loginResponse.status === DataStatus.Loading ||
+    loginEndpoint.response.status === DataStatus.Loading ||
     usernameInput.isShowingError ||
     passwordInput.isShowingError
 
