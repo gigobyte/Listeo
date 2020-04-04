@@ -4,7 +4,6 @@ import { ModalProps, Modal } from '../../ui/Modal'
 import { useInput, Input } from '../../ui/Input'
 import { DefaultButton } from '../../ui/Button'
 import { http } from '../../utils/http'
-import { createEndpoint } from '../../utils/endpoint'
 import { useForm } from '../../ui/Form'
 import { useTagInput, TagInput } from '../../ui/TagInput'
 import { useTextarea, Textarea } from '../../ui/Textarea'
@@ -35,7 +34,7 @@ const addVideo = (
   playlistId: Id<Playlist>,
   request: AddVideoRequest
 ): Promise<void> =>
-  http.post(createEndpoint<void>('/playlist/' + playlistId + '/video'), request)
+  http.post<void>('/playlist/' + playlistId + '/video', request)
 
 export const AddVideoModal: React.FC<AddVideoModalProps> = ({
   onClose,

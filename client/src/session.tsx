@@ -8,7 +8,6 @@ import {
   PromiseWithError,
   DataStatus
 } from './utils/http'
-import { createEndpoint } from './utils/endpoint'
 import {
   Route,
   parseUrl,
@@ -32,9 +31,8 @@ interface SessionState {
   logout: () => void
 }
 
-const currentUserEndpoint = createEndpoint<User>('/me')
 const fetchUser = (): PromiseWithError<User, FailedRequest> =>
-  http.get(currentUserEndpoint)
+  http.get<User>('/me')
 
 const history = createBrowserHistory()
 

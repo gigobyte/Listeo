@@ -9,7 +9,6 @@ import {
   FailedRequest,
   PromiseWithError
 } from '../utils/http'
-import { createEndpoint } from '../utils/endpoint'
 import { Spinner } from '../ui/Spinner'
 import { Icons } from '../ui/Icon'
 import { colors } from '../ui/color'
@@ -39,15 +38,13 @@ interface PlaylistFailResponse extends FailedRequest {
 const fetchPlaylist = (
   playlistId: Id<Playlist>
 ): PromiseWithError<Playlist, PlaylistFailResponse> =>
-  http.get(createEndpoint<Playlist>('/playlist/' + playlistId))
+  http.get<Playlist>('/playlist/' + playlistId)
 
 const deleteVideo = (
   playlistId: Id<Playlist>,
   videoId: Id<Video>
 ): Promise<void> =>
-  http.delete(
-    createEndpoint<void>('/playlist/' + playlistId + '/video/' + videoId)
-  )
+  http.delete<void>('/playlist/' + playlistId + '/video/' + videoId)
 
 const PlaylistHeader = styled.div`
   display: flex;

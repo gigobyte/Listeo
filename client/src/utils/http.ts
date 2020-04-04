@@ -1,4 +1,3 @@
-import { Endpoint } from './endpoint'
 import { useState, useEffect } from 'react'
 import axios, { AxiosError } from 'axios'
 
@@ -24,11 +23,11 @@ const handleErrors = (err: AxiosError) => {
 }
 
 export const http = {
-  async get<T>(url: Endpoint<T>): Promise<T> {
+  async get<T>(url: string): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
     return axios
-      .get(url, {
+      .get(process.env.API_ROOT + url, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }
@@ -37,11 +36,11 @@ export const http = {
       .catch(handleErrors)
   },
 
-  async post<T>(url: Endpoint<T>, body: unknown): Promise<T> {
+  async post<T>(url: string, body: unknown): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
     return axios
-      .post(url, body, {
+      .post(process.env.API_ROOT + url, body, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }
@@ -50,11 +49,11 @@ export const http = {
       .catch(handleErrors)
   },
 
-  async delete<T>(url: Endpoint<T>): Promise<T> {
+  async delete<T>(url: string): Promise<T> {
     const jwt = localStorage.getItem('jwt')
 
     return axios
-      .delete(url, {
+      .delete(process.env.API_ROOT + url, {
         headers: {
           Authorization: 'Bearer ' + jwt
         }

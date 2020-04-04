@@ -10,7 +10,6 @@ import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
 import { remoteData, RemoteData, DataStatus, http } from '../utils/http'
-import { createEndpoint } from '../utils/endpoint'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -23,10 +22,6 @@ enum ValidationError {
 interface CreatePlaylistSuccessResponse {
   playlistId: string
 }
-
-const createPlaylistEndpoint = createEndpoint<CreatePlaylistSuccessResponse>(
-  '/playlist'
-)
 
 const Container = styled.div`
   ${centered};
@@ -75,7 +70,7 @@ export const CreatePlaylist = () => {
       if (playlistNameInput.isValid) {
         setCreatePlaylistResponse(remoteData.loading)
         http
-          .post(createPlaylistEndpoint, {
+          .post<CreatePlaylistSuccessResponse>('/playlist', {
             name: playlistNameInput.value,
             description: descriptionInput.value,
             tags: tagsInput.tags,

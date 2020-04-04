@@ -8,7 +8,6 @@ import { useForm } from '../ui/Form'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
 import { Error } from '../ui/Error'
-import { createEndpoint } from '../utils/endpoint'
 import {
   FailedRequest,
   http,
@@ -35,8 +34,6 @@ interface LoginSuccessResponse {
 interface LoginFailResponse extends FailedRequest {
   error: LoginResponseError
 }
-
-const loginEndpoint = createEndpoint<LoginSuccessResponse>('/login')
 
 const LoginForm = styled.form`
   ${centered};
@@ -71,7 +68,7 @@ export const Login = () => {
       if (usernameInput.isValid && passwordInput.isValid) {
         setLoginResponse(remoteData.loading)
         http
-          .post(loginEndpoint, {
+          .post<LoginSuccessResponse>('/login', {
             username: usernameInput.value,
             password: passwordInput.value
           })

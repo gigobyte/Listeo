@@ -7,7 +7,6 @@ import {
   RemoteData,
   DataStatus
 } from '../utils/http'
-import { createEndpoint } from '../utils/endpoint'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
 import { Error } from '../ui/Error'
@@ -50,8 +49,6 @@ interface RegisterFailResponse extends FailedRequest {
   error: RegisterResponseError
 }
 
-const registerEndpoint = createEndpoint<RegisterSuccessResponse>('/register')
-
 const RegisterForm = styled.form`
   ${centered};
   height: 66%;
@@ -91,7 +88,7 @@ export const Register = () => {
         setRegisterResponse(remoteData.loading)
 
         http
-          .post(registerEndpoint, {
+          .post<RegisterSuccessResponse>('/register', {
             username: usernameInput.value,
             email: emailInput.value,
             password: passwordInput.value
