@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
                       />
                     )}
                     <NavItem data-test="header--username">
-                      <Link to={routes.home}>{user.username}</Link>
+                      <Link to={routes.home}>{user.data.username}</Link>
                     </NavItem>
                     <NavItem data-test="header--logout">
                       <Link to={routes.home} onClick={() => session.logout()}>

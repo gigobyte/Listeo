@@ -3,9 +3,13 @@ import styled from 'styled-components'
 import {
   FailedRequest,
   http,
-  remoteData,
   RemoteData,
-  DataStatus
+  DataStatus,
+  notAsked,
+  loading,
+  fail,
+  success,
+  showError
 } from '../utils/http'
 import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
@@ -76,7 +80,7 @@ export const Register = () => {
   const session = useSessionContext()
   const [registerResponse, setRegisterResponse] = useState<
     RemoteData<RegisterSuccessResponse, RegisterFailResponse>
-  >(remoteData.notAsked)
+  >(notAsked)
 
   const registerForm = useForm({
     onSubmit: () => {
@@ -85,7 +89,7 @@ export const Register = () => {
         emailInput.isValid &&
         passwordInput.isValid
       ) {
-        setRegisterResponse(remoteData.loading)
+        setRegisterResponse(loading)
 
         http
           .post<RegisterSuccessResponse>('/register', {
@@ -95,10 +99,10 @@ export const Register = () => {
           })
           .then((response: RegisterSuccessResponse) => {
             session.login(response.jwt)
-            setRegisterResponse(remoteData.success(response))
+            setRegisterResponse(success(response))
           })
           .catch((response: RegisterFailResponse) => {
-            setRegisterResponse(remoteData.fail(response))
+            setRegisterResponse(fail(response))
           })
       }
     }
@@ -133,7 +137,7 @@ export const Register = () => {
     shouldShowError: _ => registerForm.submitted
   })
 
-  const registerRequestErrorText = remoteData.showError(
+  const registerRequestErrorText = showError(
     registerResponse,
     showRegisterResponseError
   )

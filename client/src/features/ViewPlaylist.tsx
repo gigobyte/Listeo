@@ -163,7 +163,7 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
     (() => {
       switch (playlist.status) {
         case DataStatus.Success:
-          return `${playlist.name} - Listeo`
+          return `${playlist.data.name} - Listeo`
 
         default:
           return 'Playlist - Listeo'
@@ -176,26 +176,28 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
       return (
         <div>
           <PlaylistHeader>
-            <PlaylistTitle>{playlist.name}</PlaylistTitle>
+            <PlaylistTitle>{playlist.data.name}</PlaylistTitle>
             <PlaylistActions>
-              {playlist.privacy === PlaylistPrivacy.Private && (
+              {playlist.data.privacy === PlaylistPrivacy.Private && (
                 <Tooltip label="This playlist is private">
                   <PrivateIcon />
                 </Tooltip>
               )}
-              {playlist.privacy === PlaylistPrivacy.Public && (
+              {playlist.data.privacy === PlaylistPrivacy.Public && (
                 <Tooltip label="This playlist is public">
                   <PublicIcon />
                 </Tooltip>
               )}
             </PlaylistActions>
           </PlaylistHeader>
-          {playlist.description && (
-            <PlaylistDescription>{playlist.description}</PlaylistDescription>
+          {playlist.data.description && (
+            <PlaylistDescription>
+              {playlist.data.description}
+            </PlaylistDescription>
           )}
-          {playlist.tags.length > 0 && (
+          {playlist.data.tags.length > 0 && (
             <PlaylistTags>
-              {playlist.tags.map(tag => (
+              {playlist.data.tags.map(tag => (
                 <Tag key={tag.name} label={tag.name} />
               ))}
             </PlaylistTags>
@@ -213,7 +215,7 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
           <Button styling={ButtonStyle.Default} icon={<Icons.edit />}>
             Edit
           </Button>
-          {playlist.videos.map(video => (
+          {playlist.data.videos.map(video => (
             <>
               <VideoWrapper key={video.id}>
                 <VideoThumbnailWrapper>
@@ -253,7 +255,7 @@ export const ViewPlaylist = ({ playlistId }: ViewPlaylistProps) => {
       )
 
     case DataStatus.Fail:
-      if (playlist.error === PlaylistResponseError.PlaylistIsPrivate)
+      if (playlist.error.error === PlaylistResponseError.PlaylistIsPrivate)
         return <div>You do not have access to this playlist</div>
       else return null
 

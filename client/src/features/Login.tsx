@@ -12,8 +12,12 @@ import {
   FailedRequest,
   http,
   DataStatus,
-  remoteData,
-  RemoteData
+  RemoteData,
+  notAsked,
+  loading,
+  success,
+  fail,
+  showError
 } from '../utils/http'
 import { rule, ifBlank } from '../ui/validate'
 import { useSessionContext } from '../session'
@@ -61,12 +65,12 @@ export const Login = () => {
   const session = useSessionContext()
   const [loginResponse, setLoginResponse] = useState<
     RemoteData<LoginSuccessResponse, LoginFailResponse>
-  >(remoteData.notAsked)
+  >(notAsked)
 
   const loginForm = useForm({
     onSubmit: () => {
       if (usernameInput.isValid && passwordInput.isValid) {
-        setLoginResponse(remoteData.loading)
+        setLoginResponse(loading)
         http
           .post<LoginSuccessResponse>('/login', {
             username: usernameInput.value,
@@ -74,10 +78,10 @@ export const Login = () => {
           })
           .then(response => {
             session.login(response.jwt)
-            setLoginResponse(remoteData.success(response))
+            setLoginResponse(success(response))
           })
           .catch((response: LoginFailResponse) => {
-            setLoginResponse(remoteData.fail(response))
+            setLoginResponse(fail(response))
           })
       }
     }
@@ -95,10 +99,7 @@ export const Login = () => {
     shouldShowError: _ => loginForm.submitted
   })
 
-  const loginRequestErrorText = remoteData.showError(
-    loginResponse,
-    showLoginResponseError
-  )
+  const loginRequestErrorText = showError(loginResponse, showLoginResponseError)
 
   const isSubmitButtonDisabled =
     loginResponse.status === DataStatus.Loading ||

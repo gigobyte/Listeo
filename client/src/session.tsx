@@ -2,11 +2,11 @@ import {
   HttpStatus,
   FailedRequest,
   RemoteData,
-  remoteData,
   http,
   useAsync,
   PromiseWithError,
-  DataStatus
+  DataStatus,
+  notAsked
 } from './utils/http'
 import {
   Route,
@@ -64,7 +64,7 @@ export const SessionProvider: React.FC = ({ children }) => {
 
     if (
       user.data.status === DataStatus.Fail &&
-      user.data.statusCode === HttpStatus.Unauthorized &&
+      user.data.error.statusCode === HttpStatus.Unauthorized &&
       isAuthProtectedRoute(route)
     ) {
       redirect(routes.login)
@@ -93,7 +93,7 @@ export const SessionProvider: React.FC = ({ children }) => {
 }
 
 export const useUser = (): RemoteData<User> =>
-  React.useContext(SessionContext)?.user ?? remoteData.notAsked
+  React.useContext(SessionContext)?.user ?? notAsked
 
 export const useRoute = (): Route =>
   React.useContext(SessionContext)?.route ?? routes.notFound404

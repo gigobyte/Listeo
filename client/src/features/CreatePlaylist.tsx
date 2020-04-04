@@ -9,7 +9,15 @@ import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
-import { remoteData, RemoteData, DataStatus, http } from '../utils/http'
+import {
+  RemoteData,
+  DataStatus,
+  http,
+  notAsked,
+  loading,
+  success,
+  fail
+} from '../utils/http'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -63,12 +71,12 @@ export const CreatePlaylist = () => {
 
   const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
     RemoteData<CreatePlaylistSuccessResponse>
-  >(remoteData.notAsked)
+  >(notAsked)
 
   const createPlaylistForm = useForm({
     onSubmit: () => {
       if (playlistNameInput.isValid) {
-        setCreatePlaylistResponse(remoteData.loading)
+        setCreatePlaylistResponse(loading)
         http
           .post<CreatePlaylistSuccessResponse>('/playlist', {
             name: playlistNameInput.value,
@@ -78,11 +86,11 @@ export const CreatePlaylist = () => {
             style: playlistStyle.value
           })
           .then(response => {
-            setCreatePlaylistResponse(remoteData.success(response))
+            setCreatePlaylistResponse(success(response))
             redirect(routes.viewPlaylist(response.playlistId))
           })
           .catch(response => {
-            setCreatePlaylistResponse(remoteData.fail(response))
+            setCreatePlaylistResponse(fail(response))
           })
       }
     }

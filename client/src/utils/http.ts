@@ -73,44 +73,45 @@ export enum DataStatus {
 export type RemoteData<T, E = FailedRequest> =
   | { status: DataStatus.NotAsked }
   | { status: DataStatus.Loading }
-  | ({ status: DataStatus.Success } & T)
-  | ({ status: DataStatus.Fail } & E)
+  | { status: DataStatus.Success; data: T }
+  | { status: DataStatus.Fail; error: E }
 
-export const remoteData = {
-  notAsked: { status: DataStatus.NotAsked },
-  loading: { status: DataStatus.Loading },
-  success: <T>(data: T): RemoteData<T, never> => ({
+export const notAsked = { status: DataStatus.NotAsked } as const
+export const loading = { status: DataStatus.Loading } as const
+export const success = <T>(data: T) =>
+  ({
     status: DataStatus.Success,
-    ...data
-  }),
-  fail: <E>(error: E): RemoteData<never, E> => ({
+    data
+  } as const)
+export const fail = <E>(error: E) =>
+  ({
     status: DataStatus.Fail,
-    ...error
-  }),
-  showError: <T, E>(
-    error: RemoteData<T, E>,
-    show: (error: E) => string
-  ): string => {
-    switch (error.status) {
-      case DataStatus.Fail:
-        return show(error)
+    error
+  } as const)
 
-      default:
-        return ''
-    }
+export const showError = <T, E>(
+  error: RemoteData<T, E>,
+  show: (error: E) => string
+): string => {
+  switch (error.status) {
+    case DataStatus.Fail:
+      return show(error.error)
+
+    default:
+      return ''
   }
-} as const
+}
 
 export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
   promiseFn: (...args: TArgs) => PromiseWithError<TRes, TErr>,
   args: TArgs
 ): { data: RemoteData<TRes, TErr>; refetch: () => void } => {
-  const [data, setData] = useState<RemoteData<TRes, TErr>>(remoteData.loading)
+  const [data, setData] = useState<RemoteData<TRes, TErr>>(loading)
 
   const startFetch = () =>
     promiseFn(...args)
-      .then(res => setData(remoteData.success(res)))
-      .catch(err => setData(remoteData.fail(err)))
+      .then(res => setData(success(res)))
+      .catch(err => setData(fail(err)))
 
   useEffect(() => {
     startFetch()
