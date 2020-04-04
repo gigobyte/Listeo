@@ -12,10 +12,8 @@ import { centered } from '../ui/Container'
 import { DefaultButton } from '../ui/Button'
 import { Error } from '../ui/Error'
 import { useTitle } from 'react-use'
-import { useDispatch } from 'react-redux'
 import { useInput, Input } from '../ui/Input'
 import { useForm } from '../ui/Form'
-import { session } from '../session'
 import { routes } from '../route'
 import { Link } from '../ui/Link'
 import {
@@ -27,6 +25,7 @@ import {
   pass,
   ifLongerThan
 } from '../ui/validate'
+import { useSessionContext } from '../session'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
@@ -77,7 +76,7 @@ const showRegisterResponseError = ({ error }: RegisterFailResponse) => {
 export const Register = () => {
   useTitle('Register - Listeo')
 
-  const dispatch = useDispatch()
+  const session = useSessionContext()
   const [registerResponse, setRegisterResponse] = useState<
     RemoteData<RegisterSuccessResponse, RegisterFailResponse>
   >(remoteData.notAsked)
@@ -98,7 +97,7 @@ export const Register = () => {
             password: passwordInput.value
           })
           .then((response: RegisterSuccessResponse) => {
-            dispatch(session.effects.authSuccess(response.jwt))
+            session.login(response.jwt)
             setRegisterResponse(remoteData.success(response))
           })
           .catch((response: RegisterFailResponse) => {

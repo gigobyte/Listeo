@@ -1,9 +1,6 @@
 import React from 'react'
-import { useMount } from 'react-use'
 import styled, { createGlobalStyle } from 'styled-components'
-import { configureStore } from '@reduxjs/toolkit'
-import { Provider, useDispatch } from 'react-redux'
-import { session, useRoute, useUser, useHistoryListener } from './session'
+import { useRoute, useUser, SessionProvider } from './session'
 import { RouteTag } from './route'
 import { colors } from './ui/color'
 import { Header } from './ui/Header'
@@ -17,17 +14,11 @@ import { ViewPlaylist } from './features/ViewPlaylist'
 import { DataStatus } from './utils/http'
 import { Spinner } from './ui/Spinner'
 
-const store = configureStore({
-  reducer: session.reducer
-})
-
-export type AppDispatch = typeof store.dispatch
-
 export const App = () => {
   return (
-    <Provider store={store}>
+    <SessionProvider>
       <Main />
-    </Provider>
+    </SessionProvider>
   )
 }
 
@@ -69,16 +60,8 @@ const Layout: React.FC = ({ children }) => (
 )
 
 export const Main = () => {
-  const dispatch = useDispatch()
   const route = useRoute()
   const user = useUser()
-  useHistoryListener()
-
-  useMount(() => {
-    if (route.tag !== RouteTag.Error) {
-      dispatch(session.effects.fetchUser())
-    }
-  })
 
   if (route.tag === RouteTag.Error) {
     return (

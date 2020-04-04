@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import { colors } from '../../ui/color'
 import { Icons } from '../../ui/Icon'
 import { DefaultButton } from '../../ui/Button'
-import { useDispatch } from 'react-redux'
-import { session } from '../../session'
+import { redirect } from '../../session'
 import { routes } from '../../route'
 import { Modal, ModalProps } from '../../ui/Modal'
 
@@ -66,8 +65,6 @@ const OptionDescription = styled.div`
 `
 
 export const AddPlaylistModal: React.FC<ModalProps> = ({ onClose }) => {
-  const dispatch = useDispatch()
-
   return (
     <Modal onClose={onClose}>
       <Container>
@@ -87,7 +84,7 @@ export const AddPlaylistModal: React.FC<ModalProps> = ({ onClose }) => {
               data-test="add-playlist--create"
               onClick={() => {
                 onClose()
-                dispatch(session.effects.redirect(routes.createPlaylist))
+                redirect(routes.createPlaylist)
               }}
             >
               Create new

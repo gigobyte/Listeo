@@ -11,10 +11,9 @@ import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
 import { remoteData, RemoteData, DataStatus, http } from '../utils/http'
 import { createEndpoint } from '../utils/endpoint'
-import { session } from '../session'
-import { useDispatch } from 'react-redux'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
+import { redirect } from '../session'
 
 enum ValidationError {
   PlaylistNameMissing = 'Please enter the name of the playlist',
@@ -67,7 +66,6 @@ const Separator = styled.div`
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const dispatch = useDispatch()
   const [createPlaylistResponse, setCreatePlaylistResponse] = useState<
     RemoteData<CreatePlaylistSuccessResponse>
   >(remoteData.notAsked)
@@ -86,9 +84,7 @@ export const CreatePlaylist = () => {
           })
           .then(response => {
             setCreatePlaylistResponse(remoteData.success(response))
-            dispatch(
-              session.effects.redirect(routes.viewPlaylist(response.playlistId))
-            )
+            redirect(routes.viewPlaylist(response.playlistId))
           })
           .catch(response => {
             setCreatePlaylistResponse(remoteData.fail(response))

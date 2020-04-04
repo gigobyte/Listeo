@@ -16,9 +16,8 @@ import {
   remoteData,
   RemoteData
 } from '../utils/http'
-import { useDispatch } from 'react-redux'
-import { session } from '../session'
 import { rule, ifBlank } from '../ui/validate'
+import { useSessionContext } from '../session'
 
 enum ValidationError {
   UsernameMissing = 'Please enter username',
@@ -62,7 +61,7 @@ const showLoginResponseError = ({ error }: LoginFailResponse) => {
 export const Login = () => {
   useTitle('Login - Listeo')
 
-  const dispatch = useDispatch()
+  const session = useSessionContext()
   const [loginResponse, setLoginResponse] = useState<
     RemoteData<LoginSuccessResponse, LoginFailResponse>
   >(remoteData.notAsked)
@@ -77,7 +76,7 @@ export const Login = () => {
             password: passwordInput.value
           })
           .then(response => {
-            dispatch(session.effects.authSuccess(response.jwt))
+            session.login(response.jwt)
             setLoginResponse(remoteData.success(response))
           })
           .catch((response: LoginFailResponse) => {

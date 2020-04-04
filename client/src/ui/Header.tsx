@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { colors } from './color'
-import { useUser, useRoute, session } from '../session'
+import { useUser, useRoute, useSessionContext } from '../session'
 import { DataStatus } from '../utils/http'
 import { Link } from './Link'
 import { routes } from '../route'
 import { Icons } from './Icon'
 import { Logo } from './Logo'
 import { AddPlaylistModal } from '../features/playlist/AddPlaylistModal'
-import { useDispatch } from 'react-redux'
 
 const Container = styled.div`
   display: flex;
@@ -47,7 +46,7 @@ const AddButton = styled(Icons.plusCircle)`
 export const Header: React.FC = () => {
   const user = useUser()
   const route = useRoute()
-  const dispatch = useDispatch()
+  const session = useSessionContext()
   const [isAddPlaylistOverlayShown, setIsAddPlaylistOverlayShown] = useState(
     false
   )
@@ -77,10 +76,7 @@ export const Header: React.FC = () => {
                       <Link to={routes.home}>{user.username}</Link>
                     </NavItem>
                     <NavItem data-test="header--logout">
-                      <Link
-                        to={routes.home}
-                        onClick={() => dispatch(session.effects.logout())}
-                      >
+                      <Link to={routes.home} onClick={() => session.logout()}>
                         Logout
                       </Link>
                     </NavItem>

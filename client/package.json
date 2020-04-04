@@ -7,17 +7,15 @@
     "start": "webpack-dev-server",
     "build": "webpack",
     "tsc": "tsc --noEmit",
-    "test:e2e": "cypress run",
+    "test": "cypress run",
     "lint": "eslint src/**/*.{ts,tsx}"
   },
   "dependencies": {
     "@reach/tooltip": "^0.8.0",
-    "@reduxjs/toolkit": "^1.2.3",
     "@types/history": "^4.7.5",
     "@types/node": "^13.7.0",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
-    "@types/react-redux": "^7.1.7",
     "@types/styled-components": "^4.4.2",
     "axios": "^0.19.2",
     "date-fns": "^2.9.0",
@@ -25,9 +23,7 @@
     "iso8601-duration": "^1.2.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-redux": "^7.1.1",
     "react-use": "^13.22.4",
-    "redux": "^4.0.4",
     "styled-components": "^5.0.0",
     "whatwg-fetch": "^3.0.0"
   },

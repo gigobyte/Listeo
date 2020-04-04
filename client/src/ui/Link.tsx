@@ -2,8 +2,7 @@ import React, { useCallback } from 'react'
 import { Route, routeToString } from '../route'
 import styled from 'styled-components'
 import { colors } from './color'
-import { useDispatch } from 'react-redux'
-import { session } from '../session'
+import { redirect } from '../session'
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: Route
@@ -15,7 +14,6 @@ const LinkWrapper = styled.a`
 `
 
 export const Link: React.FC<LinkProps> = ({ to, onClick, children }) => {
-  const dispatch = useDispatch()
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       e.preventDefault()
@@ -24,7 +22,7 @@ export const Link: React.FC<LinkProps> = ({ to, onClick, children }) => {
         onClick(e)
       }
 
-      dispatch(session.effects.redirect(to))
+      redirect(to)
     },
     [to]
   )
