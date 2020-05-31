@@ -8,7 +8,7 @@ import { TagInput, useTagInput } from '../ui/TagInput'
 import { Textarea, useTextarea } from '../ui/Textarea'
 import { RadioButton, useRadioButtons } from '../ui/RadioButton'
 import { DefaultButton } from '../ui/Button'
-import { http, useCallableAsync, isSuccess, isLoading } from '../utils/http'
+import { http, useCreateAsync, isSuccess, isLoading } from '../utils/http'
 import { routes } from '../route'
 import { PlaylistPrivacy, PlaylistStyle } from './playlist/Playlist'
 import { redirect } from '../session'
@@ -75,7 +75,7 @@ const Separator = styled.div`
 export const CreatePlaylist = () => {
   useTitle('Create Playlist - Listeo')
 
-  const [response, createPlaylist] = useCallableAsync(createPlaylistEndpoint)
+  const [response, createPlaylist] = useCreateAsync(createPlaylistEndpoint)
 
   useEffect(() => {
     if (isSuccess(response)) {

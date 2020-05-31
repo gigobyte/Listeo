@@ -134,7 +134,7 @@ export const useAsync = <TArgs extends unknown[], TRes, TErr = FailedRequest>(
   return [data, startFetch]
 }
 
-export const useCallableAsync = <
+export const useCreateAsync = <
   TArgs extends unknown[],
   TRes,
   TErr = FailedRequest

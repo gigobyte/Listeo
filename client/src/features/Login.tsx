@@ -12,7 +12,7 @@ import {
   FailedRequest,
   http,
   showError,
-  useCallableAsync,
+  useCreateAsync,
   PromiseWithError,
   isSuccess,
   isLoading
@@ -67,7 +67,7 @@ export const Login = () => {
   useTitle('Login - Listeo')
 
   const session = useSessionContext()
-  const [loginResponse, login] = useCallableAsync(loginEndpoint)
+  const [loginResponse, login] = useCreateAsync(loginEndpoint)
 
   useEffect(() => {
     if (isSuccess(loginResponse)) {

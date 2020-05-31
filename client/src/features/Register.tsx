@@ -4,7 +4,7 @@ import {
   FailedRequest,
   http,
   showError,
-  useCallableAsync,
+  useCreateAsync,
   PromiseWithError,
   isSuccess,
   isLoading
@@ -83,7 +83,7 @@ export const Register = () => {
   useTitle('Register - Listeo')
 
   const session = useSessionContext()
-  const [registerResponse, register] = useCallableAsync(registerEndpoint)
+  const [registerResponse, register] = useCreateAsync(registerEndpoint)
 
   useEffect(() => {
     if (isSuccess(registerResponse)) {
