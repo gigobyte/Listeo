@@ -2,8 +2,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import { createDbPool } from './infrastructure/DB'
-import { me } from './features/user/UserRouter'
+import { userRoutes } from './features/user/UserRouter'
 import { requireUser } from './features/user/UserMiddleware'
+import { loginRoutes } from './features/login/LoginRouter'
 
 async function main() {
   const pool = await createDbPool()
@@ -18,7 +19,7 @@ async function main() {
     next()
   })
 
-  app.get('/me', requireUser, me)
+  app.get('/me', requireUser, userRoutes.me).post('/login', loginRoutes.login)
 
   app.listen(process.env.PORT || 8081, () => {
     console.log('App started successfully!')
