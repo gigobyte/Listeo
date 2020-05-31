@@ -7,3 +7,4 @@ dist
 server/src/Infrastructure/Secrets.hs
 client/cypress/videos
 client/cypress/screenshots
+server-ts/src/infrastructure/Secrets.ts
